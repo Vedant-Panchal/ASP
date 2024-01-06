@@ -58,8 +58,8 @@ function Header() {
           <div
             hidden={hidden}
             className={`justify-between items-center w-full lg:flex lg:w-auto lg:order-1 lg:justify-start lg:items-center sm:transform-${
-              hidden ? 'sm:translate-x-[500px]' : 'sm:translate-x-0'
-            } transition-transform ease-in-out duration-300 `}
+              hidden ? ' sm:opacity-0' : 'sm:opacity-100'
+            } transition-all ease-in-out duration-300 `}
           >
             <ul className="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-9 lg:pl-6 lg:mt-0">
               <li>
@@ -67,6 +67,7 @@ function Header() {
                   to={"/"}
                   className="block py-2 pr-4 pl-3 text-white rounded bg-primary-700 lg:bg-transparent lg:text-primary-700 lg:p-0 dark:text-white"
                   aria-current="page"
+                  onClick={() => setHidden(true)}
                 >
                   Home
                 </NavLink>
@@ -75,6 +76,7 @@ function Header() {
                 <NavLink
                   to={"/aboutus"}
                   className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
+                  onClick={() => setHidden(true)}
                 >
                   About Us
                 </NavLink>
@@ -83,6 +85,7 @@ function Header() {
                 <NavLink
                   to={"/contact"}
                   className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
+                  onClick={() => setHidden(true)}
                 >
                   Contact Us
                 </NavLink>
