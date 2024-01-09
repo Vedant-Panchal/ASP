@@ -11,7 +11,7 @@ function Header() {
           <img
             src="assets/FinalLogo.png"
             className="mr-10 h-14 sm:h-14 lg:h-16"
-            alt="Flowbite Logo"
+            alt="Logo"
           />
           
         </Link>
