@@ -2,12 +2,13 @@ import { useContext, useState } from 'react';
 import { Link,useNavigate } from 'react-router-dom';
 import { UserContext } from '../../context/AuthContext';
 import { Eye, EyeOff } from "lucide-react";
-
+import { aspauth } from '../../firebase';
 function Login() {
+  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailPlaceholder, setemailPlaceholder] = useState("name.branchYY@adaniuni.ac.in");
-  const [eye, seteye] = useState(false);
+  const [eye, seteye] = useState(true);
   const [error, setError] = useState('');
   const [hidden, sethidden] = useState(true);
   const {loginUser} = useContext(UserContext);
@@ -33,18 +34,18 @@ function Login() {
     setError('')
     try {
 
-      await loginUser(email, password).then(()=>{
+      await loginUser(aspauth,email, password).then(()=>{
         setEmail('');
         setPassword('');
         
         setTimeout(() => {
           navigate("/dashboard")
-        }, 2000);
+        }, 1000);
       })
     } catch (err) {
       sethidden(false)
       setError('Account not found or password is incorrect');
-      // console.log(`The error is ${error}`);
+  
     }
   };
 
@@ -90,17 +91,29 @@ function Login() {
                 </label>
                 <div className='relative flex items-center'>
                 
-                <input
-
-                  type={eye ? 'password' : 'text'}
-                  name="password"
-                  id="password"
-                  placeholder="••••••••"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  required="true"
-                  onChange={(e) => setPassword(e.target.value)}
-                  value={password}
+                {eye ? (
+                  <input
+                    type="password"
+                    name="password"
+                    id="password"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                    placeholder="••••••••"
+                    required={true}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                   />
+                ) : (
+                  <input
+                    type="text"
+                    name="password"
+                    id="password"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                    placeholder="••••••••"
+                    required={true}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                )}
                 <button className='absolute right-2'
                 onClick={showeye}
                 >
@@ -115,7 +128,7 @@ function Login() {
                 <div className="text-sm">
                   <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                     Forgot your password?{' '}
-                    <Link to="/forgotpassword" className="font-medium text-primary-600 hover:underline dark:text-primary-500">
+                    <Link to="/forgotpasswordemail" className="font-medium text-primary-600 hover:underline dark:text-primary-500">
                       Click here
                     </Link>
                   </p>

@@ -5,7 +5,7 @@ function Header() {
   const [hidden, sethidden] = useState(true);
   return (
     <header>
-    <nav className="bg-white fixed top-0 left-0 right-0 b border-gray-200 px-4 lg:px-6 dark:bg-gray-800">
+    <nav className="bg-white fixed top-0 left-0 right-0  border-gray-200 px-4 lg:px-6 dark:bg-gray-800">
       <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
         <Link to={"/"} className="flex items-center">
           <img

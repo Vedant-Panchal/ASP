@@ -10,13 +10,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "animate.css": "^4.1.1",
     "firebase": "^10.7.1",
+    "firebase-admin": "^12.0.0",
     "flowbite": "^2.2.1",
     "flowbite-react": "^0.7.2",
     "lucide-react": "^0.306.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.21.1"
+    "react-router-dom": "^6.21.1",
+    "sweetalert2": "^11.10.2"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",

@@ -2,8 +2,14 @@ import { useContext, useState } from 'react';
 import { Link,useNavigate } from 'react-router-dom';
 import { UserContext } from '../../context/AuthContext';
 import { Eye, EyeOff } from "lucide-react";
+import { aspauth } from '../../firebase';
 
 function SignUp() {
+  const [firstName, setfirstName] = useState('');
+  const [lastName, setlastName] = useState('');
+  const [branch, setBranch] = useState('ICT')
+  const [semester, setSemester] = useState('1')
+  const [enrollmentnumber, setEnrollmentnumber] = useState('')
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -13,7 +19,6 @@ function SignUp() {
   const [emailPlaceholder, setemailPlaceholder] = useState("name.branchYY@adaniuni.ac.in");
   const [passworderror, setpassworderror] = useState("");
   const [eye, seteye] = useState(false);
-
   const navigate = useNavigate();
 
   const showeye = () => {
@@ -45,7 +50,15 @@ function SignUp() {
 
     // If all checks pass, attempt to create the user
     try {
-      await createUser(email, password).then(()=>{
+      await createUser(aspauth,email, password).then(()=>{
+        console.log({
+          firstName,
+          lastName,
+          branch,
+          email,
+          semester,
+          enrollmentnumber,
+        })
         setEmail('');
         setPassword('');
         setConfirmPassword('');
@@ -63,8 +76,8 @@ function SignUp() {
   };
 
   return (
-    <section className="bg-gray-50 dark:bg-gray-900 ">
-      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0 sm:h-screen ">
+    <section className="bg-gray-50 dark:bg-gray-900 pt-10 ">
+      <div className="flex flex-col items-center justify-center px-4 py-4 mx-auto ">
         <Link
           to={"/"}
           className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
@@ -75,13 +88,101 @@ function SignUp() {
             alt="logo"
           />
         </Link>
-        <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-          <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+        <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md lg:max-w-xl xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+          <div className=" space-y-4 md:space-y-6 p-8">
          
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
               Create an account
             </h1>
             <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
+              <div>
+                <label
+                  htmlFor="First Name"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  First Name
+                </label>
+                <input
+                  type="text"
+                  id="First Name"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="Atmaram"
+                  required="true"
+                  onChange={(e) => setfirstName(e.target.value)}
+                  value={firstName}
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="Last Name"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Last Name
+                </label>
+                <input
+                  type="text"
+                  id="Last Name"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="Bhide"
+                  required="true"
+                  onChange={(e) => setlastName(e.target.value)}
+                  value={lastName}
+                />
+              </div>
+
+              <div className=' w-full flex items-center justify-between space-x-2'>
+                <div className='w-1/2'>
+                  <label
+                    htmlFor="Branch"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white w-1/2"
+                  >
+                    Branch
+                  </label>
+                
+                  <select name="branch" required="true" value={branch} onChange={(e)=> setBranch(e.target.value)} className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <option value="ICT" className='mb-2 p-2' selected= "true">ICT</option>
+                    <option value="CSE" className='mb-2 p-2'>CSE</option>
+
+                  </select>
+                </div>
+                <div className='w-1/2'>
+                  <label
+                    htmlFor="Semester"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white w-1/2"
+                  >
+                    Semester
+                  </label>
+                  <select name="semester" required="true" value={semester} onChange={(e)=> setSemester(e.target.value)} className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <option value="1" className='mb-2 p-2' selected= "true">1</option>
+                    <option value="2" className='mb-2 p-2'>2</option>
+                    <option value="3" className='mb-2 p-2'>3</option>
+                    <option value="4" className='mb-2 p-2'>4</option>
+                    <option value="5" className='mb-2 p-2'>5</option>
+                    <option value="6" className='mb-2 p-2'>6</option>
+                    <option value="7" className='mb-2 p-2'>7</option>
+                    <option value="8" className='mb-2 p-2'>8</option>
+
+                  </select>
+                </div>
+              </div>
+                <div>
+                <label
+                  htmlFor="enrollmentnumber"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Enrollment Number
+                </label>
+                <input
+                  type="number"
+                  id="enrollmentnumber"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="Example : 220012"
+                  required="true"
+                  onChange={(e) => setEnrollmentnumber(e.target.value)}
+                  value={enrollmentnumber}
+
+                />
+              </div>
               <div>
                 <label
                   htmlFor="email"

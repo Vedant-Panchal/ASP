@@ -5,6 +5,9 @@ import './index.css'
 import {Route,RouterProvider,createBrowserRouter,createRoutesFromElements} from 'react-router-dom'
 import { Home,AboutUs,ContactUs,Four04,Dashboard,SignUp,Login } from './Components/index.js'
 import PrivateRoute from './Components/InnerComponents/PrivateRoute'
+import ForgotPasswordViaEmail from './Components/InnerComponents/ForgotPasswordViaEmail.jsx'
+import ForgotPassword from './Components/InnerComponents/ForgotPassword.jsx'
+
 
 export const Routes = createBrowserRouter(
 
@@ -18,6 +21,8 @@ export const Routes = createBrowserRouter(
       <PrivateRoute>
       <Dashboard/>
       </PrivateRoute>}/>
+      <Route path='forgotpasswordemail' element={<ForgotPasswordViaEmail />}/>
+      <Route path='updatepassword' element={<ForgotPassword />}/>
       <Route path='signup' element={<SignUp />}/>
       <Route path='signin' element={<Login />}/>
       <Route path='*' element={<Four04 />}/>
