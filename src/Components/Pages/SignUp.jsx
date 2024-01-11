@@ -111,7 +111,7 @@ function SignUp() {
     <>
       <section
         className="bg-gray-50 dark:bg-gray-900 pt-10 "
-        hidden={!emailVerified}
+        hidden={emailVerified}
       >
         <div className="flex flex-col items-center justify-center px-4 py-4 mx-auto ">
           <Link
@@ -367,7 +367,7 @@ function SignUp() {
       </section>
       <section
         className="bg-gray-50 dark:bg-gray-900 pt-10 h-screen "
-        hidden={emailVerified}
+        hidden={!emailVerified}
       >
         <div className="flex flex-col items-center justify-center px-4 py-4 mx-auto ">
           <div className="w-full h-48 bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md lg:max-w-xl xl:p-0 dark:bg-gray-800 dark:border-gray-700">
