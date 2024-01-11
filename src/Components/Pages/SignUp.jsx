@@ -111,7 +111,7 @@ function SignUp() {
     <>
       <section
         className="bg-gray-50 dark:bg-gray-900 pt-10 "
-        hidden={emailVerified}
+        hidden={!emailVerified}
       >
         <div className="flex flex-col items-center justify-center px-4 py-4 mx-auto ">
           <Link
@@ -367,15 +367,15 @@ function SignUp() {
       </section>
       <section
         className="bg-gray-50 dark:bg-gray-900 pt-10 h-screen "
-        hidden={!emailVerified}
+        hidden={emailVerified}
       >
         <div className="flex flex-col items-center justify-center px-4 py-4 mx-auto ">
           <div className="w-full h-48 bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md lg:max-w-xl xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-            <div className="flex flex-col items-center justify-center h-full gap-4">
+            <div className="flex flex-col items-center justify-center h-full gap-4 px-5">
               
-                      <div className="block text-3xl  text-slate-200 font-bold ">Please verify your email
+                      <div className="block text-xl md:text-3xl text-slate-200 font-bold ">Please verify your email
                       </div>
-                      <p className="text-sm text-slate-200 font-mono ">Refresh the page after verifying your email 😊</p>
+                      <p className="text-sm text-slate-200 font-mono text-center text-wrap">Refresh the page after verifying your email 😊</p>
               
             </div>
           </div>
