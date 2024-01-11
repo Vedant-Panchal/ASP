@@ -1,10 +1,9 @@
 import { useState } from "react";
-import Swal from "sweetalert2";
 
 import { Link, useNavigate } from "react-router-dom";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { aspauth } from "../../firebase";
-
+import {message} from "./modal";
 function ForgotPasswordViaEmail() {
 
   const [error, setError] = useState("");
@@ -14,20 +13,7 @@ function ForgotPasswordViaEmail() {
   const [success,setSuccess] = useState(false);
   const navigate = useNavigate();
 
-  const message = (type, title, text) => {
-    Swal.fire({
-      icon: type,
-      title: title,
-      text: text,
-      timer: 1500,
-      position: "center",
-      width: 600,
-      background: "#1F2937",
-      color: "#FFFFF2",
-      confirmButtonColor: "#111827",
-      showConfirmButton: false,
-    });
-  };
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -65,6 +51,7 @@ function ForgotPasswordViaEmail() {
 }
 
   return (
+    
     <section className="relative z-20 bg-white dark:bg-gray-900 h-screen mt-10 ">
       <div className="max-w-md px-4 py-8 mx-auto lg:py-16 ">
         <h2 className="mb-4 text-center text-3xl font-bold text-gray-900 dark:text-white">

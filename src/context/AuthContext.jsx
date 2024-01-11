@@ -20,7 +20,7 @@ export const AuthCtxtProvider = ({children}) =>
         return unsubscribe;
       }, []);
 
-    const createUser = (aspauth,email,password) => {
+    const createUser = (email,password) => {
         return createUserWithEmailAndPassword(aspauth,email, password)
     }
 
