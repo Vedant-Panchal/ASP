@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword,onAuthStateChanged,sendPasswordResetEmail,signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword,onAuthStateChanged,signInWithEmailAndPassword } from "firebase/auth";
 import { createContext, useEffect, useState} from "react";
 import { aspauth } from "../firebase";
 
@@ -32,12 +32,14 @@ export const AuthCtxtProvider = ({children}) =>
         return aspauth.signOut()
     }
 
+
     
     const value = {
         createUser,
         loginUser,
         currentUser,
-        logoutUser
+        logoutUser,
+    
     }
 
     
