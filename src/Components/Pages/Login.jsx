@@ -3,6 +3,7 @@ import { Link,useNavigate } from 'react-router-dom';
 import { UserContext } from '../../context/AuthContext';
 import { Eye, EyeOff } from "lucide-react";
 import { aspauth } from '../../firebase';
+import { message } from '../InnerComponents/modal';
 function Login() {
   
   const [email, setEmail] = useState('');
@@ -11,7 +12,7 @@ function Login() {
   const [eye, seteye] = useState(true);
   const [error, setError] = useState('');
   const [hidden, sethidden] = useState(true);
-  const {loginUser} = useContext(UserContext);
+  const {loginUser,emailVerified} = useContext(UserContext);
   const showeye = () => {
     seteye(!eye);
   };
@@ -34,18 +35,25 @@ function Login() {
     setError('')
     try {
 
-      await loginUser(aspauth,email, password).then(()=>{
-        setEmail('');
-        setPassword('');
+      await loginUser(email, password).then(()=>{
         
-        setTimeout(() => {
-          navigate("/dashboard")
-        }, 1000);
+        if(!emailVerified) 
+        {
+           
+            message("error","Please verify your email")
+            return
+          }
+          else if (emailVerified){
+            setTimeout(() => {
+              navigate("/dashboard")
+             }, 1000);
+          }
+        
       })
     } catch (err) {
       sethidden(false)
       setError('Account not found or password is incorrect');
-  
+      console.log( err)
     }
   };
 
