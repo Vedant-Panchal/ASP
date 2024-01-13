@@ -91,7 +91,7 @@ function Dashboard() {
               className="flex items-center justify-between mr-4"
             >
               <img
-                src="assets/FinalLogoNoBDPNG.png"
+                src="assets/Logo.png"
                 className="mr-3 h-16 ml-3"
                 alt="Logo"
               />
