@@ -9,7 +9,7 @@ function App() {
     <AuthCtxtProvider>
       <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }} className="bg-transparent">
         <Header />
-        <div style={{ flex: 1, padding: '20px' }} className="dark:[#030025] dark:bg-[#030025]">          
+        <div style={{ flex: 1}} className="dark:[#030025] dark:bg-[#030025]">          
             <Outlet />
 
         </div>
