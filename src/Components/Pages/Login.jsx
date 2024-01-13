@@ -55,13 +55,16 @@ function Login() {
       navigate("/dashboard");
     }, 1000);
   } catch (err) {
+
     sethidden(false);
     if(err.code === "auth/user-not-found")
-    message('error','Account not found or password is incorrect');
+    message('error','Account not found');
+    else if(err.code === 'auth/wrong-password')
+    message("error", "Wrong Password");
     else
-    message("error", "Please verify your email");
-    }
-  };
+    message("error","Please verify your password");
+  }
+}
   return (
     <section className="bg-gray-50 dark:bg-gray-900">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0 sm:h-screen">
@@ -162,6 +165,6 @@ function Login() {
       </div>
     </section>
   );
-}
 
+}
 export default Login;
