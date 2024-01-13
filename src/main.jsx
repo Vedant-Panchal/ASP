@@ -10,7 +10,7 @@ import ForgotPassword from './Components/InnerComponents/ForgotPassword.jsx'
 
 
 export const Routes = createBrowserRouter(
-
+  
   createRoutesFromElements(
     
     <Route path='/' element={<App />} >

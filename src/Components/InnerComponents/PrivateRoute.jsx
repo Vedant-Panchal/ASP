@@ -2,9 +2,9 @@ import { useContext } from "react";
 import { Navigate } from "react-router-dom";
 import { UserContext } from "../../context/AuthContext";
 function PrivateDashboard({children} ) {
-  const { currentUser,emailVerified } = useContext(UserContext);
+  const { currentUser } = useContext(UserContext);
 
-  if(!currentUser || !emailVerified )
+  if(!currentUser )
   {
     return <Navigate to="/signin" />
   }

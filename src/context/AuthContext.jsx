@@ -2,26 +2,34 @@ import { createContext, useEffect, useState } from 'react';
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
 import { aspauth } from '../firebase';
 import { useNavigate } from 'react-router-dom';
+import Loading from '../Components/InnerComponents/Loading';
+
+
 
 export const UserContext = createContext();
 
 export const AuthCtxtProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [emailVerified, setEmailVerified] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  const callLoader = ()=>{
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+  }
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(aspauth, (user) => {
       if (user) {
         setCurrentUser(user);
         user.reload().then(() => {
             setEmailVerified(user.emailVerified);
-            setLoading(false);
+            setLoading(true);
+            callLoader()
+           
             if (!user.emailVerified) {
           // Redirect or show an error message if the email is not verified
-    
-          return(
             <section
         className="bg-gray-50 dark:bg-gray-900 pt-10 h-screen "
       >
@@ -37,13 +45,13 @@ export const AuthCtxtProvider = ({ children }) => {
           </div>
         </div>
       </section>
-          )
         }
     });
       } else {
         setCurrentUser(null);
         setEmailVerified(false);
         setLoading(false);
+        callLoader()
       }
     });
 
@@ -52,15 +60,22 @@ export const AuthCtxtProvider = ({ children }) => {
   }, [navigate]);
 
   const createUser = (email, password) => {
-    return createUserWithEmailAndPassword(aspauth, email, password);
+    return createUserWithEmailAndPassword(aspauth, email, password).finally(()=>{
+      callLoader()
+    })
   };
 
   const loginUser = (email, password) => {
-    return signInWithEmailAndPassword(aspauth, email, password);
+    setLoading(true)
+    return signInWithEmailAndPassword(aspauth, email, password).finally(()=>{
+      callLoader()
+    })
   };
 
   const logoutUser = () => {
-    return aspauth.signOut();
+    return aspauth.signOut().finally(()=>{
+      callLoader()
+    })
   };
 
   const value = {
@@ -69,7 +84,16 @@ export const AuthCtxtProvider = ({ children }) => {
     currentUser,
     logoutUser,
     emailVerified,
+    loading
   };
 
-  return <UserContext.Provider value={value}>{!loading && children}</UserContext.Provider>;
+  return <UserContext.Provider value={value}>
+  {loading ? (
+    <div className='bg-transparent flex items-center w-full h-screen justify-center'>
+      <Loading loading={loading} />
+    </div>
+  ) : (
+    children
+  )}
+</UserContext.Provider>;
 };

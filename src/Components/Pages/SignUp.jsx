@@ -18,14 +18,14 @@ function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [termsChecked, setTermsChecked] = useState(false);
+  const [termsChecked, setTermsChecked] = useState(true);
   const [error, setError] = useState("");
   const { createUser } = useContext(UserContext);
   const [emailPlaceholder, setemailPlaceholder] = useState(
     "name.branchYY@adaniuni.ac.in"
   );
   const [eye, seteye] = useState(false);
-  const [emailVerified, setemailVerified] = useState(false);
+  const [emailVerified, setemailVerified] = useState(true);
 
   const navigate = useNavigate();
 
@@ -111,7 +111,7 @@ function SignUp() {
     <>
       <section
         className="bg-gray-50 dark:bg-gray-900 pt-10 "
-        hidden={emailVerified}
+        hidden={!emailVerified}
       >
         <div className="flex flex-col items-center justify-center px-4 py-4 mx-auto ">
           <Link
@@ -367,7 +367,7 @@ function SignUp() {
       </section>
       <section
         className="bg-gray-50 dark:bg-gray-900 pt-10 h-screen "
-        hidden={!emailVerified}
+        hidden={emailVerified}
       >
         <div className="flex flex-col items-center justify-center px-4 py-4 mx-auto ">
           <div className="w-full h-48 bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md lg:max-w-xl xl:p-0 dark:bg-gray-800 dark:border-gray-700">

@@ -1,23 +1,24 @@
-import { useContext, useState } from 'react';
-import { Link,useNavigate } from 'react-router-dom';
+import React, { useState, useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from '../../context/AuthContext';
 import { Eye, EyeOff } from "lucide-react";
-import { aspauth } from '../../firebase';
 import { message } from '../InnerComponents/modal';
+import { aspauth } from '../../firebase';
+import { updateCurrentUser } from 'firebase/auth';
+
 function Login() {
-  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailPlaceholder, setemailPlaceholder] = useState("name.branchYY@adaniuni.ac.in");
   const [eye, seteye] = useState(true);
   const [error, setError] = useState('');
   const [hidden, sethidden] = useState(true);
-  const {loginUser,emailVerified} = useContext(UserContext);
+  const { loginUser} = useContext(UserContext);
+  const navigate = useNavigate();
+
   const showeye = () => {
     seteye(!eye);
   };
-
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,31 +33,35 @@ function Login() {
     }
 
     // If all checks pass, attempt to create the user
-    setError('')
+    setError('');
     try {
+      await loginUser(email, password);
 
-      await loginUser(email, password).then(()=>{
-        
-        if(!emailVerified) 
-        {
-           
-            message("error","Please verify your email")
-            return
-          }
-          else if (emailVerified){
-            setTimeout(() => {
-              navigate("/dashboard")
-             }, 1000);
-          }
-        
-      })
-    } catch (err) {
-      sethidden(false)
-      setError('Account not found or password is incorrect');
-      console.log( err)
+    // Wait for the user state to be updated
+    const updatedUser = await aspauth.currentUser;
+
+
+    // Display message only if the email is not verified
+    if (updatedUser && !updatedUser.emailVerified) {
+      setEmail('');
+      setPassword('')
+
+      return 
+      
+    }
+    
+    // Navigate to the dashboard
+    setTimeout(() => {
+      navigate("/dashboard");
+    }, 1000);
+  } catch (err) {
+    sethidden(false);
+    if(err.code === "auth/user-not-found")
+    message('error','Account not found or password is incorrect');
+    else
+    message("error", "Please verify your email");
     }
   };
-
   return (
     <section className="bg-gray-50 dark:bg-gray-900">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0 sm:h-screen">
