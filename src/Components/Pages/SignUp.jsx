@@ -2,13 +2,15 @@ import { useContext, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../../context/AuthContext";
 import { Eye, EyeOff } from "lucide-react";
-import { aspauth } from "../../firebase";
+import { aspauth, db } from "../../firebase";
 import { message } from "../InnerComponents/modal.js";
 import {
   onAuthStateChanged,
   sendEmailVerification,
   updateProfile,
 } from "firebase/auth";
+import { addDoc, collection } from "firebase/firestore";
+
 function SignUp() {
   const [firstName, setfirstName] = useState("");
   const [lastName, setlastName] = useState("");
@@ -28,6 +30,9 @@ function SignUp() {
   const [emailVerified, setemailVerified] = useState(true);
 
   const navigate = useNavigate();
+
+  // User refernce in db
+  const userRef = collection(db, "users");
 
   const showeye = () => {
     seteye(!eye);
@@ -83,6 +88,25 @@ function SignUp() {
     try {
       await createUser(lowerCaseEmail, password);
 
+      
+      await updateProfile(aspauth.currentUser, {
+        displayName: fullName, // You can custo mize how you want to set the display name
+      });
+      // console.log("Display Name : ", aspauth.currentUser.displayName);
+      
+      message("success", "Verification link sent on your email", "");
+      await sendEmailVerification(aspauth.currentUser).then(() => {
+        setemailVerified(true);
+      })
+      
+      await addDoc(userRef,{
+        userName: fullName,
+        userEmail: lowerCaseEmail,
+        userBranch: branch,
+        userSemester: semester,
+        userEnrollNum: enrollmentnumber,
+      })
+
       setfirstName("");
       setlastName("");
       setEmail("");
@@ -91,16 +115,6 @@ function SignUp() {
       setEnrollmentnumber("");
       setTermsChecked(false);
       setemailPlaceholder("name.branchYY@adaniuni.ac.in");
-
-      await updateProfile(aspauth.currentUser, {
-        displayName: fullName, // You can custo mize how you want to set the display name
-      });
-      // console.log("Display Name : ", aspauth.currentUser.displayName);
-      
-      await sendEmailVerification(aspauth.currentUser).then(() => {
-        setemailVerified(true);
-        message("success", "Verification link sent on your email", "");
-      });
     } catch (err) {
       setError(err.message);
       console.error(error);
