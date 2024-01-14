@@ -315,7 +315,7 @@ function SignUp() {
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       value={confirmPassword}
                     />
-                    <button className="absolute right-2" onClick={showeye}>
+                    <button className="absolute right-2" onClick={showeye} type="button">
                       <div>
                         <Eye
                           className="text-white"

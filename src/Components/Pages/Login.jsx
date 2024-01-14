@@ -62,7 +62,7 @@ function Login() {
     else if(err.code === 'auth/wrong-password')
     message("error", "Wrong Password");
     else
-    message("error","Please verify your password");
+    message("error","Please verify your email");
   }
 }
   return (
@@ -132,6 +132,7 @@ function Login() {
                 )}
                 <button className='absolute right-2'
                 onClick={showeye}
+                type='button'
                 >
                   <div >
                   <Eye className='text-white'strokeWidth={1.25} hidden={eye} />
