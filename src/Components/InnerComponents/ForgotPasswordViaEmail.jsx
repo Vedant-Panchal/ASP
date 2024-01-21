@@ -53,10 +53,10 @@ function ForgotPasswordViaEmail() {
 
   return (
     
-    <section className="bg-white dark:bg-dark">
+    <section className="bg-white dark:bg-dark h-screen">
       <Header />
-      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0 sm:h-screen">
-        <div className="w-full bg-white rounded-lg shadow-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-darkElevate dark:border-gray-700 py-5 px-4">
+      <div className="flex flex-col items-center justify-center px-6 pt-40 mx-auto md:h-screen  sm:h-screen">
+        <div className="w-full bg-white rounded-lg shadow-lg dark:border md:mt-0 sm:max-w-md md:p-5 dark:bg-darkElevate dark:border-gray-700 py-5 px-4">
         <h2 className="mb-4 text-center text-3xl font-bold text-gray-900 dark:text-white">
           Forgot Password
         </h2>

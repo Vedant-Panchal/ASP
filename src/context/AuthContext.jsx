@@ -21,6 +21,7 @@ export const AuthCtxtProvider = ({ children }) => {
     const unsubscribe = onAuthStateChanged(aspauth, (user) => {
       if (user) {
         setCurrentUser(user);
+
         user.reload().then(() => {
           setEmailVerified(user.emailVerified);
           setLoading(false); // Set loading to false once user data is loaded
@@ -43,15 +44,12 @@ export const AuthCtxtProvider = ({ children }) => {
           </div>
           </section>
           }
-          // else {
-          //   // Redirect or show an error message if the user is not authenticated
-          //   if(user.email === 'vedantpanchal.ict22@adaniuni.ac.in')
-            
-          //   else
-          //   navigate("/dashboard");
-          // }
+          else{
+            navigate('/dashboard')
+          }
         });
-      } else {
+      } 
+      else {
         setCurrentUser(null);
         setEmailVerified(false);
         setLoading(false); // Set loading to false if there's no user

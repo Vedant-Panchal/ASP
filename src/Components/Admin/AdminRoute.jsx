@@ -8,12 +8,23 @@ function AdminRoute({children} ) {
     {
         return <Navigate to="/adminsignin" />
     }
-  else if(currentUser && currentUser.email !== "vedantpanchal.ict22@adaniuni.ac.in")
+  else if(currentUser && currentUser.email)
   {
-    message('error','You must be an admin to access this page')
-    return <Navigate to="/adminsignin" />
+    if(currentUser.email === 'vedantpanchal.ict22@adaniuni.ac.in')
+    {
+      return children
+    }
+    else if(currentUser.email === "mrunalshah.ict22@adaniuni.ac.in")
+    {
+      return children
+    }
+    else
+    {
+      message('error','You must be an admin to access this page')
+      return <Navigate to="/adminsignin" />
+    }
   }
-  return children
+  
 }
 
 export default AdminRoute;

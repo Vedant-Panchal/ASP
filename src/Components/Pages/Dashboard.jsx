@@ -356,7 +356,7 @@ function Dashboard() {
             </div>
             {childFolders.length > 0 && childFiles.length > 0 && (
               <div className="w-full">
-                <hr className="dark:bg-slate-300 h-1 w-full bg-slate-400 border-0 rounded-md" />
+                <hr className="dark:bg-slate-300 h-1 w-full bg-slate-400 border-0 mt-4 rounded-md" />
               </div>
             )}
             <div
