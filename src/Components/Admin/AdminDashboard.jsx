@@ -309,7 +309,7 @@ const AdminDashboard = () => {
           toggleMode={toggleMode}
         />
         <FolderBreadCrumb currentFolder={folder} toggleMode={toggleMode} />
-        <main className="w-full h-screen">
+        <main className="w-full h-max">
           <div className="flex p-4 flex-row h-fit w-full items-start justify-start flex-wrap mt-28 gap-2">
             {childFolders.length > 0 &&
               childFolders.map((childFolder) => {

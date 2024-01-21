@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { UserContext } from "../../context/AuthContext";
 import { useContext } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, NavLink, useNavigate, useParams } from "react-router-dom";
 import {
   Eye,
   ChevronDown,
@@ -110,7 +110,7 @@ function Dashboard() {
     setmode(mode === "light" ? "dark" : "light");
   };
   return (
-    <div className="antialiased h-screen  bg-light dark:bg-dark">
+    <div className="antialiased h-max  bg-light dark:bg-dark">
       <nav className="bg-slate-100 px-4  dark:bg-darkNav dark:shadow-sm fixed left-0 right-0 top-0 z-50 shadow-lg rounded-sm">
         <div className="flex flex-wrap justify-between items-center relative">
           <div className="flex justify-start items-center">
@@ -159,6 +159,34 @@ function Dashboard() {
             </Link>
           </div>
           <div className="flex items-center lg:order-2">
+          <ul className="flex flex-col lg:flex-row  lg:space-x-8 lg:items-center lg:w-auto">
+         
+            <li>
+            <NavLink
+                to={"/aboutus"}
+                className={({ isActive }) =>
+                  `block relative py-2 pr-4 pl-3 dark:border-transparent after:content[''] after:w-full after:h-1 after:block after:absolute after:-bottom-2 after:left-0 after:bg-transparent transition-all duration-500 ease-in after:border-transparent border-gray-100 lg:hover:bg-transparent lg:border-0 lg:p-0 font-bold dark:hover:bg-gray-700 lg:dark:hover:bg-transparent dark:border-gray-700 ${
+                    isActive ? 'text-blue-800 dark:text-blue-300' : 'dark:text-slate-200 text-zinc-900'
+                  } hover:after:bg-[#FC54AD] hover:border-transparent`
+                }
+              >
+                About Us
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to={"/contactus"}
+                
+                className={({ isActive }) =>
+                  `block mr-3 relative py-2 pr-4 pl-3 dark:border-transparent after:content[''] after:w-full after:h-1 after:block after:absolute after:-bottom-2 after:left-0 after:bg-transparent transition-all duration-500 ease-in after:border-transparent border-gray-500 lg:hover:bg-transparent lg:border-0 lg:p-0 font-bold dark:hover:bg-gray-700 lg:dark:hover:bg-transparent dark:border-gray-700 ${
+                    isActive ? 'text-blue-800 dark:text-blue-300' : 'dark:text-slate-200 text-zinc-900'
+                  } hover:after:bg-[#FC54AD] hover:border-transparent`
+                }
+              >
+                Contact Us
+              </NavLink>
+            </li>
+          </ul>
             <button
               className={`${
                 mode === "light" ? "bg-yellow-300" : "bg-darkElevate"
@@ -199,24 +227,7 @@ function Dashboard() {
                   {userEmail}
                 </span>
               </div>
-              <ul className="py-1 text-gray-700 " aria-labelledby="dropdown">
-                <li>
-                  <a
-                    href="#"
-                    className="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-darkElevate dark:text-slate-100 dark:hover:text-slate-200"
-                  >
-                    My profile
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-darkElevate dark:text-slate-100 dark:hover:text-slate-200"
-                  >
-                    Account settings
-                  </a>
-                </li>
-              </ul>
+              
 
               <ul
                 className="py-1 text-gray-700 dark:text-gray-300"
