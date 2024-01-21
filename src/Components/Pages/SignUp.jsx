@@ -396,7 +396,8 @@ className="shadow-sm bg-[#F2F2F2] text-zinc-900 text-sm rounded-lg focus:ring-sl
       >
         <Header />
         <div className="flex flex-col items-center justify-start px-4 py-4 mx-auto bg-light dark:bg-dark h-screen ">
-          <div className="w-full h-48 bg-light rounded-lg shadow mt-16 dark:border md:mt-0 sm:max-w-md lg:max-w-xl xl:p-0 dark:bg-darkElevate dark:border-gray-700">
+          <div className="w-full h-48 bg-light rounded-lg shadow mt-16
+          md:mt-28 dark:border sm:max-w-md lg:max-w-xl xl:p-0 dark:bg-darkElevate dark:border-gray-700">
             <div className="flex flex-col items-center justify-center h-full gap-4 px-5">
               
                       <div className="block text-xl md:text-3xl text-slate-200 font-bold ">Please verify your email

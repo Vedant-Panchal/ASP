@@ -1,13 +1,12 @@
 import { createContext, useEffect, useState } from 'react';
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
 import { aspauth, db } from '../firebase';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import Loading from '../Components/InnerComponents/Loading';
 
 
 export const UserContext = createContext();
 // ... (import statements)
-
 export const AuthCtxtProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [emailVerified, setEmailVerified] = useState(false);
