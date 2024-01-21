@@ -8,7 +8,8 @@ import { ROOT_FOLDER, useFolder } from "./hooks/useFolder";
 import AdminFolder from "./AdminFolder";
 import AdminNav from "./AdminNav";
 
-
+import { deleteObject, ref as deleteRef } from "firebase/storage";
+import { deleteDoc, doc } from "firebase/firestore";
 import {
   uploadBytes,
   ref as StorageRef,
@@ -17,19 +18,16 @@ import {
 } from "firebase/storage";
 import AdminFile from "./AdminFile";
 import {
-  FileText,
   Moon,
   Sun,
   Plus,
   MousePointerSquareDashed,
-  Trash2,
   File,
   Folder,
 } from "lucide-react";
-import PdfViewer from "../PdfViewer/PdfViewer";
 import Drag from "../../../public/assets/Drag";
-import ClientBreadCrumb from "../InnerComponents/ClientBreadCrumb";
 import FolderBreadCrumb from "./FolderBreadCrumb";
+
 const AdminDashboard = () => {
   const [uploadComplete, setUploadComplete] = useState(true);
   const { folderId } = useParams();
@@ -40,10 +38,10 @@ const AdminDashboard = () => {
   const ref = collection(db, "folders");
   const filesref = collection(db, "files");
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [files, setFiles] = useState("");
+  const [deleteOption, setdeleteOption] = useState(false);
   const [rotate, setRotate] = useState(false);
   const [open, setopen] = useState(false);
-  const [hidden, sethidden] = useState(true)
+  const [hidden, sethidden] = useState(true);
   const openPdfViewer = (fileUrl) => {
     setPDF(fileUrl);
     setpdfViewerOpen(true);
@@ -115,6 +113,7 @@ const AdminDashboard = () => {
     console.log(path);
 
     if (folder !== ROOT_FOLDER) path.push({ name: folder.name, id: folder.id });
+    console.log(path);
 
     await addDoc(ref, {
       name: folderName,
@@ -123,6 +122,8 @@ const AdminDashboard = () => {
       parentId: folder.id,
       path: path,
     });
+    setopen(!open)
+    sethidden((p) => !p)
   };
   const handleUpload = async (e) => {
     const selectedFiles = Array.from(e.target.files);
@@ -135,8 +136,8 @@ const AdminDashboard = () => {
     const uploadPromises = selectedFiles.map((file) => {
       const filePath =
         folder === ROOT_FOLDER
-          ? `Test${folder.path.join("/")}/${file.name}`
-          : `Test${folder.path.join("/")}/${folder.name}/${file.name}`;
+          ? `Home${folder.path.join("/")}/${file.name}`
+          : `Home${folder.path.join("/")}/${folder.name}/${file.name}`;
 
       const storageRef = StorageRef(storage, filePath);
 
@@ -174,6 +175,8 @@ const AdminDashboard = () => {
 
               // Resolve the promise for the current file
               resolve();
+              setopen(!open)
+              sethidden((p) => !p)
             });
           }
         );
@@ -214,14 +217,35 @@ const AdminDashboard = () => {
   //     console.log(fileList)
   //   }
   // }
+  const toggleDelete = () => {
+    setdeleteOption(!deleteOption)
+  }
+  const deleteFile = async (file) => {
+    try {
+      // Delete file from Storage
+      const filePath =
+        folder === ROOT_FOLDER
+          ? `Home${folder.path.join("/")}/${file.name}`
+          : `Home${folder.path.join("/")}/${folder.name}/${file.name}`;
+      const storageRef = deleteRef(storage, filePath);
+      await deleteObject(storageRef);
+  
+      // Delete file from Firestore
+      const fileDocRef = doc(filesref, file.id);
+      await deleteDoc(fileDocRef);
+  
+      // You may want to update the UI here to reflect the deletion
+    } catch (error) {
+      console.error("Error deleting file:", error);
+    }
+  };
   return (
     <>
-    {console.log(hidden)}
       <div className="h-fit w-full dark:bg-dark ">
         <button
           className={`${
             mode === "light" ? "bg-yellow-300" : "bg-darkElevate"
-          } w-fit h-fit p-2 rounded-full fixed bottom-10 right-5 transition-all duration-500 ease-in mr-2`}
+          } w-fit h-fit p-2 z-50 rounded-full fixed bottom-10 right-5 transition-all duration-500 ease-in mr-2`}
           onClick={toggleMode}
         >
           <span className="transition-all duration-200 ease-in">
@@ -238,44 +262,57 @@ const AdminDashboard = () => {
             open ? "opacity-100 translate-y-0" : "translate-y-3 opacity-0"
           } flex flex-col items-start justify-between gap-3`}
         >
-          <label className={`dark:bg-darkElevateHover bg-slate-100 w-full h-32 rounded-md  items-center justify-center  outline-2 outline-dashed outline-slate-800 dark:outline-slate-300 flex flex-col ${hidden ? 'hidden' : ''}`} 
-          // ref={DragRef}
-          draggable={true}
-          // onDragEnter={onDragEnter}
-          // onDragLeave={onDragLeave}
-          // onDrop={onDrop}
+          <label
+            className={`dark:bg-darkElevateHover bg-slate-100 w-full h-32 rounded-md  items-center justify-center  outline-2 outline-dashed outline-slate-800 dark:outline-slate-300 flex flex-col ${
+              hidden ? "hidden" : ""
+            }`}
+            // ref={DragRef}
+            draggable={true}
+            // onDragEnter={onDragEnter}
+            // onDragLeave={onDragLeave}
+            // onDrop={onDrop}
           >
-            <p className="dark:text-slate-300 text-zinc-900 mb-2">Upload file</p>
+            <p className="dark:text-slate-300 text-zinc-900 mb-2">
+              Upload file
+            </p>
             <MousePointerSquareDashed className="w-14 h-14 dark:text-slate-300 text-zinc-900 " />
-            <input type="file"
-                  onChange={handleUpload}
-                  className='opacity-0 w-0 h-0'
-                  multiple
-                  disabled={hidden}
-                  />
+            <input
+              type="file"
+              onChange={handleUpload}
+              className="opacity-0 w-0 h-0"
+              multiple
+              disabled={hidden}
+            />
           </label>
-          <button className={`flex items-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 w-full ${hidden ? 'hidden' : ''}`} onClick={createFolder}
+          <button
+            className={`flex items-center text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 w-full ${
+              hidden ? "hidden" : ""
+            }`}
+            onClick={createFolder}
           >
-        
-                <Folder size={16} className="mr-3" />
-                <div>Create Folder</div>
-              </button>
-              
-              <label className={`flex items-center text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none w-full dark:focus:ring-green-800 ${hidden ? 'hidden' : ''}`} 
-              >
-                <File size={16} className="mr-3" />
-                    Upload File
-                  <input type="file"
-                  onChange={handleUpload}
-                  className='opacity-0 w-0 h-0'
-                  multiple
-                  />
-              </label>
+            <Folder size={16} className="mr-3" />
+            <div>Create Folder</div>
+          </button>
+
+          <label
+            className={`flex items-center text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none w-full dark:focus:ring-green-800 ${
+              hidden ? "hidden" : ""
+            }`}
+          >
+            <File size={16} className="mr-3" />
+            Upload File
+            <input
+              type="file"
+              onChange={handleUpload}
+              className="opacity-0 w-0 h-0"
+              multiple
+            />
+          </label>
         </div>
 
         <button
           onClick={() => {
-            setRotate(!rotate), setopen(!open), sethidden(p => !p);
+            setRotate(!rotate), setopen(!open), sethidden((p) => !p);
           }}
           className={`bg-gradient-to-r from-pink-500 to-yellow-500
         } w-fit h-fit p-2 rounded-full fixed bottom-10 right-16  mr-2 z-50`}
@@ -302,30 +339,48 @@ const AdminDashboard = () => {
             </div>
           </div>
         } */}
+        
         <AdminNav
-          createFolder={createFolder}
           handleSignOut={handleSignOut}
           handleUpload={handleUpload}
           toggleMode={toggleMode}
+          toggleDelete={toggleDelete}
         />
+        
+        <main
+        className={`p-4 min-h-screen pt-20 transition-all ease-in-out delay-[40] duration-200 mb-20 `}
+      >
         <FolderBreadCrumb currentFolder={folder} toggleMode={toggleMode} />
-        <main className="w-full h-max">
-          <div className="flex p-4 flex-row h-fit w-full items-start justify-start flex-wrap mt-28 gap-2">
-            {childFolders.length > 0 &&
-              childFolders.map((childFolder) => {
-                return (
-                  <AdminFolder folder={childFolder} key={childFolder.id} />
-                );
-              })}
+        <div className="md:pl-4">
+          <div
+            className={`flex flex-col items-start justify-center w-full`}
+          >
+            <div
+              className={`grid grid-cols-3 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6  gap-4 mt-14 lg:mt-12 w-full`}
+            >
+              {childFolders.length > 0 &&
+                childFolders.map((childFolder) => {
+                  return (
+                    <AdminFolder folder={childFolder} key={childFolder.id} />
+                  );
+                })}
+            </div>
             {childFolders.length > 0 && childFiles.length > 0 && (
-              <hr className="dark:bg-slate-300 h-1 bg-slate-400 border-0 rounded-md  w-screen" />
+              <div className="w-full">
+                <hr className="dark:bg-slate-300 h-1 w-full bg-slate-400 border-0 mt-5 rounded-md" />
+              </div>
             )}
-            {childFiles.length > 0 &&
-              childFiles.map((childFile) => {
-                return <AdminFile file={childFile} key={childFile.id} />;
-              })}
+            <div
+              className={`grid grid-cols-3 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-4 mt-5 w-full `}
+            >
+              {childFiles.length > 0 &&
+                childFiles.map((childFile) => {
+                  return <AdminFile file={childFile} key={childFile.id} onDelete={() => deleteFile(childFile)} toggleDelete={deleteOption} />;
+                })}
+            </div>
           </div>
-        </main>
+        </div>
+      </main>
       </div>
     </>
   );

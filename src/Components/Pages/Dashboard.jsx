@@ -34,9 +34,6 @@ import ClientBreadCrumb from "../InnerComponents/ClientBreadCrumb";
 // import { onMessage } from "firebase/messaging";
 function Dashboard() {
   const [error, seterror] = useState("");
-  const [asidehidden, setasidehidden] = useState(true);
-  const [asidecourses, setasidecourses] = useState(true);
-  const [notiHidden, setNotiHidden] = useState(true);
   const [profileHidden, setProfileHidden] = useState(true);
   const [welcomehidden, setwelcomehidden] = useState(false);
   const navigate = useNavigate();
@@ -45,7 +42,6 @@ function Dashboard() {
 
   const userName = currentUser.displayName;
   const userEmail = currentUser.email;
-  console.log(userName);
   const [profilePicture, setProfilePicture] = useState(null);
   const { folderId } = useParams();
   const { folder, childFolders, childFiles } = useFolder(folderId);
@@ -109,84 +105,27 @@ function Dashboard() {
   const toggleMode = () => {
     setmode(mode === "light" ? "dark" : "light");
   };
+  
+ 
   return (
     <div className="antialiased h-max  bg-light dark:bg-dark">
       <nav className="bg-slate-100 px-4  dark:bg-darkNav dark:shadow-sm fixed left-0 right-0 top-0 z-50 shadow-lg rounded-sm">
         <div className="flex flex-wrap justify-between items-center relative">
           <div className="flex justify-start items-center">
-            <button
-              className="p-2 mr-2 text-slate-600 rounded-lg cursor-pointer  hover:text-gray-900 hover:bg-slate-200/80 focus:bg-slate-200/80 dark:focus:bg-darkElevateHover  dark:focus:ring-gray-700 dark:text-slate-200 dark:hover:bg-darkElevate dark:hover:text-slate-300 transition-all duration-200 ease-in"
-              onClick={() => {
-                setasidehidden(!asidehidden), setasidecourses(true);
-              }}
-            >
-              <svg
-                aria-hidden="true"
-                className="w-6 h-6"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h6a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              <svg
-                aria-hidden="true"
-                className="hidden w-6 h-6"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </button>
+           
             <Link
               to="/dashboard"
               className="flex items-center justify-between mr-4"
             >
               <img
-                src="assets/Logo.png"
+                src="/assets/Logo.png"
                 className="mr-3 h-16 ml-3"
                 alt="Logo"
               />
             </Link>
           </div>
-          <div className="flex items-center lg:order-2">
-          <ul className="flex flex-col lg:flex-row  lg:space-x-8 lg:items-center lg:w-auto">
-         
-            <li>
-            <NavLink
-                to={"/aboutus"}
-                className={({ isActive }) =>
-                  `block relative py-2 pr-4 pl-3 dark:border-transparent after:content[''] after:w-full after:h-1 after:block after:absolute after:-bottom-2 after:left-0 after:bg-transparent transition-all duration-500 ease-in after:border-transparent border-gray-100 lg:hover:bg-transparent lg:border-0 lg:p-0 font-bold dark:hover:bg-gray-700 lg:dark:hover:bg-transparent dark:border-gray-700 ${
-                    isActive ? 'text-blue-800 dark:text-blue-300' : 'dark:text-slate-200 text-zinc-900'
-                  } hover:after:bg-[#FC54AD] hover:border-transparent`
-                }
-              >
-                About Us
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to={"/contactus"}
-                
-                className={({ isActive }) =>
-                  `block mr-3 relative py-2 pr-4 pl-3 dark:border-transparent after:content[''] after:w-full after:h-1 after:block after:absolute after:-bottom-2 after:left-0 after:bg-transparent transition-all duration-500 ease-in after:border-transparent border-gray-500 lg:hover:bg-transparent lg:border-0 lg:p-0 font-bold dark:hover:bg-gray-700 lg:dark:hover:bg-transparent dark:border-gray-700 ${
-                    isActive ? 'text-blue-800 dark:text-blue-300' : 'dark:text-slate-200 text-zinc-900'
-                  } hover:after:bg-[#FC54AD] hover:border-transparent`
-                }
-              >
-                Contact Us
-              </NavLink>
-            </li>
-          </ul>
+          <div className="flex flex-row items-center justify-start w-fit lg:order-2">
+          
             <button
               className={`${
                 mode === "light" ? "bg-yellow-300" : "bg-darkElevate"
@@ -215,121 +154,40 @@ function Dashboard() {
             </button>
             {/* Dropdown menu */}
             <div
-              className="absolute top-0 right-0 z-20 my-2 w-56 text-base list-none bg-white divide-y divide-gray-100 shadow dark:bg-dark dark:divide-gray-600 rounded-xl"
+              className="absolute top-0 right-0 z-20 my-2 w-56 text-base list-none bg-white outline-dashed outline-2 lg:outline-2 dark:outline-light shadow dark:bg-dark dark:divide-gray-600 rounded-xl"
               id="dropdown"
               hidden={profileHidden}
             >
-              <div className="py-3 px-4 as">
+              <div className="py-3 px-4">
                 <span className="block text-sm font-semibold text-gray-900 dark:text-white">
                   {userName}
                 </span>
-                <span className="block text-xs text-gray-900 truncate dark:text-white mt-5">
+                <span className="block  text-gray-900 truncate dark:text-white mt-5">
                   {userEmail}
                 </span>
-              </div>
-              
-
-              <ul
-                className="py-1 text-gray-700 dark:text-gray-300"
-                aria-labelledby="dropdown"
-              >
-                <li
-                  className="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-darkElevate dark:text-slate-100 dark:hover:text-slate-200 cursor-pointer"
-                  onClick={handleSignOut}
-                >
+                <Link className="block  text-gray-900 truncate dark:text-white mt-5" to={'/aboutus'}>
+                  About Us
+                </Link>
+                <Link className="block text-gray-900 truncate dark:text-white mt-5 mb-5" to={'/contactus'}>
+                  Contact Us
+                </Link>
+                
+                <Link className="block dark:border-light border-zinc-900 border-t-2 pt-3 text-gray-900 truncate dark:text-white"
+                onClick={handleSignOut}>
                   Logout
-                </li>
-              </ul>
+                </Link>
+                
+              </div>
+    
             </div>
           </div>
         </div>
       </nav>
-      {/* Sidebar */}
-      <aside
-        className={`fixed top-0 left-0 z-40 w-64 h-screen pt-14 transition-transform ease-in-out duration-200 bg-white border-r shadow-xl border-gray-200  dark:bg-darkNav dark:border-gray-700 ${
-          asidehidden ? "-translate-x-full" : "translate-x-0"
-        }`}
-      >
-        <div className="overflow-y-auto py-5 px-3 h-full bg-white dark:bg-transparent">
-          <ul className="space-y-2">
-            <li>
-              <Link className="flex items-center p-2 w-full text-base font-medium text-gray-900 rounded-lg transition-all duration-200 ease-in group hover:bg-gray-100 dark:text-white dark:hover:bg-darkElevate ">
-                <PanelsTopLeft />
-                <span className="ml-3 dark:text-white font-medium">
-                  Overview
-                </span>
-              </Link>
-            </li>
-            <li>
-              <button
-                type="button"
-                className="flex items-center p-2 w-full text-base font-medium text-gray-900 rounded-lg transition-all duration-200 ease-in group hover:bg-gray-100 dark:text-white dark:hover:bg-darkElevate "
-                onClick={() => setasidecourses(!asidecourses)}
-              >
-                <FileText />
-                <span className="flex-1 ml-3 text-left whitespace-nowrap">
-                  Courses
-                </span>
-                <div>
-                  <ChevronDown strokeWidth={2.5} hidden={!asidecourses} />
-                </div>
-                <div hidden={asidecourses}>
-                  <ChevronUp strokeWidth={2.5} />
-                </div>
-              </button>
-              <ul
-                id="dropdown-pages"
-                className={`py-2 space-y-2 transition-transform ease-in-out duration-200 delay-100 ${
-                  asidecourses ? "-translate-x-full" : "translate-x-0"
-                }`}
-                hidden={asidecourses}
-              >
-                <li>
-                  <a
-                    href="#"
-                    className="flex items-center p-2 pl-11 w-full text-base font-medium text-gray-900 rounded-lg transition-all duration-200 ease-in group hover:bg-gray-100 dark:text-white dark:hover:bg-darkElevate "
-                  >
-                    C1
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="flex items-center p-2 pl-11 w-full text-base font-medium text-gray-900 rounded-lg transition-all duration-200 ease-in group hover:bg-gray-100 dark:text-white dark:hover:bg-darkElevate "
-                  >
-                    C2
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="flex items-center p-2 pl-11 w-full text-base font-medium text-gray-900 rounded-lg transition-all duration-200 ease-in group hover:bg-gray-100 dark:text-white dark:hover:bg-darkElevate "
-                  >
-                    C3
-                  </a>
-                </li>
-              </ul>
-            </li>
-          </ul>
-          <ul className="pt-5 mt-5 space-y-2 border-t border-gray-200 dark:border-gray-700">
-            {/* Power off button */}
-            <li>
-              <Link
-                href="#"
-                className="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg transition-all duration-200 ease-in hover:bg-gray-100 dark:hover:bg-darkElevate dark:text-white group "
-                onClick={handleSignOut}
-              >
-                <PowerOff />
-                <span className="ml-3">Logout</span>
-              </Link>
-            </li>
-          </ul>
-        </div>
-      </aside>
+     
       <main
-        className={`p-4 min-h-screen pt-20 transition-all ease-in-out delay-[40] duration-200 mb-20 ${asidehidden ? "md:pl-0" : "md:pl-64 "}`}
+        className={`p-4 min-h-screen pt-20 transition-all ease-in-out delay-[40] duration-200 mb-20 `}
       >
-        <div className="flex flex-row items-center md:mt-10 mt-10">
+        <div className="flex flex-row items-center md:mt-14 mt-14">
           <h1
             className="dark:text-slate-100 text-zinc-900 lg:text-2xl text-xs font-bold md:pl-4 mb-2 "
             hidden={welcomehidden}
@@ -351,12 +209,10 @@ function Dashboard() {
         <ClientBreadCrumb currentFolder={folder} toggleMode={toggleMode} />
         <div className="md:pl-4">
           <div
-            className={`flex flex-col items-start justify-center w-full ${
-              asidehidden ? "" : ""
-            }`}
+            className={`flex flex-col items-start justify-center w-full`}
           >
             <div
-              className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-4 w-full ${asidehidden ? "md:grid-cols-1" : ""}`}
+              className={`grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-4 w-full`}
             >
               {childFolders.length > 0 &&
                 childFolders.map((childFolder) => {
@@ -371,7 +227,7 @@ function Dashboard() {
               </div>
             )}
             <div
-              className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-4 w-full ${asidehidden ? "md:grid-cols-1" : ""}`}
+              className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-4 w-full `}
             >
               {childFiles.length > 0 &&
                 childFiles.map((childFile) => {

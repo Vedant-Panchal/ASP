@@ -8,7 +8,7 @@ function FolderBreadCrumb({currentFolder}) {
   return (
     <>
     <nav
-      className="flex pl-4 py-4 fixed top-16 w-screen text-gray-700  bg-light dark:bg-dark "
+      className="z-50 flex pl-4 py-4 fixed top-16 w-screen text-gray-700  bg-light dark:bg-dark "
       aria-label="Breadcrumb"
     >
       <ol className="inline-flex items-center md:space-x-2">

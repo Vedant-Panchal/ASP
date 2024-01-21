@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react'
 import { Folder, Trash2,File,Moon,Sun } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { UserContext } from '../../context/AuthContext';
-function AdminNav({createFolder,handleSignOut,handleUpload}) {
+function AdminNav({toggleDelete,handleSignOut,handleUpload}) {
   const { mode,setmode} = useContext(UserContext);
   useEffect(()=>{
     return (
@@ -24,6 +24,9 @@ function AdminNav({createFolder,handleSignOut,handleUpload}) {
               </Link>
             </div>
             <div className="flex items-center lg:order-2">
+              <button onClick={toggleDelete} className="text-white bg-rose-700 hover:bg-rose-800 focus:ring-4 focus:ring-rose-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:bg-rose-600 dark:hover:bg-rose-700 focus:outline-none dark:focus:ring-rose-800">
+                Delete
+              </button>
               <button onClick={handleSignOut} className="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
                 Logout
               </button>
