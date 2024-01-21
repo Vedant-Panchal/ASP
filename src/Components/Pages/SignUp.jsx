@@ -10,6 +10,7 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { addDoc, collection } from "firebase/firestore";
+import Header from "../InnerComponents/Header.jsx";
 
 function SignUp() {
   const [firstName, setfirstName] = useState("");
@@ -76,7 +77,10 @@ function SignUp() {
     if (password !== confirmPassword) {
       return;
     }
-
+if(password.length < 8) {
+      message('error', 'Password must be at least 8 characters','');
+  return
+}
     // Check if terms and conditions are accepted
     if (!termsChecked) {
       return;
@@ -124,9 +128,10 @@ function SignUp() {
   return (
     <>
       <section
-        className="bg-gray-50 dark:bg-gray-900 pt-10 "
+        className="bg-gray-50 dark:bg-dark pt-10 "
         hidden={!emailVerified}
       >
+        <Header />
         <div className="flex flex-col items-center justify-center px-4 py-4 mx-auto ">
           <Link
             to={"/"}
@@ -134,7 +139,7 @@ function SignUp() {
           >
             <img className="h-24 mr-2" src="assets/Logo.png" alt="logo" />
           </Link>
-          <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md lg:max-w-xl xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+          <div className="w-full bg-light rounded-lg shadow dark:border md:mt-0 sm:max-w-md lg:max-w-xl xl:p-0 dark:bg-darkElevate dark:border-gray-700">
             <div className=" space-y-4 md:space-y-6 p-8">
               <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                 Create an account
@@ -150,7 +155,7 @@ function SignUp() {
                   <input
                     type="text"
                     id="First Name"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    className="shadow-sm bg-[#F2F2F2]  text-zinc-900 text-sm rounded-lg focus:ring-slate-500 focus:border-slate-500 block w-full p-2.5 dark:bg-darkNav/80 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-slate-500 dark:focus:border-slate-500 dark:shadow-sm-light dark:text-slate-200"
                     placeholder="Atmaram"
                     required="true"
                     onChange={(e) => setfirstName(e.target.value)}
@@ -167,7 +172,7 @@ function SignUp() {
                   <input
                     type="text"
                     id="Last Name"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    className="shadow-sm bg-[#F2F2F2]  text-zinc-900 text-sm rounded-lg focus:ring-slate-500 focus:border-slate-500 block w-full p-2.5 dark:bg-darkNav/80 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-slate-500 dark:focus:border-slate-500 dark:shadow-sm-light dark:text-slate-200"
                     placeholder="Bhide"
                     required="true"
                     onChange={(e) => setlastName(e.target.value)}
@@ -189,8 +194,8 @@ function SignUp() {
                       required="true"
                       value={branch}
                       onChange={(e) => setBranch(e.target.value)}
-                      className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    >
+                      className="shadow-sm bg-[#F2F2F2] text-zinc-900 text-sm rounded-lg focus:ring-slate-500 focus:border-slate-500 block w-full p-2.5 dark:bg-darkNav/80 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-slate-500 dark:focus:border-slate-500 dark:shadow-sm-light dark:text-slate-200"
+                      >
                       <option value="ICT" className="mb-2 p-2">
                         ICT
                       </option>
@@ -211,7 +216,7 @@ function SignUp() {
                       required="true"
                       value={semester}
                       onChange={(e) => setSemester(e.target.value)}
-                      className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      className="shadow-sm bg-[#F2F2F2]  text-zinc-900 text-sm rounded-lg focus:ring-slate-500 focus:border-slate-500 block w-full p-2.5 dark:bg-darkNav/80 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-slate-500 dark:focus:border-slate-500 dark:shadow-sm-light dark:text-slate-200"
                     >
                       <option value="1" className="mb-2 p-2">
                         1
@@ -250,8 +255,8 @@ function SignUp() {
                   <input
                     type="number"
                     id="enrollmentnumber"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Example : 220012"
+className="shadow-sm bg-[#F2F2F2] text-zinc-900 text-sm rounded-lg focus:ring-slate-500 focus:border-slate-500 block w-full p-2.5 dark:bg-darkNav/80 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-slate-500 dark:focus:border-slate-500 dark:shadow-sm-light dark:text-slate-200"                   
+ placeholder="Example : 220012"
                     required="true"
                     onChange={(e) => setEnrollmentnumber(e.target.value)}
                     value={enrollmentnumber}
@@ -267,7 +272,7 @@ function SignUp() {
                   <input
                     type="email"
                     id="email"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    className="shadow-sm bg-[#F2F2F2]  text-zinc-900 text-sm rounded-lg focus:ring-slate-500 focus:border-slate-500 block w-full p-2.5 dark:bg-darkNav/80 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-slate-500 dark:focus:border-slate-500 dark:shadow-sm-light dark:text-slate-200"
                     placeholder={emailPlaceholder}
                     required="true"
                     onChange={(e) => setEmail(e.target.value)}
@@ -275,69 +280,75 @@ function SignUp() {
                   />
                 </div>
                 <div>
-                  <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                    Password
-                  </label>
-                  <input
-                    type="password"
-                    name="password"
-                    id="password"
-                    placeholder="••••••••"
-                    className={
-                      (password === confirmPassword) != " "
-                        ? "  border text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:bg-green-700 dark:border-green-300"
-                        : "bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 bg-red-300 border-red-300 p-2.5"
-                    }
-                    required="true"
-                    onChange={(e) => setPassword(e.target.value)}
-                    value={password}
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="confirm-password"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >
-                    Confirm password
-                  </label>
-                  <div className="relative flex items-center">
-                    <input
-                      type={eye ? "password" : "text"}
-                      name="confirm-password"
-                      id="confirm-password"
-                      placeholder="••••••••"
-                      className={
-                        password === confirmPassword
-                          ? "  border  text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:bg-green-700 dark:border-green-300"
-                          : "bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 bg-red-300 border-red-300 p-2.5"
-                      }
-                      required="true"
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      value={confirmPassword}
-                    />
-                    <button className="absolute right-2" onClick={showeye} type="button">
-                      <div>
-                        <Eye
-                          className="text-white"
-                          strokeWidth={1.25}
-                          hidden={eye}
-                        />
-                        <EyeOff
-                          className="text-white"
-                          strokeWidth={1.25}
-                          hidden={!eye}
-                        />
-                      </div>
-                    </button>
-                  </div>
-                </div>
+  <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+    Password
+  </label>
+  <input
+    type="password"
+    name="password"
+    id="password"
+    placeholder="••••••••"
+    className={` text-gray-900 dark:text-slate-200 sm:text-sm rounded-lg block w-full p-2.5
+      ${password !== ''
+        ? ''
+        : 'dark:bg-darkNav/80 bg-[#F2F2F2] '
+      }
+    ${(password !== confirmPassword) && (password && confirmPassword !== '') ? 'dark:bg-rose-400 bg-rose-300': 'dark:bg-emerald-500 bg-emerald-500'}
+      `}
+    required={true}
+    onChange={(e) => setPassword(e.target.value)}
+    value={password}
+  />
+</div>
+<div>
+  <label
+    htmlFor="confirm-password"
+    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+  >
+    Confirm password
+  </label>
+  <div className="relative flex items-center">
+    <input
+      type={eye ? 'password' : 'text'}
+      name="confirm-password"
+      id="confirm-password"
+      placeholder="••••••••"
+      className={` text-gray-900 dark:text-slate-200 sm:text-sm rounded-lg block w-full p-2.5
+      ${confirmPassword !== ''
+        ? ''
+        : 'dark:bg-darkNav/80 bg-[#F2F2F2]'
+      }
+    ${password !== confirmPassword ? 'dark:bg-rose-400 bg-rose-300': 'dark:bg-emerald-500 bg-emerald-500'}
+      `}
+      required={true}
+      onChange={(e) => setConfirmPassword(e.target.value)}
+      value={confirmPassword}
+    />
+    <button className="absolute right-2" onClick={showeye} type="button">
+      <div>
+        <Eye
+          className="text-zinc-900 dark:text-slate-200"
+          strokeWidth={1.25}
+          hidden={eye}
+        />
+        <EyeOff
+          className="text-zinc-900 dark:text-slate-200"
+          strokeWidth={1.25}
+          hidden={!eye}
+        />
+      </div>
+    </button>
+  </div>
+</div>
+
+
                 <div className="flex items-start">
                   <div className="flex items-center h-5">
                     <input
                       id="terms"
                       aria-describedby="terms"
                       type="checkbox"
-                      className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
+                      className="w-4 h-4 border border-gray-300 rounded bg-slate-100 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
                       required=""
                       onChange={(e) => setTermsChecked(e.target.checked)}
                       checked={termsChecked}
@@ -380,11 +391,12 @@ function SignUp() {
         </div>
       </section>
       <section
-        className="bg-gray-50 dark:bg-gray-900 pt-10 h-screen "
+        className="bg-slate-100 dark:bg-gray-900 pt-10 h-screen "
         hidden={emailVerified}
       >
-        <div className="flex flex-col items-center justify-center px-4 py-4 mx-auto ">
-          <div className="w-full h-48 bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md lg:max-w-xl xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+        <Header />
+        <div className="flex flex-col items-center justify-start px-4 py-4 mx-auto bg-light dark:bg-dark h-screen ">
+          <div className="w-full h-48 bg-light rounded-lg shadow mt-16 dark:border md:mt-0 sm:max-w-md lg:max-w-xl xl:p-0 dark:bg-darkElevate dark:border-gray-700">
             <div className="flex flex-col items-center justify-center h-full gap-4 px-5">
               
                       <div className="block text-xl md:text-3xl text-slate-200 font-bold ">Please verify your email

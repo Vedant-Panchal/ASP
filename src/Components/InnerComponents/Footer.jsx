@@ -4,7 +4,7 @@ import React from 'react'
 
 function Footer() {
   return (
-    <footer className="bg-white shadow dark:bg-gray-900 px-5">
+    <footer className="bg-slate-100 dark:bg-darkNav shadow-lg px-5">
     <div className="w-full max-w-screen-xl mx-auto p-4 md:py-8">
       <div className="sm:flex sm:items-center sm:justify-between">
         <Link
@@ -13,7 +13,7 @@ function Footer() {
           className="flex items-center mb-4 sm:mb-0 space-x-3 rtl:space-x-reverse"
         >
           <img
-            src="assets/Logo.png"
+            src="/public/assets/Logo.png"
             className="h-14"
             alt="Logo"
           />
@@ -23,11 +23,6 @@ function Footer() {
           <li>
             <Link to={"/aboutus"} className="hover:underline me-4 md:me-6">
               About
-            </Link>
-          </li>
-          <li>
-            <Link to={""} className="hover:underline me-4 md:me-6">
-              Privacy Policy
             </Link>
           </li>
           <li>

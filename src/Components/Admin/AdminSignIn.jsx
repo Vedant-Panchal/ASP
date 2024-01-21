@@ -5,9 +5,8 @@ import { Eye, EyeOff } from "lucide-react";
 import { message } from '../InnerComponents/modal';
 import { aspauth } from '../../firebase';
 import { updateCurrentUser } from 'firebase/auth';
-import Header from '../InnerComponents/Header';
 
-function Login() {
+function AdminSignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailPlaceholder, setemailPlaceholder] = useState("name.branchYY@adaniuni.ac.in");
@@ -27,47 +26,40 @@ function Login() {
     const [localPart, domainPart] = email.split('@');
 
     // Check if the domain part is "adaniuni.ac.in"
-    if (domainPart !== 'adaniuni.ac.in') {
-      setEmail('');
-      setemailPlaceholder("Please use an email ending with @adaniuni.ac.in");
-      return;
-    }
-    const lowerCaseEmail = email.toLowerCase();
+    // if (domainPart !== 'gmail.com') {
+    //   setEmail('');
+    //   return;
+    // }
+    // else if(localPart !== "vedkp2421@gmail.com"){
+    //     return
+    // }
+
     // If all checks pass, attempt to create the user
     setError('');
     try {
-      await loginUser(lowerCaseEmail, password);
+      await loginUser(email, password);
 
     // Wait for the user state to be updated
-    const updatedUser = await aspauth.currentUser;
-
-
-    // Display message only if the email is not verified
-    if (updatedUser && !updatedUser.emailVerified) {
-      setEmail('');
-      setPassword('')
-      message('error','Please verify your email ☹️','');
-      return 
-      
-    }
-    
     // Navigate to the dashboard
     setTimeout(() => {
-      navigate("/dashboard");
+      navigate("/admin");
     }, 1000);
-  } catch (err) {
-
+  } 
+  catch (err) {
+    console.log(err);
     sethidden(false);
     if(err.code === "auth/user-not-found")
     message('error','Account not found');
-    else
+    else if(err.code === 'auth/wrong-password')
     message("error", "Wrong Password");
+    else
+    message("error","Please verify your email");
   }
 }
+  
   return (
     <section className="bg-light dark:bg-dark">
-<Header />
-      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0 sm:h-screen">
+        <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0 sm:h-screen">
         <Link to="/" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
           <img src="/assets/Logo.png" alt="Logo" className="h-24" />
         </Link>
@@ -86,7 +78,7 @@ function Login() {
                   type="email"
                   name="email"
                   id="email"
-                  className="shadow-sm bg-[#F2F2F2]  text-zinc-900 text-sm rounded-lg focus:ring-slate-500 focus:border-slate-500 block w-full p-2.5 dark:bg-darkNav/80 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-slate-500 dark:focus:border-slate-500 dark:shadow-sm-light dark:text-slate-200"
+                  className="shadow-sm bg-gray-50  text-zinc-900 text-sm rounded-lg focus:ring-slate-500 focus:border-slate-500 block w-full p-2.5 dark:bg-darkNav/80 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-slate-500 dark:focus:border-slate-500 dark:shadow-sm-light dark:text-slate-200"
                   placeholder={emailPlaceholder}
                   onChange={(e) => setEmail(e.target.value.toLowerCase())}
                   value={email}
@@ -112,7 +104,7 @@ function Login() {
                     type="password"
                     name="password"
                     id="password"
-                    className="shadow-sm bg-[#F2F2F2]  text-zinc-900 text-sm rounded-lg focus:ring-slate-500 focus:border-slate-500 block w-full p-2.5 dark:bg-darkNav/80 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-slate-500 dark:focus:border-slate-500 dark:shadow-sm-light dark:text-slate-200"
+                    className="shadow-sm bg-gray-50  text-zinc-900 text-sm rounded-lg focus:ring-slate-500 focus:border-slate-500 block w-full p-2.5 dark:bg-darkNav/80 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-slate-500 dark:focus:border-slate-500 dark:shadow-sm-light dark:text-slate-200"
                     placeholder="••••••••"
                     required={true}
                     value={password}
@@ -167,5 +159,7 @@ function Login() {
     </section>
   );
 
-}
-export default Login;
+
+                }
+
+export default AdminSignIn

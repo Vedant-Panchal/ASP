@@ -7,5 +7,6 @@ import Login from './Pages/Login';
 import SignUp from './Pages/SignUp';
 import Header from './InnerComponents/Header'
 import Footer from './InnerComponents/Footer'
+import AdminDashboard from './Admin/AdminDashboard';
 
-export {Home,AboutUs,ContactUs,Dashboard,Login,SignUp,Four04,Header,Footer}
+export {Home,AboutUs,ContactUs,Dashboard,Login,SignUp,Four04,Header,Footer,AdminDashboard}

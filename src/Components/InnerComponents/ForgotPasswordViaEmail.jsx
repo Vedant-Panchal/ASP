@@ -1,9 +1,9 @@
 import { useState } from "react";
-
 import { Link, useNavigate } from "react-router-dom";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { aspauth } from "../../firebase";
 import {message} from "./modal";
+import Header from "./Header";
 function ForgotPasswordViaEmail() {
 
   const [error, setError] = useState("");
@@ -19,8 +19,9 @@ function ForgotPasswordViaEmail() {
 
     const [localPart, domainPart] = email.split("@");
 
+    const newdomain = domainPart.toLowerCase()
     // Check if the domain part is "adaniuni.ac.in"
-    if (domainPart !== "adaniuni.ac.in") {
+    if (newdomain !== "adaniuni.ac.in") {
       sethidden(true);
       setemail("");
       setError("Please use an email ending with @adaniuni.ac.in");
@@ -31,11 +32,11 @@ function ForgotPasswordViaEmail() {
 
     // If all checks pass, attempt to create the user
     setError("");
-    
-    await sendPasswordResetEmail(aspauth, email)
+    const lowerEmail = email.toLowerCase()
+    await sendPasswordResetEmail(aspauth, lowerEmail)
       .then(() => {
           setemail("");
-          message("success", "Check your junk folder in inbox 🗑️", "");
+          message("success", "Check your junk inbox 📩", "");
           setSuccess(true);
           setTimeout(() => {
           navigate("/signin")
@@ -52,8 +53,10 @@ function ForgotPasswordViaEmail() {
 
   return (
     
-    <section className="relative z-20 bg-white dark:bg-gray-900 h-screen mt-10 ">
-      <div className="max-w-md px-4 py-8 mx-auto lg:py-16 ">
+    <section className="bg-white dark:bg-dark">
+      <Header />
+      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0 sm:h-screen">
+        <div className="w-full bg-white rounded-lg shadow-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-darkElevate dark:border-gray-700 py-5 px-4">
         <h2 className="mb-4 text-center text-3xl font-bold text-gray-900 dark:text-white">
           Forgot Password
         </h2>
@@ -74,7 +77,7 @@ function ForgotPasswordViaEmail() {
                 type="email"
                 name="email"
                 id="email"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                className="shadow-sm bg-gray-50  text-zinc-900 text-sm rounded-lg focus:ring-slate-500 focus:border-slate-500 block w-full p-2.5 dark:bg-darkNav/80 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-slate-500 dark:focus:border-slate-500 dark:shadow-sm-light dark:text-slate-200"
                 placeholder="name.branchYY@adaniuni.ac.in"
                 required="true"
                 value={email}
@@ -109,6 +112,7 @@ function ForgotPasswordViaEmail() {
                 </div>
               </div>
         </form>
+        </div>
       </div>
     </section>
   );

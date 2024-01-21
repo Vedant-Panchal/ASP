@@ -5,6 +5,7 @@ import { aspauth } from "../../firebase";
 import { updatePassword } from "firebase/auth";
 import { UserContext } from "../../context/AuthContext";
 import { Navigate, useNavigate } from "react-router-dom";
+import Header from "./Header";
 
 
 function ForgotPassword() {
@@ -74,7 +75,8 @@ function ForgotPassword() {
   };
 
   return (
-    <section className="relative z-20 bg-white dark:bg-gray-900 h-screen mt-10 ">
+    <section className="bg-white dark:bg-gray-900 h-screen mt-10 ">
+      <Header/>
       <div className="max-w-md px-4 py-8 mx-auto lg:py-16 ">
         <h2 className="mb-4 text-center text-3xl font-bold text-gray-900 dark:text-white">
           Update Password

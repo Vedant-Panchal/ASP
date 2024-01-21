@@ -10,17 +10,27 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ramonak/react-progress-bar": "^5.2.0",
+    "@react-pdf-viewer/core": "^3.12.0",
+    "@react-pdf-viewer/default-layout": "^3.12.0",
+    "@react-pdf-viewer/scroll-mode": "^3.12.0",
+    "@react-pdf-viewer/thumbnail": "^3.12.0",
+    "@react-pdf-viewer/zoom": "^3.12.0",
     "animate.css": "^4.1.1",
+    "cors": "^2.8.5",
     "firebase": "^10.7.1",
     "firebase-admin": "^12.0.0",
     "flowbite": "^2.2.1",
     "flowbite-react": "^0.7.2",
     "lucide-react": "^0.306.0",
+    "pdfjs-dist": "^3.4.120",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-firebase-hooks": "^5.1.1",
     "react-router-dom": "^6.21.1",
     "react-spinners": "^0.13.8",
-    "sweetalert2": "^11.10.2"
+    "sweetalert2": "^11.10.2",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",

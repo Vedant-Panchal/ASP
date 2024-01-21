@@ -1,13 +1,24 @@
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import Header from '../InnerComponents/Header'
+import { UserContext } from '../../context/AuthContext'
 
 function Four04() {
+  const {mode,setmode} = useContext(UserContext)
+  useEffect(()=>{
+    return (
+      (mode === 'dark') ?
+      document.getElementById('root').classList.add('dark') :
+      document.getElementById('root').classList.remove('dark')
+    )
+    },[mode])
   return (
-    <section className="bg-white dark:bg-gray-900 h-screen flex items-center justify-center">
+    <section className="bg-light dark:bg-dark h-screen flex items-center justify-center">
+      <Header />
   <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
     <div className="mx-auto max-w-screen-sm text-center">
       <div className='flex items-center justify-center'>
-        <img src="assets/404.png" alt="404"
+        <img src="/assets/404.png" alt="404"
         className='w-[60%] h-[60%]'
          />
       </div>

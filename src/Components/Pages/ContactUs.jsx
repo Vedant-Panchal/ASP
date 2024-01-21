@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../../firebase";
 import { message } from "../InnerComponents/modal";
+import Header from "../InnerComponents/Header";
 
 
 function ContactUs() {
@@ -27,39 +28,40 @@ function ContactUs() {
   }
   return (
     <>
-        <section className="bg-gray-50 dark:bg-gray-900 py-20 ">
+        <section className="bg-gray-50 dark:bg-dark py-20 ">
+          <Header />
         <div className="flex flex-col items-center justify-center px-4 py-4 mx-auto ">
           
-          <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md lg:max-w-xl xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+          <div className="w-full bg-white rounded-lg shadow-lg dark:border md:mt-0 sm:max-w-md lg:max-w-xl xl:p-0 dark:bg-darkElevate dark:border-gray-700">
             <div className=" space-y-4 md:space-y-6 p-8">
-        <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-center text-gray-900 dark:text-white">
+        <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-center text-zinc-900 dark:text-slate-200">
           Contact Us
         </h2>
-        <p className="mb-8 lg:mb-16 font-base text-center text-gray-500 dark:text-gray-400 sm:text-md">
-          <b className="text-slate-300">
+        <p className="mb-8 lg:mb-16 font-base text-center text-zinc-700 dark:text-slate-200 sm:text-md">
+          <b>
             Got any problem in this website or functionality? ☹️
           </b>
           <br />{" "}
-          <i>Send us a message here we will fix it as soon as possible.</i>
+          <i className="font-normal">Send us a message here we will fix it as soon as possible.</i>
           <br />
           <br />
-          <b className="text-slate-300">If you not got one 😊</b>
+          <b>If you not got one 😊</b>
           <br />
-          <i>"Connect with Us: Let's Make Your Student Journey Seamless!"</i>
+          <i className="font-normal">"Connect with Us: Let's Make Your Student Journey Seamless!"</i>
         </p>
               
               <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
               <div>
             <label
               htmlFor="email"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+              className="block mb-2 text-sm font-medium text-zinc-900 dark:text-slate-100"
             >
               Your email
             </label>
             <input
               type="email"
               id="email"
-              className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 dark:shadow-sm-light"
+              className="shadow-sm bg-[#F2F2F2]  text-zinc-900 text-sm rounded-lg focus:ring-slate-500 focus:border-slate-500 block w-full p-2.5 dark:bg-darkNav/80 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-slate-500 dark:focus:border-slate-500 dark:shadow-sm-light dark:text-slate-200 "
               placeholder="name.branchYY@adaniuni.ac.in"
               required="true"
               value={email}
@@ -69,14 +71,14 @@ function ContactUs() {
           <div>
             <label
               htmlFor="subject"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-200"
               >
               Subject
             </label>
             <input
               type="text"
               id="subject"
-              className="block p-3 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 shadow-sm focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 dark:shadow-sm-light"
+              className="block p-3 w-full text-sm text-gray-900 bg-[#F2F2F2] rounded-lg  shadow-sm dark:bg-darkNav/80 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-slate-500 dark:focus:border-slate-500 dark:shadow-sm-light dark:text-slate-200 "
               placeholder="Let us know how we can help you"
               required="true"
               value={subject}
@@ -87,14 +89,14 @@ function ContactUs() {
           <div className="sm:col-span-2">
             <label
               htmlFor="message"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-slate-200"
             >
               Your message
             </label>
             <textarea
               id="message"
               rows={6}
-              className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg shadow-sm border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              className="block p-2.5 w-full text-sm text-gray-900 bg-[#F2F2F2] rounded-lg shadow-sm dark:bg-darkNav/80 dark:border-gray-600 dark:placeholder-gray-400 dark:text-slate-200 dark:focus:ring-slate-500 dark:focus:border-slate-500 dark:shadow-sm-light"
               placeholder="Leave a comment..."
               required="true"
               value={contactmessage}
