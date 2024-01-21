@@ -43,9 +43,7 @@ export const AuthCtxtProvider = ({ children }) => {
           </div>
           </section>
           }
-          else{
-            navigate('/dashboard')
-          }
+          
         });
       } 
       else {
