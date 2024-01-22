@@ -1,9 +1,9 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import { aspauth, db, storage } from "../../firebase";
-import { collection, addDoc, documentId } from "firebase/firestore";
+import { collection, addDoc  } from "firebase/firestore";
 import { UserContext } from "../../context/AuthContext";
-import { useContext, useState, useEffect, useRef } from "react";
+import { useContext, useState, useEffect } from "react";
 import { ROOT_FOLDER, useFolder } from "./hooks/useFolder";
 import AdminFolder from "./AdminFolder";
 import AdminNav from "./AdminNav";
@@ -24,6 +24,7 @@ import {
   MousePointerSquareDashed,
   File,
   Folder,
+  FileText
 } from "lucide-react";
 import Drag from "../../../public/assets/Drag";
 import FolderBreadCrumb from "./FolderBreadCrumb";
@@ -32,26 +33,17 @@ const AdminDashboard = () => {
   const [uploadComplete, setUploadComplete] = useState(true);
   const { folderId } = useParams();
   const { folder, childFolders, childFiles } = useFolder(folderId);
-  const { logoutUser, mode, setmode, pdfViewerOpen, setpdfViewerOpen } =
+  const { mode, setmode} =
     useContext(UserContext);
-  const navigate = useNavigate();
+
   const ref = collection(db, "folders");
   const filesref = collection(db, "files");
   const [uploadProgress, setUploadProgress] = useState(0);
   const [deleteOption, setdeleteOption] = useState(false);
-  const [rotate, setRotate] = useState(false);
+  const [rotate, setRotate] = useState(true);
   const [open, setopen] = useState(false);
   const [hidden, sethidden] = useState(true);
-  const openPdfViewer = (fileUrl) => {
-    setPDF(fileUrl);
-    setpdfViewerOpen(true);
-  };
-
-  const closePdfViewer = () => {
-    setPDF(null);
-    setpdfViewerOpen(false);
-  };
-
+const [filename, setfilename] = useState('')
   useEffect(() => {
     return mode === "dark"
       ? document.getElementById("root").classList.add("dark")
@@ -59,38 +51,6 @@ const AdminDashboard = () => {
   }, [mode]);
   const toggleMode = () => {
     setmode(mode === "light" ? "dark" : "light");
-  };
-  const handleSignOut = async () => {
-    Swal.fire({
-      title: "Are you sure?",
-      imageUrl: "assets/svgviewer-png-output.png  ",
-      text: "You will be logged out of this application",
-      showDenyButton: true,
-      confirmButtonText: "Yes, logout",
-      denyButtonText: `Cancel`,
-      customClass: {
-        confirmButton:
-          "px-3 py-2.5 border border-emerald-400 mr-2 rounded-lg text-md bg-green-500/70 hover:bg-green-500/80 focus:bg-green-500/80",
-        denyButton:
-          "px-3 py-2.5 border border-rose-300 rounded-lg text-md bg-rose-500/70 hover:bg-rose-500/80 focus:bg-rose-500/80",
-      },
-      buttonsStyling: false,
-      background: "#111827",
-      color: "#FFFFF2",
-      backdrop: `
-        rgba(255, 255, 255, 0.4) 
-        left top
-        no-repeat
-        `,
-    }).then((result) => {
-      /* Read more about isConfirmed, isDenied below */
-      if (result.isConfirmed) {
-        logoutUser();
-        navigate("/signin");
-      } else if (result.isDenied) {
-        return;
-      }
-    });
   };
   const createFolder = async () => {
     const { value: folderName } = await Swal.fire({
@@ -122,80 +82,64 @@ const AdminDashboard = () => {
       parentId: folder.id,
       path: path,
     });
-    setopen(!open)
-    sethidden((p) => !p)
   };
-  const handleUpload = async (e) => {
-    const selectedFiles = Array.from(e.target.files);
+ const handleUpload = async (e) => {
+  const selectedFiles = Array.from(e.target.files);
 
-    if (folder == null || selectedFiles.length === 0) return;
+  if (folder == null || selectedFiles.length === 0) return;
 
-    setUploadComplete(false);
-    const totalFiles = selectedFiles.length;
+  setUploadComplete(false);
+  const totalFiles = selectedFiles.length;
 
-    const uploadPromises = selectedFiles.map((file) => {
-      const filePath =
-        folder === ROOT_FOLDER
-          ? `Home${folder.path.join("/")}/${file.name}`
-          : `Home${folder.path.join("/")}/${folder.name}/${file.name}`;
+  for (let i = 0; i < totalFiles; i++) {
+    const file = selectedFiles[i];
+    setfilename(file.name)
+    const folderPathArray = folder.path;
+    const folderPathString = folderPathArray.map(folder => folder.name).join('/');
+    const filePath =
+      folder === ROOT_FOLDER
+        ? `Home/${file.name}`
+        : `Home/${folderPathString}/${folder.name}/${file.name}`;
 
-      const storageRef = StorageRef(storage, filePath);
+    console.log(filePath)
+    const storageRef = StorageRef(storage, filePath);
 
-      return new Promise((resolve, reject) => {
-        const uploadTask = uploadBytesResumable(storageRef, file);
+    await new Promise((resolve, reject) => {
+      const uploadTask = uploadBytesResumable(storageRef, file);
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const overallProgress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
 
-        uploadTask.on(
-          "state_changed",
-          (snapshot) => {
-            const progress =
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            const overallProgress =
-              (snapshot.bytesTransferred / (totalFiles * snapshot.totalBytes)) *
-              100;
-
-            setUploadProgress((prevProgress) => ({
-              ...prevProgress,
-              [file.name]: Math.floor(progress),
-              overall: Math.floor(overallProgress),
-            }));
-          },
-          (error) => {
-            // Handle unsuccessful uploads
-            reject(error);
-          },
-          () => {
-            // Handle successful uploads on complete
-            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-              addDoc(filesref, {
-                url: downloadURL,
-                name: file.name,
-                createdAt: new Date().toLocaleString(),
-                folderId: folder.id,
-              });
-
-              // Resolve the promise for the current file
-              resolve();
-              setopen(!open)
-              sethidden((p) => !p)
+          setUploadProgress(Math.floor(overallProgress));
+        },
+        (error) => {
+          // Handle unsuccessful uploads
+          reject(error);
+        },
+        () => {
+          // Handle successful uploads on complete
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            addDoc(filesref, {
+              url: downloadURL,
+              name: file.name,
+              createdAt: new Date().toLocaleString(),
+              folderId: folder.id,
             });
-          }
-        );
-      });
-    });
 
-    // Wait for all uploads to complete
-    Promise.all(uploadPromises)
-      .then(() => {
-        // All files uploaded successfully
-        console.log("All files uploaded successfully");
-        setUploadComplete(true);
-      })
-      .catch((error) => {
-        // Handle errors during uploads
-        console.error("Error uploading files:", error);
-        setUploadComplete(false);
-      });
-  };
+            // Resolve the promise for the current file
+            resolve();
+          });
+        }
+      );
+    });
+  }
+
+  // All files uploaded successfully
+  console.log("All files uploaded successfully");
+  setUploadComplete(true);
+};
 
   // const DragRef = useRef(null)
   // const onDragEnter = () => {
@@ -223,10 +167,12 @@ const AdminDashboard = () => {
   const deleteFile = async (file) => {
     try {
       // Delete file from Storage
+      const folderPathArray = folder.path || [];
+      const folderPathString = folderPathArray.map(folder => folder.name).join('/');
       const filePath =
         folder === ROOT_FOLDER
-          ? `Home${folder.path.join("/")}/${file.name}`
-          : `Home${folder.path.join("/")}/${folder.name}/${file.name}`;
+          ? `Home/${file.name}`
+          : `Home/${folderPathString}/${folder.name}/${file.name}`;
       const storageRef = deleteRef(storage, filePath);
       await deleteObject(storageRef);
   
@@ -315,35 +261,34 @@ const AdminDashboard = () => {
             setRotate(!rotate), setopen(!open), sethidden((p) => !p);
           }}
           className={`bg-gradient-to-r from-pink-500 to-yellow-500
-        } w-fit h-fit p-2 rounded-full fixed bottom-10 right-16  mr-2 z-50`}
+        } w-fit h-fit p-2 rounded-full fixed bottom-10 right-16  mr-2 z-50 `}
         >
           <Plus
             strokeWidth={2}
             className={`text-slate-200 ${
-              rotate ? "rotate-45" : "rotate-0"
+              rotate ? "rotate-0" : "rotate-45"
             } transition-all duration-200 ease-in`}
           />
         </button>
-        {/* {
-          <div className="w-[500px] h-fit rounded-md absolute bottom-28 right-10 bg-blue-800 px-4 py-2 shadow-md">
+
+        {/* Progress bar */}
+        {
+          <div className={`lg:w-[500px] w-96 h-fit rounded-md absolute bottom-28 right-10 transition-all duration-200 ease-in dark:bg-blue-800 bg-lightNav px-4 py-2 shadow-md ${uploadComplete ? 'translate-x-full opacity-0 hidden': '-translate-x-0 opacity-100'}`}>
             <div className="flex justify-between mb-1">
-              <span className="flex text-base font-medium text-blue-700 dark:text-white mb-2">
-                <FileText className="mx-2" /> {files}
+              <span className="flex text-base font-medium text-zinc-900 dark:text-white mb-2">
+                <FileText className="mx-2" /> {filename}
               </span>
             </div>
             <div className="w-full bg-blue-900 rounded-full h-6 dark:bg-blue-400">
               <div
                 className="bg-blue-600 h-6 rounded-full p-0.5 leading-none text-sm text-slate-200 font-semibold flex items-center justify-center shadow-lg transition-all duration-300 ease-in-out"
                 style={{ width: uploadProgress + "%" }}
-              ></div>
+              >{uploadProgress+ "%"}</div>
             </div>
           </div>
-        } */}
+        }
         
         <AdminNav
-          handleSignOut={handleSignOut}
-          handleUpload={handleUpload}
-          toggleMode={toggleMode}
           toggleDelete={toggleDelete}
         />
         

@@ -40,7 +40,7 @@ function FolderBreadCrumb({currentFolder}) {
         </Link>
         ))}
         {currentFolder && (
-        <NavLink className={({isActive})=>`${isActive ? 'dark:text-blue-600':''}`} >
+        <NavLink className={({isActive})=>`${isActive ? 'text-blue-600 ':''}`} >
         <div className="pl-1 flex items-center">
           <div
             className="text-sm font-medium "
