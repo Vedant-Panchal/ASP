@@ -206,7 +206,7 @@ const [filename, setfilename] = useState('')
           } flex flex-col items-start justify-between gap-3`}
         >
           <label
-            className={`dark:bg-darkElevateHover bg-slate-100 w-full h-36 rounded-md  items-center justify-center outline-2 outline-dashed outline-slate-800 dark:outline-slate-300 flex flex-col ${
+            className={`dark:bg-darkElevateHover bg-slate-100 w-full h-52 rounded-md  items-center justify-center outline-2 outline-dashed outline-slate-800 dark:outline-slate-300 flex flex-col ${
               hidden ? "hidden" : ""
             }`}
              ref={DragRef}
