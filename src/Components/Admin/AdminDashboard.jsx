@@ -148,6 +148,11 @@ const [filename, setfilename] = useState('')
     e.preventDefault();
     DragRef.current.classList.remove("bg-darkNav");
   }
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    // Necessary for Chrome to recognize the drop
+    e.dataTransfer.dropEffect = "copy";
+  };
   const handleDrop = (e) => {
     e.preventDefault();
     DragRef.current.classList.remove("bg-darkNav");
@@ -214,6 +219,7 @@ const [filename, setfilename] = useState('')
             onDragEnter={handleDragEnter}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
+            onDragOver={handleDragOver}
           >
             <p className="dark:text-slate-300 text-zinc-900 mb-2">
               Upload file
