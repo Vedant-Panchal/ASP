@@ -3,7 +3,7 @@ import Swal from "sweetalert2";
 import { aspauth, db, storage } from "../../firebase";
 import { collection, addDoc  } from "firebase/firestore";
 import { UserContext } from "../../context/AuthContext";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import { ROOT_FOLDER, useFolder } from "./hooks/useFolder";
 import AdminFolder from "./AdminFolder";
 import AdminNav from "./AdminNav";
@@ -139,26 +139,25 @@ const [filename, setfilename] = useState('')
   setUploadComplete(true);
 };
 
-  // const DragRef = useRef(null)
-  // const onDragEnter = () => {
-  //   DragRef.classList.add("dark:bg-darkNav")
-  // }
-  // const onDragLeave = () => {
-  //   DragRef.classList.add("dark:bg-darkElevate")
-  // }
-  // const onDrop = () => {
-  //   DragRef.classList.add("dark:bg-darkNav")
-  // }
-  // const [fileList, setFileList] = useState([])
-  // const onFileDrop = (e)=>{
-  //   const files = Array.from(e.target.files[0]);
-  //   if(files)
-  //   {
-  //     const updatedFiles = [...FileList,files]
-  //     setFileList(updatedFiles)
-  //     console.log(fileList)
-  //   }
-  // }
+  const DragRef = useRef(null)
+  const handleDragEnter = (e) => {
+    e.preventDefault();
+    DragRef.current.classList.add("bg-darkNav");
+  }
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    DragRef.current.classList.remove("bg-darkNav");
+  }
+  const handleDrop = (e) => {
+    e.preventDefault();
+    DragRef.current.classList.remove("bg-darkNav");
+
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      // Handle dropped files (you can call your upload function here)
+      handleUpload({ target: { files } });
+    }
+  }
   const toggleDelete = () => {
     setdeleteOption(!deleteOption)
   }
@@ -207,14 +206,14 @@ const [filename, setfilename] = useState('')
           } flex flex-col items-start justify-between gap-3`}
         >
           <label
-            className={`dark:bg-darkElevateHover bg-slate-100 w-full h-32 rounded-md  items-center justify-center  outline-2 outline-dashed outline-slate-800 dark:outline-slate-300 flex flex-col ${
+            className={`dark:bg-darkElevateHover bg-slate-100 w-full h-36 rounded-md  items-center justify-center outline-2 outline-dashed outline-slate-800 dark:outline-slate-300 flex flex-col ${
               hidden ? "hidden" : ""
             }`}
-            // ref={DragRef}
+             ref={DragRef}
             draggable={true}
-            // onDragEnter={onDragEnter}
-            // onDragLeave={onDragLeave}
-            // onDrop={onDrop}
+            onDragEnter={handleDragEnter}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
           >
             <p className="dark:text-slate-300 text-zinc-900 mb-2">
               Upload file
@@ -271,7 +270,7 @@ const [filename, setfilename] = useState('')
 
         {/* Progress bar */}
         {
-          <div className={`lg:w-[500px] w-96 h-fit rounded-md absolute bottom-28 right-10 transition-all duration-200 ease-in dark:bg-blue-800 bg-lightNav px-4 py-2 shadow-md ${uploadComplete ? 'translate-x-full opacity-0 hidden': '-translate-x-0 opacity-100'}`}>
+          <div className={`lg:w-[500px] w-96 h-fit rounded-md absolute bottom-10 left-10 transition-all duration-200 ease-in dark:bg-blue-800 bg-lightNav px-4 py-2 shadow-md ${uploadComplete ? 'translate-x-full opacity-0 hidden': '-translate-x-0 opacity-100'}`}>
             <div className="flex justify-between mb-1">
               <span className="flex text-base font-medium text-zinc-900 dark:text-white mb-2">
                 <FileText className="mx-2" /> {filename}
