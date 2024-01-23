@@ -226,6 +226,13 @@ function Dashboard() {
                 childFiles.map((childFile) => {
                   return <ClientFile file={childFile} key={childFile.id} />;
                 })}
+                {
+                  childFolders.length === 0 && childFiles.length === 0 && (
+                    
+                    <div className="dark:text-slate-200 text-center w-full">We will be uploading files as soon as we get them 🫡</div>
+                  
+                  )
+                }
             </div>
           </div>
         </div>
