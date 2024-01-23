@@ -162,16 +162,9 @@ function Dashboard() {
                 <span className="block text-sm font-semibold text-gray-900 dark:text-white">
                   {userName}
                 </span>
-                <span className="block  text-gray-900 truncate dark:text-white mt-5">
+                <span className="block  text-gray-900 truncate dark:text-white mt-5 mb-5">
                   {userEmail}
-                </span>
-                <Link className="block  text-gray-900 truncate dark:text-white mt-5" to={'/aboutus'}>
-                  About Us
-                </Link>
-                <Link className="block text-gray-900 truncate dark:text-white mt-5 mb-5" to={'/contactus'}>
-                  Contact Us
-                </Link>
-                
+                </span>                
                 <Link className="block dark:border-light border-zinc-900 border-t-2 pt-3 text-gray-900 truncate dark:text-white"
                 onClick={handleSignOut}>
                   Logout
