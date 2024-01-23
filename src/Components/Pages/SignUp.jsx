@@ -41,7 +41,6 @@ function SignUp() {
  
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(aspauth, (user) => {
-      console.log("Auth state changed:", user);
       if (user) {
         // Reload user to get the latest emailVerified status
         user.reload();
@@ -96,7 +95,7 @@ if(password.length < 8) {
       await updateProfile(aspauth.currentUser, {
         displayName: fullName, // You can custo mize how you want to set the display name
       });
-      // console.log("Display Name : ", aspauth.currentUser.displayName);
+    
       
       message("success", "Verification link sent on your email", "");
       await sendEmailVerification(aspauth.currentUser).then(() => {

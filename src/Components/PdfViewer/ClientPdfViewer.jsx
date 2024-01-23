@@ -43,7 +43,6 @@ function ClientPdfViewer() {
       fetchData();
     }, [fileId]);
     const url = fileDoc && fileDoc.url ? fileDoc.url : 'default-url'; // Provide a default URL or handle it accordingly
-    console.log("fileUrl:", url);
     useEffect(() => {
       const fetchProfile = async () => {
         try {

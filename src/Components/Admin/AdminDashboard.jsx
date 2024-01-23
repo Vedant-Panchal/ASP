@@ -70,10 +70,10 @@ const [filename, setfilename] = useState('')
     if (folder == null) return;
     // Swal.fire(`Folder created with name ${folderName}`);
     const path = [...folder.path];
-    console.log(path);
+    
 
     if (folder !== ROOT_FOLDER) path.push({ name: folder.name, id: folder.id });
-    console.log(path);
+    
 
     await addDoc(ref, {
       name: folderName,
@@ -101,7 +101,6 @@ const [filename, setfilename] = useState('')
         ? `Home/${file.name}`
         : `Home/${folderPathString}/${folder.name}/${file.name}`;
 
-    console.log(filePath)
     const storageRef = StorageRef(storage, filePath);
 
     await new Promise((resolve, reject) => {
@@ -136,8 +135,7 @@ const [filename, setfilename] = useState('')
     });
   }
 
-  // All files uploaded successfully
-  console.log("All files uploaded successfully");
+  
   setUploadComplete(true);
 };
 
