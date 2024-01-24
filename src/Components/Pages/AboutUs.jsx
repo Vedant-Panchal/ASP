@@ -8,7 +8,7 @@ function AboutUs() {
   <div className="gap-16 items-center py-8 px-4 mx-auto max-w-screen-xl lg:grid lg:grid-cols-1 lg:py-16 lg:px-18">
     <div className="font-light text-gray-500 sm:text-lg dark:text-gray-400">
       <h2 className="mb-4 lg:text-4xl text-sm tracking-tight font-extrabold text-gray-900 text-center dark:text-white">
-         Welcome to Adani Study Portal (ASP)😎 <br /><br /> 
+         Welcome to Adani Student Portal (ASP)😎 <br /><br /> 
       </h2>
       <h2 className="mb-4 lg:text-xl text-sm tracking-tight font-extrabold text-gray-900 text-wrap dark:text-white">
       Your centralized hub for accessing university materials in a structured and student-friendly format.
