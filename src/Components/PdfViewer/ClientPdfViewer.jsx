@@ -205,7 +205,7 @@ function ClientPdfViewer() {
      
         <div className="relative h-full w-screen mt-16">
         <button onClick={()=>window.close()} className="px-4 py-1 absolute bg-transparent z-[500] md:top-1 md:right-28 top-1 right-8 w-fit h-fit rounded-none"><XSquare strokeWidth={1} className="text-blue-500" /></button>
-      <div className="w-screen h-full absolute top-0 right-0 z-50 print:hidden px-2 select-none ">
+      <div className="w-screen h-full absolute top-0 right-0 z-50 print:hidden px-2 ">
         
         <Worker
           workerUrl={`https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js`}
@@ -213,7 +213,6 @@ function ClientPdfViewer() {
           <Viewer
             fileUrl={url}
             plugins={[defaultLayoutPluginInstance]}
-            style={{ userSelect: 'none', pointerEvents: 'none' }}
           />
         </Worker>
       </div>

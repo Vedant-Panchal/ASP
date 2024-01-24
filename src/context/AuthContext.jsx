@@ -43,7 +43,6 @@ export const AuthCtxtProvider = ({ children }) => {
           </div>
           </section>
           }
-          
         });
       } 
       else {
