@@ -11,7 +11,7 @@ function ClientBreadCrumb({currentFolder}) {
       className="flex py-4 fixed top-16 w-screen text-gray-700  bg-light dark:bg-dark"
       aria-label="Breadcrumb"
     >
-      <ol className="inline-flex items-center md:space-x-2">
+      <ol className="inline-flex justify-start flex-wrap items-center md:space-x-2">
         {path.map((folder,index)=>(
         <Link to={folder.id ? `/dashboard/folder/${folder.id}`: "/dashboard"} key={folder.id}
         >
