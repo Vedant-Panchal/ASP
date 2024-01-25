@@ -27,9 +27,9 @@ function Login() {
     const [localPart, domainPart] = email.split('@');
 
     // Check if the domain part is "adaniuni.ac.in"
-    if (domainPart !== 'adaniuni.ac.in') {
-      setEmail('');
-      setemailPlaceholder("Please use an email ending with @adaniuni.ac.in");
+    if (domainPart !== "adaniuni.ac.in" && domainPart !== "aii.ac.in") {
+      setEmail("");
+      message("error", "Please use an email ending with @adaniuni.ac.in or @aii.ac.in", "");
       return;
     }
     const lowerCaseEmail = email.toLowerCase();

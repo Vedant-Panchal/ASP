@@ -66,12 +66,11 @@ function SignUp() {
     const [localPart, domainPart] = email.split("@");
 
     // Check if the domain part is "adaniuni.ac.in"
-    if (domainPart !== "adaniuni.ac.in") {
+    if (domainPart !== "adaniuni.ac.in" && domainPart !== "aii.ac.in") {
       setEmail("");
-      setemailPlaceholder("Please use an email ending with @adaniuni.ac.in");
+      message("error", "Please use an email ending with @adaniuni.ac.in or @aii.ac.in", "");
       return;
     }
-
     // Check if passwords match
     if (password !== confirmPassword) {
       return;
