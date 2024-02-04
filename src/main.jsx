@@ -10,6 +10,7 @@ import AdminRoute from './Components/Admin/AdminRoute.jsx'
 import AdminSignIn from './Components/Admin/AdminSignIn.jsx'
 import PdfViewer from './Components/PdfViewer/PdfViewer.jsx'
 import ClientPdfViewer from './Components/PdfViewer/ClientPdfViewer.jsx'
+import Calculator from './Components/Pages/Calculator.jsx'
 
 export const Routes = createBrowserRouter(
   
@@ -22,6 +23,10 @@ export const Routes = createBrowserRouter(
       <Route path='dashboard' element={
       <PrivateRoute>
       <Dashboard/>
+      </PrivateRoute>}/>
+      <Route path='dashboard/calculator' element={
+      <PrivateRoute>
+      <Calculator/>
       </PrivateRoute>}/>
       
       <Route path='forgotpasswordemail' element={<ForgotPasswordViaEmail />}/>

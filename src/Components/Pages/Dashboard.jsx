@@ -14,6 +14,7 @@ import {
   XCircle,
   Moon,
   Sun,
+  GraduationCap,
 } from "lucide-react";
 import {
   collection,
@@ -37,6 +38,7 @@ function Dashboard() {
   const [profileHidden, setProfileHidden] = useState(true);
   const [welcomehidden, setwelcomehidden] = useState(false);
   const navigate = useNavigate();
+  const [asidehidden, setasidehidden] = useState(true);
 
   const { currentUser, logoutUser, mode, setmode } = useContext(UserContext);
 
@@ -108,11 +110,44 @@ function Dashboard() {
   
  
   return (
+    
     <div className="antialiased h-max  bg-light dark:bg-dark">
       <nav className="bg-slate-100 px-4  dark:bg-darkNav dark:shadow-sm fixed left-0 right-0 top-0 z-50 shadow-lg rounded-sm">
         <div className="flex flex-wrap justify-between items-center relative">
           <div className="flex justify-start items-center">
-           
+          <button
+              className="p-2 mr-2 text-slate-600 rounded-lg cursor-pointer  hover:text-gray-900 hover:bg-slate-200/80 focus:bg-slate-200/80 dark:focus:bg-darkElevateHover  dark:focus:ring-gray-700 dark:text-slate-200 dark:hover:bg-darkElevate dark:hover:text-slate-300 transition-all duration-200 ease-in"
+              onClick={() => {
+                setasidehidden(!asidehidden);
+              }}
+            >
+              <svg
+                aria-hidden="true"
+                className="w-6 h-6"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h6a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              <svg
+                aria-hidden="true"
+                className="hidden w-6 h-6"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
             <Link
               to="/dashboard"
               className="flex items-center justify-between mr-4"
@@ -176,10 +211,51 @@ function Dashboard() {
           </div>
         </div>
       </nav>
-     
+     {/* Sidebar */}
+     <aside
+        className={`fixed top-0 left-0 z-40 w-64 h-screen pt-14 transition-transform ease-in-out duration-200 bg-white border-r shadow-xl border-gray-200  dark:bg-darkNav dark:border-gray-700 ${
+          asidehidden ? "-translate-x-full" : "translate-x-0"
+        }`}
+      >
+        <div className="overflow-y-auto py-5 px-3 h-full bg-white dark:bg-transparent">
+          <ul className="space-y-2">
+            <li>
+              <Link className="flex items-center p-2 w-full text-base font-medium text-gray-900 rounded-lg transition-all duration-200 ease-in group hover:bg-gray-100 dark:text-white dark:hover:bg-darkElevate "
+              to={'/dashboard'}>
+                <PanelsTopLeft />
+                <span className="ml-3 dark:text-white font-medium">
+                  Overview
+                </span>
+              </Link>
+            </li>
+            <li>
+            <Link className="flex items-center p-2 w-full text-base font-medium text-gray-900 rounded-lg transition-all duration-200 ease-in group hover:bg-gray-100 dark:text-white dark:hover:bg-darkElevate "
+            to={'/dashboard/calculator'}>
+                <GraduationCap />
+                <span className="ml-3 dark:text-white font-medium">
+                   Calculators
+                </span>
+              </Link>
+            </li>
+          </ul>
+          <ul className="pt-5 mt-5 space-y-2 border-t border-gray-200 dark:border-gray-700">
+            {/* Power off button */}
+            <li>
+              <Link
+                className="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg transition-all duration-200 ease-in hover:bg-gray-100 dark:hover:bg-darkElevate dark:text-white group "
+                onClick={handleSignOut}
+              >
+                <PowerOff />
+                <span className="ml-3">Logout</span>
+              </Link>
+            </li>
+          </ul>
+        </div>
+      </aside>
       <main
         className={`p-4 min-h-screen pt-20 transition-all ease-in-out delay-[40] duration-200 mb-20 `}
       >
+        
         <div className="flex flex-row items-center md:mt-14 mt-14">
           <h1
             className="dark:text-slate-100 text-zinc-900 lg:text-2xl text-xs font-bold md:pl-4 mb-2 "
