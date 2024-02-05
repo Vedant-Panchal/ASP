@@ -61,11 +61,10 @@ function ClientPdfViewer() {
     }, [userEmail]);
     const transformToolbarSlot = (slot) => ({
       ...slot,
-      Download: () => <></>,
-      DownloadMenuItem: () => <></>,
       Print: () => <></>,
       PrintMenuItem: () => <></>,
       OpenFile: () => <></>,
+      OpenMenuItem: () => <></>,
       ShowProperties: () => <></>,
       Open: () => <></>,
     });
@@ -204,7 +203,7 @@ function ClientPdfViewer() {
       </nav>
      
         <div className="relative h-full w-screen mt-16">
-        <button onClick={()=>window.close()} className="px-4 py-1 absolute bg-transparent z-[500] md:top-1 md:right-28 top-1 right-8 w-fit h-fit rounded-none"><XSquare strokeWidth={1} className="text-blue-500" /></button>
+        <button onClick={()=>window.close()} className="px-4 py-1 absolute bg-transparent z-[500] md:top-1 md:right-40 top-1 right-10 w-fit h-fit rounded-none"><XSquare strokeWidth={1} className="text-blue-500" /></button>
       <div className="w-screen h-full absolute top-0 right-0 z-50 print:hidden px-2 ">
         
         <Worker
