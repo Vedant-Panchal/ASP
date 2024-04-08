@@ -1,0 +1,12 @@
+{
+  "appId": "com.xenostar.asp",
+  "appName": "ASP",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android":{
+    "icon": "./public/assets/app_icon.png"
+  }
+  
+}
