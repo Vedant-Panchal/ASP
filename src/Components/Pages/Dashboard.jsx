@@ -15,6 +15,7 @@ import {
   Moon,
   Sun,
   GraduationCap,
+  ArrowDownToLine,
 } from "lucide-react";
 import {
   collection,
@@ -179,6 +180,16 @@ function Dashboard() {
             </Link>
           </div>
           <div className="flex flex-row items-center justify-start w-fit lg:order-2">
+          <Link
+              to={"https://github.com/XENOSTAR7/ASP-C-CODES/releases/download/v1.0.0/ASP-v1.0.0-arm64-v8a-release.apk "}
+              className="p-2.5 mr-2 text-gray-500 rounded-full hover:text-gray-900 hover:bg-gray-100 dark:text-slate-100 dark:bg-darkElevate dark:hover:text-white dark:hover:bg-darkElevate/70"
+
+            >
+              <div className='flex items-center justify-start gap-2 w-max'>
+               <ArrowDownToLine size={19} strokeWidth={3}/>
+               
+              </div>
+            </Link>
             {/* Notifications */}
         <button
           type="button"
@@ -200,7 +211,7 @@ function Dashboard() {
         </button>
         {/* Dropdown menu */}
         <div
-          className={`overflow-hidden absolute z-50 lg:w-1/4 w-90 right-32 top-7 my-4  text-base list-none bg-white divide-y divide-gray-300 shadow-lg dark:divide-gray-600 dark:bg-darkElevate rounded-xl outline outline-2 outline-zinc-800`}
+          className={`overflow-hidden absolute z-50 lg:w-1/4 w-90 md:right-32 md:top-7 top-10 right-0 my-4  text-base list-none bg-white divide-y divide-gray-300 shadow-lg dark:divide-gray-600 dark:bg-darkElevate rounded-xl outline outline-2 outline-zinc-800`}
           hidden={notification}
           id="notification-dropdown"
         >
@@ -214,7 +225,7 @@ function Dashboard() {
             <div className="w-full px-2 py-2">
                
                 <div className="text-zinc-900 font-semibold text-sm dark:text-white mb-2">
-                  {notification.message}
+                <div className="max-w-full break-all">{notification.message}</div>
                 </div>
                 <div className="flex items-center justify-start gap-5 mb-2">
                   <div className="text-xs font-medium text-zinc-500 dark:text-gray-400">
@@ -329,24 +340,20 @@ function Dashboard() {
         className={`p-4 min-h-screen pt-20 transition-all ease-in-out delay-[40] duration-200 mb-20 `}
       >
 
-        <div className="flex flex-row items-center md:mt-14 mt-14">
+        <div className="flex flex-col mb-5 items-start justify-center md:mt-14 mt-14">
           <h1
             className="dark:text-slate-100 text-zinc-900 lg:text-2xl text-xs font-bold md:pl-4 mb-2 "
             hidden={welcomehidden}
           >
-            Hey {userName} <span className="wave">👋</span>, We have been
-            missing you! 😊
-          </h1>
-          <div className="ml-3" hidden={welcomehidden}>
-            <button
-              type="button"
-              onClick={() => {
-                setwelcomehidden(true);
-              }}
-            >
-              <XCircle className="text-slate-400 hover:text-slate-200 transition-colors ease-in duration-100" />
-            </button>
-          </div>
+
+            Feature Update 📢<br/>
+            </h1>
+            
+            <div className="text-md dark:text-slate-200 md:pl-4 ">We have added a new notification feature to notify you whenever a file/folder is uploaded🔔</div>
+            
+             
+           
+          
         </div>
         <ClientBreadCrumb currentFolder={folder} toggleMode={toggleMode} />
         <div className="md:pl-4">
