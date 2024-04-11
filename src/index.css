@@ -30,4 +30,26 @@ body.swal2-shown > [aria-hidden='true'] {
    50% { transform: rotate(10.0deg) }
    60% { transform: rotate( 0.0deg) }  /* Reset for the last half to pause */
   100% { transform: rotate( 0.0deg) }
+} 
+/* 
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #2E2B3C #15131D;
 }
+
+*::-webkit-scrollbar {
+  width: 1px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #ffffff;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #2E2B3C;
+  border-radius: 100%;
+  
+}
+*::-webkit-scrollbar-button {
+  display: none;
+} */

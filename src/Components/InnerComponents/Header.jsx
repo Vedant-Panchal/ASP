@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { UserContext } from "../../context/AuthContext";
-import { Moon, Sun } from "lucide-react";
+import { Moon, Sun,ArrowDownToLine } from "lucide-react";
 
 
 function Header() {
@@ -78,14 +78,12 @@ function Header() {
             <Link
               to={"https://github.com/XENOSTAR7/ASP-C-CODES/releases/download/v1.0.0/ASP-v1.0.0-arm64-v8a-release.apk "}
               className="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-bold rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 transition-all duration-200 ease-in"
-             /* onClick={() =>
-                window.open(
-                  "https://github.com/XENOSTAR7/ASP/releases/download/v1.0.0/ASP-v1.0.0-arm64-v8a-release.apk"
-                
-                )
-              }*/
+
             >
-               Download APP  
+              <div className='flex items-center justify-start gap-2 w-max'>
+               <ArrowDownToLine size={19} strokeWidth={3}/>
+               <span>APP</span>  
+              </div>
             </Link>
             
             <Link

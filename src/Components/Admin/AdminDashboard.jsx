@@ -1,3 +1,4 @@
+import { Timestamp, serverTimestamp } from 'firebase/firestore';
 import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import { aspauth, db, storage } from "../../firebase";
@@ -30,6 +31,7 @@ import Drag from "../../../public/assets/Drag";
 import FolderBreadCrumb from "./FolderBreadCrumb";
 
 const AdminDashboard = () => {
+  const [comment, setComment] = useState('');
   const [uploadComplete, setUploadComplete] = useState(true);
   const { folderId } = useParams();
   const { folder, childFolders, childFiles } = useFolder(folderId);
@@ -52,8 +54,28 @@ const [filename, setfilename] = useState('')
   const toggleMode = () => {
     setmode(mode === "light" ? "dark" : "light");
   };
+
+  
   const createFolder = async () => {
     const { value: folderName } = await Swal.fire({
+      title: "Multiple inputs",
+  html: `
+  <form class="mt-4 space-y-4 lg:mt-5 md:space-y-5" action="#">
+  <div class="flex items-start">
+      <div class="flex items-center h-5">
+        <input id="swal-input1" aria-describedby="newsletter" type="checkbox" class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" required="">
+      </div>
+      <div class="ml-3 text-sm">
+        <label for="newsletter" class="font-light text-blue-500 dark:text-gray-300">Send notification</label>
+      </div>
+  </div>
+</form>
+  `,
+  focusConfirm: false,
+  preConfirm: () => {
+      const check = document.getElementById("swal-input1").value;
+      console.log(`Checkbox value = `+ check);
+  },
       title: "Enter folder name",
       input: "text",
       inputLabel: "Create folder",
@@ -83,6 +105,74 @@ const [filename, setfilename] = useState('')
       path: path,
     });
   };
+
+
+
+  const handleCommentSubmit = async () => {
+    try {
+      // Create a new Date object
+var currentDate = new Date();
+
+// Array of month names for formatting
+var monthNames = ["January", "February", "March", "April", "May", "June",
+                  "July", "August", "September", "October", "November", "December"];
+
+// Get the day, month, and year components
+var day = currentDate.getDate();
+var month = monthNames[currentDate.getMonth()];
+var year = currentDate.getFullYear();
+
+// Function to add ordinal suffix to day
+function addOrdinalSuffix(day) {
+    if (day >= 11 && day <= 13) {
+        return day + "th";
+    }
+    switch (day % 10) {
+        case 1:  return day + "st";
+        case 2:  return day + "nd";
+        case 3:  return day + "rd";
+        default: return day + "th";
+    }
+}
+
+// Format the date
+var formattedDate = addOrdinalSuffix(day) + " " + month + " " + year;
+
+// Output the formatted date
+
+
+
+      const { value: comment } = await Swal.fire({
+        title: "Enter  Notification",
+        input: "text",
+        inputLabel: "Add Notification",
+        showCancelButton: true,
+        inputValidator: (value) => {
+          if (!value) {
+            return "You need to write something!";
+          }
+        },
+      });
+      
+      
+      // Create a document in the 'upload-message' collection
+      await addDoc(collection(db, 'upload-message'), {
+        time: serverTimestamp(),
+        createdAt: formattedDate,
+        message: comment,
+      });
+  
+      // Clear the comment input field after submission
+      setComment('');
+          } 
+        
+    catch (error) {
+      console.error('Error adding comment:', error);
+    }
+  };
+
+
+
  const handleUpload = async (e) => {
   const selectedFiles = Array.from(e.target.files);
 
@@ -257,6 +347,13 @@ const [filename, setfilename] = useState('')
               multiple
             />
           </label>
+
+
+          <button className={`focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:focus:ring-yellow-900">Yellow</button> ${
+              hidden ? "hidden" : "" }`}
+           onClick={handleCommentSubmit}>Enter Comment</button>
+          
+
         </div>
 
         <button
