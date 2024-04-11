@@ -71,11 +71,7 @@ const [filename, setfilename] = useState('')
   </div>
 </form>
   `,
-  focusConfirm: false,
-  preConfirm: () => {
-      const check = document.getElementById("swal-input1").value;
-      console.log(`Checkbox value = `+ check);
-  },
+
       title: "Enter folder name",
       input: "text",
       inputLabel: "Create folder",
@@ -92,6 +88,8 @@ const [filename, setfilename] = useState('')
     if (folder == null) return;
     // Swal.fire(`Folder created with name ${folderName}`);
     const path = [...folder.path];
+
+    const addComment = document.getElementById("swal-input1").checked;
     
 
     if (folder !== ROOT_FOLDER) path.push({ name: folder.name, id: folder.id });
@@ -104,7 +102,57 @@ const [filename, setfilename] = useState('')
       parentId: folder.id,
       path: path,
     });
+    if(addComment){
+      const formattedDate = new Date().toLocaleString();
+      const comment = `Folder created with name ${folderName} abd path ${path}`;
+      try {
+        await addDoc(collection(db, 'upload-message'), {
+          time: serverTimestamp(),
+          createdAt: formattedDate,
+          message: comment,
+        });
+      } catch (error) {
+        console.error('Error adding comment:', error);
+      }
+
+    }
+      
   };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
