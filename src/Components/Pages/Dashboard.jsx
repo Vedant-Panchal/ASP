@@ -21,8 +21,10 @@ import {
   doc,
   getDoc,
   getDocs,
+  orderBy,
   query,
   where,
+  onSnapshot
 } from "firebase/firestore";
 import { db } from "../../firebase";
 import { useFolder } from "../Admin/hooks/useFolder";
@@ -34,6 +36,7 @@ import ClientBreadCrumb from "../InnerComponents/ClientBreadCrumb";
 
 // import { onMessage } from "firebase/messaging";
 function Dashboard() {
+  const [notificationData, setNotificationData] = useState([]);
   const [error, seterror] = useState("");
   const [profileHidden, setProfileHidden] = useState(true);
   const [welcomehidden, setwelcomehidden] = useState(false);
@@ -47,6 +50,8 @@ function Dashboard() {
   const [profilePicture, setProfilePicture] = useState(null);
   const { folderId } = useParams();
   const { folder, childFolders, childFiles } = useFolder(folderId);
+  const [notification, setNotification] = useState(true);
+  
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -108,7 +113,23 @@ function Dashboard() {
     setmode(mode === "light" ? "dark" : "light");
   };
 
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(query(collection(db, 'upload-message'), orderBy('time', 'desc')), 
+    (snapshot) => {
+      const data = [];
+      snapshot.forEach((doc) => {
+        data.push(doc.data());
+      });
+      setNotificationData(data);
+    });
+
+    return () => unsubscribe();
+  }, []);
+  
+
   return (
+
     <div className="antialiased h-max  bg-light dark:bg-dark">
       <nav className="bg-slate-100 px-4  dark:bg-darkNav dark:shadow-sm fixed left-0 right-0 top-0 z-50 shadow-lg rounded-sm">
         <div className="flex flex-wrap justify-between items-center relative">
@@ -248,10 +269,66 @@ function Dashboard() {
           </div>
 
           <div className="flex flex-row items-center justify-start w-fit lg:order-2">
+            {/* Notifications */}
+        <button
+          type="button"
+          data-dropdown-toggle="notification-dropdown"
+          className="p-2 mr-2 text-gray-500 rounded-full hover:text-gray-900 hover:bg-gray-100 dark:text-slate-100 dark:bg-darkElevate dark:hover:text-white dark:hover:bg-darkElevate/70"
+          onClick={()=>{ setNotification(!notification)}}
+        >
+          <span className="sr-only">View notifications</span>
+          {/* Bell icon */}
+          <svg
+            aria-hidden="true"
+            className="w-6 h-6"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
+          </svg>
+        </button>
+        {/* Dropdown menu */}
+        <div
+          className={`overflow-hidden absolute z-50 lg:w-1/4 w-90 right-32 top-7 my-4  text-base list-none bg-white divide-y divide-gray-300 shadow-lg dark:divide-gray-600 dark:bg-darkElevate rounded-xl outline outline-2 outline-zinc-800`}
+          hidden={notification}
+          id="notification-dropdown"
+        >
+          <div className="block py-2 px-4 text-base font-medium text-center text-zinc-900 bg-slate-200 dark:bg-darkNav dark:text-slate-100">
+            Notifications
+          </div>
+          <div id="box" className="overflow-y-scroll scroll max-h-64">
+
+             {/* Render notification data here */}
+          {notificationData.map((notification, index) => (
+            <div className="w-full px-2 py-2">
+               
+                <div className="text-zinc-900 font-semibold text-sm dark:text-white mb-2">
+                  {notification.message}
+                </div>
+                <div className="flex items-center justify-start gap-5 mb-2">
+                  <div className="text-xs font-medium text-zinc-500 dark:text-gray-400">
+                    Team ASP
+                  </div>    
+                  <div className="text-xs font-medium text-primary-600 dark:text-primary-500">
+                  {String(notification.createdAt)}
+                  </div>
+                  <div className="flex-1"></div>
+                </div>
+                <hr />
+              </div>
+              
+          ))}
+          
+          {notificationData.length === 0 && (
+            <div className="p-4 text-gray-500">No notifications</div>
+          )} 
+          </div>
+    
+        </div>
             <button
-              className={`${
-                mode === "light" ? "bg-yellow-300" : "bg-darkElevate"
-              } w-fit h-fit p-2 rounded-full transition-all duration-500 ease-in mr-2`}
+              className={`${mode === "light" ? "bg-yellow-300" : "bg-darkElevate"
+                } w-fit h-fit p-2 rounded-full transition-all duration-500 ease-in mr-2`}
               onClick={toggleMode}
             >
               <span className="transition-all duration-200 ease-in">
@@ -287,42 +364,36 @@ function Dashboard() {
                 <span className="block  text-gray-900 truncate dark:text-white mt-5 mb-5">
                   {userEmail}
                 </span>
-                <Link
-                  className="block dark:border-light border-zinc-900 border-t-2 pt-3 text-gray-900 truncate dark:text-white"
-                  onClick={handleSignOut}
-                >
+                <Link className="block dark:border-light border-zinc-900 border-t-2 pt-3 text-gray-900 truncate dark:text-white"
+                  onClick={handleSignOut}>
                   Logout
                 </Link>
+
               </div>
+
             </div>
-          </div>
+          </div>  
         </div>
       </nav>
       {/* Sidebar */}
       <aside
-      
-        className={`fixed top-0 left-0 z-[40] w-64 h-screen pt-14 transition-transform ease-in-out duration-200 bg-white border-r shadow-xl border-gray-200  dark:bg-darkNav dark:border-gray-700 ${
-          asidehidden ? "-translate-x-full" : "translate-x-0"
-        }`}
+        className={`fixed top-0 left-0 z-40 w-64 h-screen pt-14 transition-transform ease-in-out duration-200 bg-white border-r shadow-xl border-gray-200  dark:bg-darkNav dark:border-gray-700 ${asidehidden ? "-translate-x-full" : "translate-x-0"
+          }`}
       >
         <div className="overflow-y-auto py-5 px-3 h-full bg-white dark:bg-transparent">
           <ul className="space-y-2">
             <li>
-              <Link
-                className="flex items-center p-2 w-full text-base font-medium text-gray-900 rounded-lg transition-all duration-200 ease-in group hover:bg-gray-100 dark:text-white dark:hover:bg-darkElevate "
-                to={"/dashboard"}
-              >
+              <Link className="flex items-center p-2 w-full text-base font-medium text-gray-900 rounded-lg transition-all duration-200 ease-in group hover:bg-gray-100 dark:text-white dark:hover:bg-darkElevate "
+                to={'/dashboard'}>
                 <PanelsTopLeft />
                 <span className="ml-3 dark:text-white font-medium">
-                  Overview
+                  Dashboard
                 </span>
               </Link>
             </li>
             <li>
-              <Link
-                className="flex items-center p-2 w-full text-base font-medium text-gray-900 rounded-lg transition-all duration-200 ease-in group hover:bg-gray-100 dark:text-white dark:hover:bg-darkElevate "
-                to={"/dashboard/calculator"}
-              >
+              <Link className="flex items-center p-2 w-full text-base font-medium text-gray-900 rounded-lg transition-all duration-200 ease-in group hover:bg-gray-100 dark:text-white dark:hover:bg-darkElevate "
+                to={'/dashboard/calculator'}>
                 <GraduationCap />
                 <span className="ml-3 dark:text-white font-medium">
                   Calculators
@@ -347,6 +418,26 @@ function Dashboard() {
       <main
         className={`p-4 min-h-screen pt-20 transition-all ease-in-out delay-[40] duration-200 mb-20 `}
       >
+
+        <div className="flex flex-row items-center md:mt-14 mt-14">
+          <h1
+            className="dark:text-slate-100 text-zinc-900 lg:text-2xl text-xs font-bold md:pl-4 mb-2 "
+            hidden={welcomehidden}
+          >
+            Hey {userName} <span className="wave">👋</span>, We have been
+            missing you! 😊
+          </h1>
+          <div className="ml-3" hidden={welcomehidden}>
+            <button
+              type="button"
+              onClick={() => {
+                setwelcomehidden(true);
+              }}
+            >
+              <XCircle className="text-slate-400 hover:text-slate-200 transition-colors ease-in duration-100" />
+            </button>
+          </div>
+        </div>
         <ClientBreadCrumb currentFolder={folder} toggleMode={toggleMode} />
         <div className="flex flex-row items-center gap-4 md:mt-14 mt-14">
           {/* add a search bar to search for folder and files */}
@@ -376,11 +467,12 @@ function Dashboard() {
                 childFiles.map((childFile) => {
                   return <ClientFile file={childFile} key={childFile.id} />;
                 })}
-              {childFolders.length === 0 && childFiles.length === 0 && (
-                <div className="dark:text-slate-200 text-center w-full">
-                  We will be uploading files as soon as we get them 🫡
-                </div>
-              )}
+              {
+                childFolders.length === 0 && childFiles.length === 0 && (
+                  <div className="dark:text-slate-200 text-center w-full">We will be uploading files as soon as we get them 🫡</div>
+
+                )
+              }
             </div>
           </div>
         </div>
@@ -389,5 +481,10 @@ function Dashboard() {
     </div>
   );
 }
+
+
+
+
+
 
 export default Dashboard;

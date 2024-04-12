@@ -7,7 +7,7 @@ function App() {
   return (
     <AuthCtxtProvider>
       <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-        <div style={{ flex: 1}} className="dark:bg-dark bg-light">          
+        <div style={{ flex: 1}} className="dark:bg-dark bg-light overflow-hidden">          
             <Outlet />
         </div>
         <Footer />

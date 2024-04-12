@@ -21,5 +21,3 @@ export const analytics = getAnalytics(app);
 export const aspauth = getAuth(app)
 export const db = getFirestore()
 export const storage = getStorage()
-// export const notification = getMessaging(app)
-// getToken(notification,{vapidKey:"BKFWW0XQAShzIpK9AlltOoKLFv9wvzL6pIYHugz4Xg07UAAFWSPk_bXDRS3AxpAVRTqdSWeGB0ii5DEDJLpnllg"})
