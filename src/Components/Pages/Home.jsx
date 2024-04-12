@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 function Home() {
   return (
-    <section className="bg-light dark:bg-dark h-screen w-full flex items-center justify-center">
+    <section className="bg-Light20 dark:bg-dark h-screen w-full flex items-center justify-center">
       <Header />
     <div className="gap-8 items-center p-8 mx-auto max-w-screen-xl xl:gap-16 md:grid md:grid-cols-2 sm:py-16 lg:px-6">
       
