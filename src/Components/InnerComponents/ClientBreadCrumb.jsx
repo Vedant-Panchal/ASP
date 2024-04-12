@@ -8,7 +8,7 @@ function ClientBreadCrumb({currentFolder}) {
   return (
     <>
     <nav
-      className="flex py-4 fixed top-16 w-screen text-gray-700  bg-light dark:bg-dark"
+      className="z-[30] flex py-4 fixed top-16 w-screen text-gray-700  bg-light dark:bg-dark"
       aria-label="Breadcrumb"
     >
       <ol className="inline-flex justify-start flex-wrap items-center md:space-x-2">

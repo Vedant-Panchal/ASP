@@ -107,15 +107,13 @@ function Dashboard() {
   const toggleMode = () => {
     setmode(mode === "light" ? "dark" : "light");
   };
-  
- 
+
   return (
-    
     <div className="antialiased h-max  bg-light dark:bg-dark">
       <nav className="bg-slate-100 px-4  dark:bg-darkNav dark:shadow-sm fixed left-0 right-0 top-0 z-50 shadow-lg rounded-sm">
         <div className="flex flex-wrap justify-between items-center relative">
           <div className="flex justify-start items-center">
-          <button
+            <button
               className="p-2 mr-2 text-slate-600 rounded-lg cursor-pointer  hover:text-gray-900 hover:bg-slate-200/80 focus:bg-slate-200/80 dark:focus:bg-darkElevateHover  dark:focus:ring-gray-700 dark:text-slate-200 dark:hover:bg-darkElevate dark:hover:text-slate-300 transition-all duration-200 ease-in"
               onClick={() => {
                 setasidehidden(!asidehidden);
@@ -159,8 +157,97 @@ function Dashboard() {
               />
             </Link>
           </div>
+          <div className=" flex flex-grow flex-row justify-start items-center gap-5 lg:order-1">
+
+          <form className="w-1/2">
+            <label
+              htmlFor="default-search"
+              className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
+            >
+              Search
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                <svg
+                  className="w-4 h-4 text-gray-500 dark:text-gray-400"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                  />
+                </svg>
+              </div>
+              <input
+                type="search"
+                id="default-search"
+                className="block w-full p-4 ps-10 shadow-sm  bg-[#ecececb4] focus:outline-none  text-zinc-900 text-sm rounded-lg focus:ring-slate-500 focus:border-slate-500  dark:bg-darkElevate dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-slate-500 dark:focus:border-slate-500 dark:shadow-sm-light dark:text-slate-200 placeholder-gray-700 border-gray-200 border-1 border"
+                placeholder="Search files and folders"
+              />
+              <button
+                type="submit"
+                className="text-white absolute end-2 bottom-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              >
+                Search
+              </button>
+            </div>
+          </form>
+          <div className="">
+            
+            <ul className="items-center py-1 w-max text-sm font-medium text-gray-900  rounded-lg sm:flex dark:bg-darkElevate dark:border-gray-600 dark:text-white">
+              <li className="w-fit border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
+                <div className="flex items-center">
+                  <label
+                    htmlFor="vue-checkbox-list"
+                    className="w-full py-3 mx-3 text-sm font-medium text-gray-900 dark:text-gray-300"
+                  >
+                    Filters
+                  </label>
+                </div>
+              </li>
+              <li className="w-fit border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
+                <div className="flex items-center ps-3">
+                  <input
+                    id="vue-checkbox-list"
+                    type="checkbox"
+                    defaultValue=""
+                    className="w-4 h-4 shadow-sm bg-[#F2F2F2]  text-zinc-900 text-sm rounded-lg focus:ring-slate-500 focus:border-slate-500 block w-full p-2.5 dark:bg-darkNav/80 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-slate-500 dark:focus:border-slate-500 dark:shadow-sm-light dark:text-slate-200"
+                  />
+                  <label
+                    htmlFor="vue-checkbox-list"
+                    className="w-full py-3 mx-3  text-sm font-medium text-gray-900 dark:text-gray-300"
+                  >
+                    Files
+                  </label>
+                </div>
+              </li>
+              <li className="w-fit border-b border-gray-200 sm:border-b-0 dark:border-gray-600">
+                <div className="flex items-center ps-3">
+                  <input
+                    id="react-checkbox-list"
+                    type="checkbox"
+                    defaultValue=""
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                  />
+                  <label
+                    htmlFor="react-checkbox-list"
+                    className="w-full py-3 mx-3 text-sm font-medium text-gray-900 dark:text-gray-300"
+                  >
+                    Folders
+                  </label>
+                </div>
+              </li>
+            </ul>
+          </div>
+          </div>
+
           <div className="flex flex-row items-center justify-start w-fit lg:order-2">
-          
             <button
               className={`${
                 mode === "light" ? "bg-yellow-300" : "bg-darkElevate"
@@ -199,29 +286,32 @@ function Dashboard() {
                 </span>
                 <span className="block  text-gray-900 truncate dark:text-white mt-5 mb-5">
                   {userEmail}
-                </span>                
-                <Link className="block dark:border-light border-zinc-900 border-t-2 pt-3 text-gray-900 truncate dark:text-white"
-                onClick={handleSignOut}>
+                </span>
+                <Link
+                  className="block dark:border-light border-zinc-900 border-t-2 pt-3 text-gray-900 truncate dark:text-white"
+                  onClick={handleSignOut}
+                >
                   Logout
                 </Link>
-                
               </div>
-    
             </div>
           </div>
         </div>
       </nav>
-     {/* Sidebar */}
-     <aside
-        className={`fixed top-0 left-0 z-40 w-64 h-screen pt-14 transition-transform ease-in-out duration-200 bg-white border-r shadow-xl border-gray-200  dark:bg-darkNav dark:border-gray-700 ${
+      {/* Sidebar */}
+      <aside
+      
+        className={`fixed top-0 left-0 z-[40] w-64 h-screen pt-14 transition-transform ease-in-out duration-200 bg-white border-r shadow-xl border-gray-200  dark:bg-darkNav dark:border-gray-700 ${
           asidehidden ? "-translate-x-full" : "translate-x-0"
         }`}
       >
         <div className="overflow-y-auto py-5 px-3 h-full bg-white dark:bg-transparent">
           <ul className="space-y-2">
             <li>
-              <Link className="flex items-center p-2 w-full text-base font-medium text-gray-900 rounded-lg transition-all duration-200 ease-in group hover:bg-gray-100 dark:text-white dark:hover:bg-darkElevate "
-              to={'/dashboard'}>
+              <Link
+                className="flex items-center p-2 w-full text-base font-medium text-gray-900 rounded-lg transition-all duration-200 ease-in group hover:bg-gray-100 dark:text-white dark:hover:bg-darkElevate "
+                to={"/dashboard"}
+              >
                 <PanelsTopLeft />
                 <span className="ml-3 dark:text-white font-medium">
                   Overview
@@ -229,11 +319,13 @@ function Dashboard() {
               </Link>
             </li>
             <li>
-            <Link className="flex items-center p-2 w-full text-base font-medium text-gray-900 rounded-lg transition-all duration-200 ease-in group hover:bg-gray-100 dark:text-white dark:hover:bg-darkElevate "
-            to={'/dashboard/calculator'}>
+              <Link
+                className="flex items-center p-2 w-full text-base font-medium text-gray-900 rounded-lg transition-all duration-200 ease-in group hover:bg-gray-100 dark:text-white dark:hover:bg-darkElevate "
+                to={"/dashboard/calculator"}
+              >
                 <GraduationCap />
                 <span className="ml-3 dark:text-white font-medium">
-                   Calculators
+                  Calculators
                 </span>
               </Link>
             </li>
@@ -255,31 +347,13 @@ function Dashboard() {
       <main
         className={`p-4 min-h-screen pt-20 transition-all ease-in-out delay-[40] duration-200 mb-20 `}
       >
-        
-        <div className="flex flex-row items-center md:mt-14 mt-14">
-          <h1
-            className="dark:text-slate-100 text-zinc-900 lg:text-2xl text-xs font-bold md:pl-4 mb-2 "
-            hidden={welcomehidden}
-          >
-            Hey {userName} <span className="wave">👋</span>, We have been
-            missing you! 😊
-          </h1>
-          <div className="ml-3" hidden={welcomehidden}>
-            <button
-              type="button"
-              onClick={() => {
-                setwelcomehidden(true);
-              }}
-            >
-              <XCircle className="text-slate-400 hover:text-slate-200 transition-colors ease-in duration-100" />
-            </button>
-          </div>
-        </div>
         <ClientBreadCrumb currentFolder={folder} toggleMode={toggleMode} />
-        <div className="md:pl-4">
-          <div
-            className={`flex flex-col items-start justify-center w-full`}
-          >
+        <div className="flex flex-row items-center gap-4 md:mt-14 mt-14">
+          {/* add a search bar to search for folder and files */}
+          
+        </div>
+        <div className="md:pl-0">
+          <div className={`flex flex-col items-start justify-center w-full`}>
             <div
               className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-4 w-full`}
             >
@@ -302,16 +376,15 @@ function Dashboard() {
                 childFiles.map((childFile) => {
                   return <ClientFile file={childFile} key={childFile.id} />;
                 })}
-                {
-                  childFolders.length === 0 && childFiles.length === 0 && (
-                    
-                    <div className="dark:text-slate-200 text-center w-full">We will be uploading files as soon as we get them 🫡</div>
-                  
-                  )
-                }
+              {childFolders.length === 0 && childFiles.length === 0 && (
+                <div className="dark:text-slate-200 text-center w-full">
+                  We will be uploading files as soon as we get them 🫡
+                </div>
+              )}
             </div>
           </div>
         </div>
+        
       </main>
     </div>
   );
