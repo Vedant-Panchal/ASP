@@ -1,0 +1,7 @@
+{
+  "name": "asp",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "custom"
+}
