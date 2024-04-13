@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-key */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState , useRef } from "react";
 import Swal from "sweetalert2";
 import { UserContext } from "../../context/AuthContext";
 import { useContext } from "react";
@@ -44,15 +44,18 @@ function Dashboard() {
   const [welcomehidden, setwelcomehidden] = useState(false);
   const navigate = useNavigate();
   const [asidehidden, setasidehidden] = useState(true);
-
   const { currentUser, logoutUser, mode, setmode } = useContext(UserContext);
-
   const userName = currentUser.displayName;
   const userEmail = currentUser.email;
   const [profilePicture, setProfilePicture] = useState(null);
   const { folderId } = useParams();
   const { folder, childFolders, childFiles } = useFolder(folderId);
   const [notification, setNotification] = useState(true);
+  const[notificationIndicator, setNotificationIndicator] = useState(false);
+  let notiRef = useRef();
+  let profileRef = useRef();
+  let asideRef = useRef();
+  
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -67,9 +70,10 @@ function Dashboard() {
         console.error(error);
       }
     };
-
     fetchProfile();
   }, [userEmail]);
+
+
   const handleSignOut = async () => {
     seterror("");
 
@@ -106,6 +110,8 @@ function Dashboard() {
       }
     });
   };
+
+
   useEffect(() => {
     return mode === "dark"
       ? document.getElementById("root").classList.add("dark")
@@ -114,6 +120,7 @@ function Dashboard() {
   const toggleMode = () => {
     setmode(mode === "light" ? "dark" : "light");
   };
+
 
   useEffect(() => {
     const unsubscribe = onSnapshot(
@@ -124,11 +131,72 @@ function Dashboard() {
           data.push(doc.data());
         });
         setNotificationData(data);
-      }
-    );
+/*
+        //Retrive notification data from local storage
+    const storedData = JSON.parse(localStorage.getItem("notificationData"));
+    console.log("StoredData:"+storedData.length)
 
+    //Compare the length of stored data with current notification data.
+    //If the length is different, set indicator to true
+    if (storedData && storedData.length !== data.length) {
+      setNotificationIndicator(true);
+    }
+
+    // Store notification data in local storage
+    localStorage.setItem("notificationData", JSON.stringify(notificationData));
+    console.log("NotificationData:"+notificationData.length);
+*/
+      },
+    );            
     return () => unsubscribe();
   }, []);
+
+
+
+
+
+  let notiHandler = (e) => {
+    if(!notiRef.current.contains(e.target)){
+      setNotification(true);
+    }
+  }
+  document.addEventListener("mousedown",notiHandler);
+
+
+
+useEffect(() => {
+
+  let handler = (e) => {
+    if(!profileRef.current.contains(e.target)){
+      setProfileHidden(true);
+    }
+  }
+  document.addEventListener("mousedown",handler);
+  return () => {
+    document.removeEventListener("mousedown",handler);
+  }  
+});
+
+
+
+useEffect(() => {
+  const handleOutsideClick = (e) => {
+    // Check if the click target is not within the sidebar
+    if (asideRef.current && !asideRef.current.contains(e.target)) {
+      setasidehidden(true);
+    }
+  };
+
+  document.addEventListener("mousedown", handleOutsideClick);
+  return () => {
+    document.removeEventListener("mousedown", handleOutsideClick);
+  };
+}, [asideRef]);
+
+
+
+
+
 
   return (
     <div className="antialiased h-max  bg-Light20 dark:bg-dark">
@@ -172,7 +240,7 @@ function Dashboard() {
       <nav className="bg-light px-4  dark:bg-darkNav dark:shadow-sm fixed left-0 right-0 top-0 z-50 shadow-sm">
         <div className="flex flex-wrap justify-between items-center relative">
           <div className="flex justify-start items-center">
-            <button
+            <button 
               className="p-2 mr-2 text-zinc-900 rounded-lg cursor-pointer  hover:text-gray-900 hover:bg-Light30 focus:bg-Light30 dark:focus:bg-darkElevateHover  dark:focus:ring-gray-700 dark:text-slate-200 dark:hover:bg-darkElevate dark:hover:text-slate-300 transition-all duration-200 ease-in"
               onClick={() => {
                 setasidehidden(!asidehidden);
@@ -325,9 +393,13 @@ function Dashboard() {
               >
                 <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
               </svg>
+                {/* Notification indicator */}
+  {notificationIndicator && (
+    <span className="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full"></span>
+  )}
             </button>
             {/* Dropdown menu */}
-            <div
+            <div ref={notiRef}
               className={`overflow-hidden absolute z-50 lg:w-1/4 w-90 right-32 top-7 my-4  text-base list-none bg-white divide-y divide-gray-300 shadow-lg dark:divide-gray-600 dark:bg-darkElevate rounded-xl outline outline-2 outline-zinc-800`}
               hidden={notification}
               id="notification-dropdown"
@@ -387,7 +459,7 @@ function Dashboard() {
               />
             </button>
             {/* Dropdown menu */}
-            <div
+            <div ref={profileRef}
               className="absolute top-0 right-0 z-20 my-2 w-56 text-base list-none bg-white outline-dashed outline-2 lg:outline-2 dark:outline-light shadow dark:bg-dark dark:divide-gray-600 rounded-xl"
               id="dropdown"
               hidden={profileHidden}
@@ -411,12 +483,12 @@ function Dashboard() {
         </div>
       </nav>
       {/* Sidebar */}
-      <aside
+      <aside 
         className={`fixed top-0 left-0 z-40 w-64 h-screen pt-14 transition-transform ease-in-out duration-200 bg-Light20 border-r shadow-xl border-gray-200  dark:bg-darkNav dark:border-gray-700 ${
           asidehidden ? "-translate-x-full" : "translate-x-0"
         }`}
       >
-        <div className="overflow-y-auto py-5 px-3 h-full dark:bg-transparent">
+        <div className="overflow-y-auto py-5 px-3 h-full dark:bg-transparent" ref={asideRef}>
           <ul className="space-y-2">
             <li>
               <Link
