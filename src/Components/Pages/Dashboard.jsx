@@ -53,14 +53,11 @@ function Dashboard() {
   const [notificationIndicator, setNotificationIndicator] = useState(false);
   const [notificationCount, setNotificationCount] = useState(0);
   const [notificationData, setNotificationData] = useState([]);
-  const [filter, setFilter] = useState("All")
+  const [filter, setFilter] = useState("All");
+  const [filterDropDown, setFilterDropDown] = useState(false);
   let notiRef = useRef();
   let asideRef = useRef();
-  const dropdownRef = useRef(null);
-
-  const toggleDropdown = () => {
-    dropdownRef.current.classList.toggle("hidden");
-  };
+  let filterRef = useRef();
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -186,8 +183,8 @@ function Dashboard() {
 
   useEffect(() => {
     let handler = (e) => {
-      if (!dropdownRef.current.contains(e.target)) {
-        toggleDropdown()
+      if (!filterRef.current.contains(e.target)) {
+        setFilterDropDown(false)
       }
     };
     document.addEventListener("click", handler);
@@ -323,7 +320,7 @@ function Dashboard() {
               />
             </Link>
           </div>
-          <div className=" flex flex-grow flex-row justify-start items-center gap-5 lg:order-1">
+          <div className=" flex flex-grow flex-row justify-start items-center gap-5 lg:order-1" ref={filterRef}>
             <form className="max-w-lg w-1/2">
               <div className="flex relative rounded-lg dark:divide-gray-600 divide-gray-300">
                 <label
@@ -335,7 +332,7 @@ function Dashboard() {
 
                 <button
                   id="dropdown-button"
-                  onClick={toggleDropdown}
+                  onClick={()=>setFilterDropDown(!filterDropDown)}
                   className="flex-shrink-0 flex-grow z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center rounded-l-lg focus:outline-none border-r-2 focus:decoration-transparent bg-Light20 hover:bg-Light30 dark:hover:bg-darkElevate/80 text-gray-900 dark:text-white dark:bg-darkElevate"
                   type="button"
                 >
@@ -357,10 +354,10 @@ function Dashboard() {
                   </svg>
                 </button>
                 <div
-                  ref={dropdownRef}
                   id="dropdown"
-                  className="absolute top-14 z-10 hidden shadow-md bg-Light20 dark:bg-darkElevate divide-y divide-gray-100 rounded-lg w-44"
-                  onClick={()=> toggleDropdown()}
+                  className="absolute top-14 z-10 shadow-md bg-Light20 dark:bg-darkElevate divide-y divide-gray-100 rounded-lg w-44"
+                  onClick={()=> setFilterDropDown(false)}
+                  hidden={!filterDropDown}
                 >
                   <ul
                     className="py-2 text-sm text-gray-700 dark:text-gray-200"
@@ -390,8 +387,6 @@ function Dashboard() {
                       <button
                         type="button"
                         className="inline-flex w-full px-4 py-2 bg-Light20 hover:bg-Light30 dark:hover:bg-dark/30 text-gray-900 dark:text-white dark:bg-darkElevate"
-                        
-
                       >
                         Folders
                       </button>
