@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-key */
-import React, { useEffect, useState , useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Swal from "sweetalert2";
 import { UserContext } from "../../context/AuthContext";
 import { useContext } from "react";
@@ -35,10 +35,10 @@ import ClientFolder from "./ClientFolder";
 import FolderBreadCrumb from "../Admin/FolderBreadCrumb";
 import ClientFile from "./ClientFile";
 import ClientBreadCrumb from "../InnerComponents/ClientBreadCrumb";
+import { data } from "autoprefixer";
 
 // import { onMessage } from "firebase/messaging";
 function Dashboard() {
-  const [notificationData, setNotificationData] = useState([]);
   const [error, seterror] = useState("");
   const [profileHidden, setProfileHidden] = useState(false);
   const navigate = useNavigate();
@@ -49,13 +49,18 @@ function Dashboard() {
   const [profilePicture, setProfilePicture] = useState(null);
   const { folderId } = useParams();
   const { folder, childFolders, childFiles } = useFolder(folderId);
-  const [notification, setNotification] = useState(false);
-  const[notificationIndicator, setNotificationIndicator] = useState(false);
-  const [notificationCount, setNotificationCount] = useState(0)
+  const [notificationDropDown, setnotificationDropDown] = useState(false);
+  const [notificationIndicator, setNotificationIndicator] = useState(false);
+  const [notificationCount, setNotificationCount] = useState(0);
+  const [notificationData, setNotificationData] = useState([]);
+  const [filter, setFilter] = useState("All")
   let notiRef = useRef();
   let asideRef = useRef();
-  
+  const dropdownRef = useRef(null);
 
+  const toggleDropdown = () => {
+    dropdownRef.current.classList.toggle("hidden");
+  };
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -71,7 +76,6 @@ function Dashboard() {
     };
     fetchProfile();
   }, [userEmail]);
-
 
   const handleSignOut = async () => {
     seterror("");
@@ -110,7 +114,6 @@ function Dashboard() {
     });
   };
 
-
   useEffect(() => {
     return mode === "dark"
       ? document.getElementById("root").classList.add("dark")
@@ -120,75 +123,89 @@ function Dashboard() {
     setmode(mode === "light" ? "dark" : "light");
   };
 
-function setLocalStorageData(data) {
-  localStorage.setItem("notificationData", JSON.stringify(data));
-}
+  function setLocalStorageData(data) {
+    localStorage.setItem("notificationData", JSON.stringify(data));
+  }
 
-useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const unsubscribe = await onSnapshot(query(collection(db, "upload-message"), orderBy("time", "desc")), 
-      (snapshot) => {
-        // gets all the notifications stored in local storage
-        const storedData = JSON.parse(localStorage.getItem("notificationData"));
-        // Map through the snapshot and get the data from firebase collection
-        const notifications = snapshot.docs.map(doc => doc.data());
-
-        console.log("StoredData:"+ storedData)
-
-        if (storedData && storedData.length > 0) {
-          // console.log("StoredData:"+ storedData);
-          // Compare fetched notifications with stored notifications to get new ones
-          const newNotis = notifications.filter(item => !storedData.some(existing => existing.message === item.message));
-
-          if (newNotis.length > 0) {
-            console.log("New notifications found " + newNotis.length);
-            setNotificationIndicator(true); // Set indicator if there are new notifications
-            setNotificationCount(newNotis.length);
-          } 
-
-          const updatedNotis = [...newNotis, ...storedData]; // Combine old and new notifications
-          setNotificationData(updatedNotis);
-
-          console.log("UpdatedData:"+ JSON.parse(updatedNotis))
-          localStorage.removeItem("notificationData");
-          setLocalStorageData(updatedNotis);
-        } 
-        else {
-          // If no notifications in local storage, set fetched notifications
-          setNotificationIndicator(true);
-          setNotificationCount(notifications.length);
-          setNotificationData(notifications);
-          console.log("NotificationData:"+ JSON.stringify(notifications));
-          setLocalStorageData(notifications);
-        }
-      });
-      // Return the unsubscribe function to detach the listener when component unmounts
-      return unsubscribe;
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  fetchData();
-}, []); // Empty dependency array to run the effect only once on component mount
-
-
-
+  function getLocalStorageData() {
+    return JSON.parse(localStorage.getItem("notificationData"));
+  }
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const unsubscribe = await onSnapshot(
+          query(collection(db, "upload-test"), orderBy("time", "desc")),
+          (snapshot) => {
+            // gets all the notifications stored in local storage
+            const storedData = getLocalStorageData();
+            // Map through the snapshot and get the data from firebase collection
+            const notifications = snapshot.docs.map((doc) => doc.data());
 
-    let handler = (e) => {
-      if(!notiRef.current.contains(e.target)){
-        setNotification(false);
+            console.log("StoredData:" + storedData);
+
+            if (storedData && storedData.length > 0) {
+              // console.log("StoredData:"+ storedData);
+              // Compare fetched notifications with stored notifications to get new ones
+              const newNotis = notifications.filter(
+                (item) =>
+                  !storedData.some(
+                    (existing) => existing.message === item.message
+                  )
+              );
+
+              if (newNotis.length > 0) {
+                console.log("New notifications found " + newNotis.length);
+                setNotificationIndicator(true); // Set indicator if there are new notifications
+                setNotificationCount(newNotis.length);
+              }
+
+              const updatedNotis = [...newNotis, ...storedData]; // Combine old and new notifications
+              setNotificationData(updatedNotis);
+
+              console.log("UpdatedData:" + JSON.parse(updatedNotis));
+              setLocalStorageData(updatedNotis);
+            } else {
+              // If no notifications in local storage, set fetched notifications
+              setNotificationIndicator(true);
+              setNotificationCount(notifications.length);
+              setNotificationData(notifications);
+              console.log("NotificationData:" + JSON.stringify(notifications));
+            }
+          }
+        );
+        // Return the unsubscribe function to detach the listener when component unmounts
+        return unsubscribe;
+      } catch (error) {
+        console.error("Error fetching data:", error);
       }
-    }
-    document.addEventListener("mousedown",handler);
-    return () => {
-      document.removeEventListener("mousedown",handler);
-    }  
-  });
+    };
 
+    fetchData();
+  }, []); // Empty dependency array to run the effect only once on component mount
+
+  useEffect(() => {
+    let handler = (e) => {
+      if (!dropdownRef.current.contains(e.target)) {
+        toggleDropdown()
+      }
+    };
+    document.addEventListener("click", handler);
+    return () => {
+      document.removeEventListener("click", handler);
+    };
+  });
+  useEffect(() => {
+    let handler = (e) => {
+      if (!notiRef.current.contains(e.target)) {
+        setnotificationDropDown(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => {
+      document.removeEventListener("mousedown", handler);
+    };
+  });
 
   useEffect(() => {
     let handler = (e) => {
@@ -196,35 +213,27 @@ useEffect(() => {
         setProfileHidden(false);
       }
     };
-  
+
     document.addEventListener("mousedown", handler);
-  
+
     return () => {
       document.removeEventListener("mousedown", handler);
     };
   }, [profileHidden]); // Adding profileHidden to the dependency array
-  
 
+  useEffect(() => {
+    const handleOutsideClick = (e) => {
+      // Check if the click target is not within the sidebar
+      if (asideRef.current && !asideRef.current.contains(e.target)) {
+        setasidehidden(false);
+      }
+    };
 
-
-useEffect(() => {
-  const handleOutsideClick = (e) => {
-    // Check if the click target is not within the sidebar
-    if (asideRef.current && !asideRef.current.contains(e.target)) {
-      setasidehidden(false);
-    }
-  };
-
-  document.addEventListener("mousedown", handleOutsideClick);
-  return () => {
-    document.removeEventListener("mousedown", handleOutsideClick);
-  };
-}, [asideRef]);
-
-
-
-
-
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [asideRef]);
 
   return (
     <div className="antialiased h-max  bg-Light20 dark:bg-dark">
@@ -262,13 +271,15 @@ useEffect(() => {
               </g>
             </svg>
           </span>
-          <span className="text-[#00DE73] peer-hover:block text-xs font-normal hidden">Download App Now</span>
+          <span className="text-[#00DE73] peer-hover:block text-xs font-normal hidden">
+            Download App Now
+          </span>
         </div>
-            </Link>
+      </Link>
       <nav className="bg-light px-4  dark:bg-darkNav dark:shadow-sm fixed left-0 right-0 top-0 z-50 shadow-sm">
         <div className="flex flex-wrap justify-between items-center relative">
           <div className="flex justify-start items-center" ref={asideRef}>
-            <button 
+            <button
               className="p-2 mr-2 text-zinc-900 rounded-lg cursor-pointer  hover:text-gray-900 hover:bg-Light30 focus:bg-Light30 dark:focus:bg-darkElevateHover  dark:focus:ring-gray-700 dark:text-slate-200 dark:hover:bg-darkElevate dark:hover:text-slate-300 transition-all duration-200 ease-in"
               onClick={() => {
                 setasidehidden(!asidehidden);
@@ -313,103 +324,129 @@ useEffect(() => {
             </Link>
           </div>
           <div className=" flex flex-grow flex-row justify-start items-center gap-5 lg:order-1">
-            <form className="w-1/2">
-              <label
-                htmlFor="default-search"
-                className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
-              >
-                Search
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+            <form className="max-w-lg w-1/2">
+              <div className="flex relative rounded-lg dark:divide-gray-600 divide-gray-300">
+                <label
+                  htmlFor="search-dropdown"
+                  className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
+                >
+                  Search for files and folders
+                </label>
+
+                <button
+                  id="dropdown-button"
+                  onClick={toggleDropdown}
+                  className="flex-shrink-0 flex-grow z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center rounded-l-lg focus:outline-none border-r-2 focus:decoration-transparent bg-Light20 hover:bg-Light30 dark:hover:bg-darkElevate/80 text-gray-900 dark:text-white dark:bg-darkElevate"
+                  type="button"
+                >
+                  {filter}{" "}
                   <svg
-                    className="w-4 h-4 text-gray-500 dark:text-gray-400"
+                    className="w-2.5 h-2.5 ms-2.5"
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
-                    viewBox="0 0 20 20"
+                    viewBox="0 0 10 6"
                   >
                     <path
                       stroke="currentColor"
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={2}
-                      d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                      d="m1 1 4 4 4-4"
                     />
                   </svg>
-                </div>
-                <input
-                  type="search"
-                  id="default-search"
-                  className="block w-full p-4 ps-10 shadow-sm  bg-Light20 border-2 dark:border-none focus:outline-none  text-zinc-900 text-sm rounded-lg focus:border-slate-500 dark:focus:border-none  dark:bg-darkElevate  dark:placeholder-gray-400   dark:shadow-sm-light dark:text-slate-200 placeholder-gray-700"
-                  placeholder="Search files and folders"
-                />
-                <button
-                  type="submit"
-                  className="text-white absolute end-2 bottom-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                >
-                  Search
                 </button>
+                <div
+                  ref={dropdownRef}
+                  id="dropdown"
+                  className="absolute top-14 z-10 hidden shadow-md bg-Light20 dark:bg-darkElevate divide-y divide-gray-100 rounded-lg w-44"
+                  onClick={()=> toggleDropdown()}
+                >
+                  <ul
+                    className="py-2 text-sm text-gray-700 dark:text-gray-200"
+                    aria-labelledby="dropdown-button"
+                  >
+                    <li
+                        onClick={()=> setFilter('All')}
+                    >
+                      <button
+                        type="button"
+                        className="inline-flex w-full px-4 py-2 bg-Light20 hover:bg-Light30 dark:hover:bg-dark/30 text-gray-900 dark:text-white dark:bg-darkElevate"
+                      >
+                        All
+                      </button>
+                    </li>
+                    <li
+                        onClick={()=> setFilter('Files')}
+                    >
+                      <button
+                        type="button"
+                        className="inline-flex w-full px-4 py-2 bg-Light20 hover:bg-Light30 dark:hover:bg-dark/30 text-gray-900 dark:text-white dark:bg-darkElevate"
+                      >
+                        Files
+                      </button>
+                    </li>
+                    <li onClick={()=> {setFilter('Folders'),console.log(filter)}}>
+                      <button
+                        type="button"
+                        className="inline-flex w-full px-4 py-2 bg-Light20 hover:bg-Light30 dark:hover:bg-dark/30 text-gray-900 dark:text-white dark:bg-darkElevate"
+                        
+
+                      >
+                        Folders
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="relative w-full">
+                  <input
+                    type="search"
+                    id="search-dropdown"
+                    className="block w-full p-4 ps-3  bg-Light20 dark:border-none focus:outline-none  text-zinc-900 text-sm rounded-r-lg dark:focus:border-none  dark:bg-darkElevate  dark:placeholder-gray-400   dark:shadow-sm-light dark:text-slate-200 placeholder-gray-700"
+                    placeholder="Search Files and Folders..."
+                    required=""
+                  />
+                  <button
+                    type="submit"
+                    className="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-blue-700 rounded-e-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  >
+                    <svg
+                      className="w-4 h-4"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2.5}
+                        d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                      />
+                    </svg>
+                    <span className="sr-only">Search</span>
+                  </button>
+                </div>
               </div>
             </form>
-            <div >
-              <ul className="items-center py-1 w-max text-sm font-medium text-gray-900  rounded-lg sm:flex dark:bg-darkElevate dark:border-gray-600 dark:text-white">
-                <li className="w-fit border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
-                  <div className="flex items-center">
-                    <label
-                      htmlFor="vue-checkbox-list"
-                      className="w-full cursor-pointer select-none py-3 mx-3 text-sm font-medium text-gray-900 dark:text-gray-300"
-                    >
-                      Filters
-                    </label>
-                  </div>
-                </li>
-                <li className="w-fit border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
-                  <div className="flex items-center ps-3">
-                    <input
-                      id="vue-checkbox-list"
-                      type="checkbox"
-                      defaultValue=""
-                      className="w-4 h-4 shadow-sm bg-[#F2F2F2]  text-zinc-900 text-sm rounded-lg focus:ring-slate-500 focus:border-slate-500 block p-2.5 dark:bg-darkNav/80 dark:border-gray-600 dark:placeholder-gray-400 cursor-pointer dark:focus:ring-slate-500 dark:focus:border-slate-500 dark:shadow-sm-light dark:text-slate-200"
-                    />
-                    <label
-                      htmlFor="vue-checkbox-list"
-                      className="w-full py-3 mx-3 select-none cursor-pointer text-sm font-medium text-gray-900 dark:text-gray-300"
-                    >
-                      Files
-                    </label>
-                  </div>
-                </li>
-                <li className="w-fit border-b border-gray-200 sm:border-b-0 dark:border-gray-600">
-                  <div className="flex items-center ps-3">
-                    <input
-                      id="react-checkbox-list"
-                      type="checkbox"
-                      defaultValue=""
-                      className="w-4 h-4 select-none cursor-pointer text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                    />
-                    <label
-                      htmlFor="react-checkbox-list"
-                      className="w-full py-3 mx-3 text-sm cursor-pointer select-none font-medium text-gray-900 dark:text-gray-300"
-                    >
-                      Folders
-                    </label>
-                  </div>
-                </li>
-              </ul>
-            </div>
           </div>
 
-          <div className="flex flex-row items-center justify-start w-fit lg:order-2" ref={notiRef}>
+          <div
+            className="flex flex-row items-center justify-start w-fit lg:order-2"
+            ref={notiRef}
+          >
             {/* Notifications */}
             <button
               type="button"
               data-dropdown-toggle="notification-dropdown"
               className="relative p-2 mr-2 text-zinc-900 bg-Light30 rounded-full hover:text-zinc-900 hover:bg-Light30/70 dark:text-slate-100 dark:bg-darkElevate dark:hover:text-white dark:hover:bg-darkElevate/70"
               onClick={() => {
-                setNotification(!notification);
+                setnotificationDropDown(!notificationDropDown);
                 setNotificationIndicator(false);
                 setNotificationCount(0);
+                setLocalStorageData(notificationData);
               }}
             >
               <span className="sr-only">View notifications</span>
@@ -423,15 +460,21 @@ useEffect(() => {
               >
                 <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
               </svg>
-                {/* Notification indicator */}
-  {notificationIndicator && (
-    <span className="absolute -top-1 right-0 w-3 h-3 flex justify-center items-center rounded-full text-xs bg-red-500 p-2"><div>{notificationCount}</div></span>
-  )}
+              {/* Notification indicator */}
+              {notificationIndicator && (
+                <span
+                  className={`absolute -top-1 right-0 w-3 h-3 flex justify-center items-center rounded-full text-xs bg-red-500 p-2 ${
+                    notificationCount > 0 ? "" : "hidden"
+                  }`}
+                >
+                  <div>{notificationCount}</div>
+                </span>
+              )}
             </button>
             {/* Dropdown menu */}
-            <div 
+            <div
               className={`overflow-hidden absolute z-50 lg:w-1/4 w-90 right-32 top-7 my-4  text-base list-none bg-white divide-y divide-gray-300 shadow-lg dark:divide-gray-600 dark:bg-darkElevate rounded-xl outline outline-2 outline-zinc-800`}
-              hidden={!notification}
+              hidden={!notificationDropDown}
               id="notification-dropdown"
             >
               <div className="block py-2 px-4 text-base font-medium text-center text-zinc-900 bg-Light30 dark:bg-darkNav dark:text-slate-100">
@@ -513,7 +556,7 @@ useEffect(() => {
         </div>
       </nav>
       {/* Sidebar */}
-      <aside 
+      <aside
         className={`fixed top-0 left-0 z-40 w-64 h-screen pt-14 transition-transform ease-in-out duration-200 bg-Light20 border-r shadow-xl border-gray-200  dark:bg-darkNav dark:border-gray-700 ${
           asidehidden ? "translate-x-0" : "-translate-x-full"
         }`}

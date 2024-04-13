@@ -166,7 +166,7 @@ var formattedDate = addOrdinalSuffix(day) + " " + month + " " + year;
       
       
       // Create a document in the 'upload-message' collection
-      await addDoc(collection(db, 'upload-message'), {
+      await addDoc(collection(db, 'upload-test'), {
         time: serverTimestamp(),
         createdAt: formattedDate,
         message: comment,
