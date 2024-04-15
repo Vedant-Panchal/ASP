@@ -105,7 +105,7 @@ const AdminDashboard = () => {
       const currentPath = path.map(folder => folder.name).join('/');
       const comment = `Folder created with name "${folderName}" in "${currentPath}"`;
       try {
-        await addDoc(collection(db, 'upload-message'), {
+        await addDoc(collection(db, 'upload-notification'), {
           time: serverTimestamp(),
           createdAt: getCurrentDate(),
           message: comment,
@@ -174,8 +174,8 @@ const AdminDashboard = () => {
       });
 
 
-      // Create a document in the 'upload-message' collection
-      await addDoc(collection(db, 'upload-message'), {
+      // Create a document in the 'upload-notification' collection
+      await addDoc(collection(db, 'upload-notification'), {
         time: serverTimestamp(),
         createdAt: getCurrentDate(),
         message: comment,
@@ -239,7 +239,7 @@ const AdminDashboard = () => {
 
               if (filesChecked) {
                 const comment = `File uploaded with name "${file.name}" in "${folderPathString}"`;
-                addDoc(collection(db, 'upload-message'), {
+                addDoc(collection(db, 'upload-notification'), {
                   time: serverTimestamp(),
                   createdAt: getCurrentDate(),
                   message: comment,
