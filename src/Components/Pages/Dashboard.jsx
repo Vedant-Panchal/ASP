@@ -238,7 +238,7 @@ function Dashboard() {
         to={
           "https://github.com/XENOSTAR7/ASP-C-CODES/releases/download/v1.0.0/ASP-v1.0.0-arm64-v8a-release.apk "
         }
-        className="fixed w-fit rounded-full bottom-10 right-5 mr-2 p-3 hover:bg-teal-900/95 bg-teal-900"
+        className="z-50 fixed w-fit rounded-full bottom-10 right-5 mr-2 p-3 hover:bg-teal-900/95 bg-teal-900"
       >
         <div className="flex items-center  justify-start gap-2 w-max">
           <span className="peer">
@@ -277,7 +277,7 @@ function Dashboard() {
         <div className="flex flex-wrap justify-between items-center relative">
           <div className="flex justify-start items-center" ref={asideRef}>
             <button
-              className="p-2 mr-2 text-zinc-900 rounded-lg cursor-pointer  hover:text-gray-900 hover:bg-Light30 focus:bg-Light30 dark:focus:bg-darkElevateHover  dark:focus:ring-gray-700 dark:text-slate-200 dark:hover:bg-darkElevate dark:hover:text-slate-300 transition-all duration-200 ease-in"
+              className="p-2 mr-2 text-zinc-900 rounded-lg cursor-pointer  hover:text-gray-900 hover:bg-Light30 focus:bg-Light30 dark:focus:bg-darkElevateHover  dark:focus:ring-gray-700 dark:text-slate-200 dark:hover:bg-darkElevate dark:bg-darkElevate bg-Light30 dark:hover:text-slate-300 transition-all duration-200 ease-in"
               onClick={() => {
                 setasidehidden(!asidehidden);
               }}
@@ -457,18 +457,18 @@ function Dashboard() {
               </svg>
               {/* Notification indicator */}
               {notificationIndicator && (
-                <span
-                  className={`absolute -top-1 right-0 w-3 h-3 flex justify-center items-center rounded-full text-xs bg-red-500 p-2 ${
+                <div
+                  className={`absolute -top-1 right-0 w-4 h-4 pl-[1px] pb-[1px] flex justify-center items-center rounded-full text-xs bg-blue-600 text-primary-200 font-semibold ${
                     notificationCount > 0 ? "" : "hidden"
                   }`}
                 >
                   <div>{notificationCount}</div>
-                </span>
+                </div>
               )}
             </button>
             {/* Dropdown menu */}
             <div
-              className={`overflow-hidden absolute z-50 lg:w-1/4 w-90 right-32 top-7 my-4  text-base list-none bg-white divide-y divide-gray-300 shadow-lg dark:divide-gray-600 dark:bg-darkElevate rounded-xl outline outline-2 outline-zinc-800`}
+              className={`overflow-hidden absolute z-[55] w-full lg:w-1/4 w-90 right-0 top-9 md:right-32 md:top-7 my-4  text-base list-none bg-white divide-y divide-gray-300 shadow-lg dark:divide-gray-600 dark:bg-darkElevate rounded-xl outline outline-2 outline-zinc-800`}
               hidden={!notificationDropDown}
               id="notification-dropdown"
             >
@@ -598,20 +598,22 @@ function Dashboard() {
       <main
         className={`p-4 min-h-screen bg-Light20 dark:bg-dark pt-20 transition-all ease-in-out delay-[40] duration-200 mb-20 `}
       >
-        <div className="flex flex-col mb-2 items-start justify-center md:mt-14 md:ml-2 mt-14">
-          <h1 className="dark:text-slate-100 text-zinc-900 lg:text-2xl text-xs font-bold  mb-2 ">
+        <div className="flex flex-col mb-2 items-start justify-center md:mt-14 mt-14">
+          <h1 className="dark:text-slate-100 text-zinc-900 lg:text-2xl text-md font-bold  mb-2 ">
             Feature Update 📢
             <br />
           </h1>
-          <div className="text-md dark:text-slate-200 ">
+          <div className="md:text-md text-sm dark:text-slate-200 ">
             We have added a new notification feature to notify you whenever a
             file/folder is uploaded🔔
           </div>
         </div>
         <ClientBreadCrumb currentFolder={folder} toggleMode={toggleMode} />
-        <div className="flex flex-row items-center gap-4 md:mt-14 mt-14">
-          {/* add a search bar to search for folder and files */}
-        </div>
+        {/* <div className="hidden flex flex-row items-center gap-4 md:mt-14 mt-14">
+          
+       Add search bar here
+        </div> */}
+
         <div className="md:pl-0">
           <div className={`flex flex-col items-start justify-center w-full`}>
             <div
@@ -626,7 +628,7 @@ function Dashboard() {
             </div>
             {childFolders.length > 0 && childFiles.length > 0 && (
               <div className="w-full">
-                <hr className="dark:bg-slate-300 h-1 w-full bg-slate-400 border-0 mt-4 rounded-md" />
+                <hr className="dark:bg-slate-300 h-1 w-full bg-zinc-800 border-0 mt-4 rounded-md" />
               </div>
             )}
             <div
