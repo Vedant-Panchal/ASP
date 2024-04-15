@@ -71,8 +71,6 @@ const AdminDashboard = () => {
   </div>
 </form>
   `,
-
-      title: "Enter folder name",
       input: "text",
       inputLabel: "Create folder",
       showCancelButton: true,
@@ -387,7 +385,7 @@ const AdminDashboard = () => {
   <div className="ml-3 text-sm">
     <label
       htmlFor="newsletter"
-      className="font-light text-blue-500 dark:text-gray-300"
+      className="font-normal text-blue-500 dark:text-white"
     >
       Send notification
     </label>

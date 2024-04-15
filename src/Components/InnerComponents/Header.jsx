@@ -26,8 +26,45 @@ function Header() {
 
   return (
     <header>
+      <Link
+        to={
+          "https://github.com/XENOSTAR7/ASP-C-CODES/releases/download/v1.0.0/ASP-v1.0.0-arm64-v8a-release.apk "
+        }
+        className="fixed w-fit rounded-full bottom-24 right-5 mr-2 p-2 hover:bg-teal-900/95 bg-teal-900"
+      >
+        <div className="flex items-center  justify-start gap-2 w-max">
+          <span className="peer">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              x="0"
+              y="0"
+              viewBox="0 0 256 256"
+            >
+              <g
+                fill={`${mode === "dark" ? "#00D824" : "#00DE73"}`}
+                strokeMiterlimit="10"
+                fontFamily="none"
+                fontSize="none"
+                fontWeight="none"
+                textAnchor="none"
+                transform="scale(10.66667)"
+              >
+                <path
+                  d="M18.239 7.945l1.593-2.39a1 1 0 10-1.664-1.11l-1.679 2.519A10.956 10.956 0 0012 6c-1.601 0-3.117.35-4.489.964L5.832 4.445a1 1 0 10-1.664 1.11l1.593 2.39A10.984 10.984 0 001 17v1a2 2 0 002 2h18a2 2 0 002-2v-1c0-3.757-1.887-7.071-4.761-9.055z"
+                  opacity="0.35"
+                ></path>
+                <circle cx="16.5" cy="14.5" r="1.5"></circle>
+                <circle cx="7.5" cy="14.5" r="1.5"></circle>
+              </g>
+            </svg>
+          </span>
+          <span className="text-[#00DE73] peer-hover:block text-xs font-normal hidden">Download App Now</span>
+        </div>
+            </Link>
       <nav
-        className={` fixed top-0 left-0 right-0  border-gray-200  lg:px-6 bg-slate-100 px-4  dark:bg-darkNav dark:shadow-sm`}
+        className={` fixed top-0 left-0 right-0  border-gray-200 shadow-sm  lg:px-6 bg-Light10 px-4  dark:bg-darkNav dark:shadow-sm`}
       >
         <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
           <div className="flex justify-between items-center w-max h-max">
@@ -75,16 +112,7 @@ function Header() {
               </span>
             </button>
 
-            <Link
-              to={"https://github.com/XENOSTAR7/ASP-C-CODES/releases/download/v1.0.0/ASP-v1.0.0-arm64-v8a-release.apk "}
-              className="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-bold rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 transition-all duration-200 ease-in"
-
-            >
-              <div className='flex items-center justify-start gap-2 w-max'>
-               <ArrowDownToLine size={19} strokeWidth={3}/>
-               <span>APP</span>  
-              </div>
-            </Link>
+            
             
             <Link
               to={"/signin"}
