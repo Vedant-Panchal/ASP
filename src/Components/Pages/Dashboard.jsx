@@ -132,7 +132,7 @@ function Dashboard() {
     const fetchData = async () => {
       try {
         const unsubscribe = await onSnapshot(
-          query(collection(db, "upload-message"), orderBy("time", "desc")),
+          query(collection(db, "upload-notification"), orderBy("time", "desc")),
           (snapshot) => {
             // gets all the notifications stored in local storage
             const storedData = getLocalStorageData();
