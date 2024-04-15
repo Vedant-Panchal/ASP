@@ -132,7 +132,7 @@ function Dashboard() {
     const fetchData = async () => {
       try {
         const unsubscribe = await onSnapshot(
-          query(collection(db, "upload-test"), orderBy("time", "desc")),
+          query(collection(db, "upload-message"), orderBy("time", "desc")),
           (snapshot) => {
             // gets all the notifications stored in local storage
             const storedData = getLocalStorageData();
@@ -320,7 +320,7 @@ function Dashboard() {
               />
             </Link>
           </div>
-          <div className=" flex flex-grow flex-row justify-start items-center gap-5 lg:order-1" ref={filterRef}>
+         {/* <div className=" flex flex-grow flex-row justify-start items-center gap-5 lg:order-1" ref={filterRef}>
             <form className="max-w-lg w-1/2">
               <div className="flex relative rounded-lg dark:divide-gray-600 divide-gray-300">
                 <label
@@ -426,7 +426,7 @@ function Dashboard() {
                 </div>
               </div>
             </form>
-          </div>
+          </div>*/}
 
           <div
             className="flex flex-row items-center justify-start w-fit lg:order-2"
