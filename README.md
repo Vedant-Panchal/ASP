@@ -10,7 +10,7 @@ Currently, two official plugins are available:
 # ASP
 
 <p align="center"> 
-	<img src="./public/assets/app_icon.png" height="300px">
+	<img src="./public/assets/FinalLogo.png" height="300px">
 </p>
 
 ASP is a centralized student portal for all your course material. View it [here](https://asp24.vercel.app/).
