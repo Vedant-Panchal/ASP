@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-key */
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import Swal from "sweetalert2";
 import { UserContext } from "../../context/AuthContext";
 import { useContext } from "react";
@@ -20,13 +20,11 @@ import {
 } from "lucide-react";
 import {
   collection,
-  doc,
-  getDoc,
-  getDocs,
   orderBy,
   query,
   where,
   onSnapshot,
+  getDocs,
 } from "firebase/firestore";
 import { db } from "../../firebase";
 import { useFolder } from "../Admin/hooks/useFolder";
@@ -36,7 +34,7 @@ import FolderBreadCrumb from "../Admin/FolderBreadCrumb";
 import ClientFile from "./ClientFile";
 import ClientBreadCrumb from "../InnerComponents/ClientBreadCrumb";
 import { data } from "autoprefixer";
-
+import debounce from 'lodash.debounce';
 // import { onMessage } from "firebase/messaging";
 function Dashboard() {
   const [error, seterror] = useState("");
@@ -53,8 +51,12 @@ function Dashboard() {
   const [notificationIndicator, setNotificationIndicator] = useState(false);
   const [notificationCount, setNotificationCount] = useState(0);
   const [notificationData, setNotificationData] = useState([]);
-  const [filter, setFilter] = useState("All");
   const [filterDropDown, setFilterDropDown] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [filter, setFilter] = useState('All');
+
+
   let notiRef = useRef();
   let asideRef = useRef();
   let filterRef = useRef();
@@ -139,7 +141,7 @@ function Dashboard() {
             // Map through the snapshot and get the data from firebase collection
             const notifications = snapshot.docs.map((doc) => doc.data());
 
-            console.log("StoredData:" + storedData);
+
 
             if (storedData && storedData.length > 0) {
               // console.log("StoredData:"+ storedData);
@@ -160,14 +162,14 @@ function Dashboard() {
               const updatedNotis = [...newNotis, ...storedData]; // Combine old and new notifications
               setNotificationData(updatedNotis);
 
-              console.log("UpdatedData:" + JSON.parse(updatedNotis));
+              // console.log("UpdatedData:" + JSON.parse(updatedNotis));
               setLocalStorageData(updatedNotis);
             } else {
               // If no notifications in local storage, set fetched notifications
               setNotificationIndicator(true);
               setNotificationCount(notifications.length);
               setNotificationData(notifications);
-              console.log("NotificationData:" + JSON.stringify(notifications));
+
             }
           }
         );
@@ -232,6 +234,72 @@ function Dashboard() {
     };
   }, [asideRef]);
 
+  //for search query
+  async function getSearchItems(query, filter) {
+    try {
+      const searchQuery = query.toLowerCase();
+      const folderRef = collection(db, "folders");
+      const fileRef = collection(db, "files");
+      const folders = [];
+      const files = [];
+      if (query === '' || query === null || query === undefined || query === ' ')
+        return;
+      if (filter === 'All') {
+        const folderSnapshot = await getDocs(folderRef);
+        const fileSnapshot = await getDocs(fileRef);
+        folderSnapshot.forEach((doc) => {
+          const data = doc.data();
+          if (data.name.toLowerCase().includes(searchQuery)) {
+            data.id = doc.id;
+            folders.push(data);
+          }
+        });
+        fileSnapshot.forEach((doc) => {
+          const data = doc.data();
+          if (data.name.toLowerCase().includes(searchQuery)) {
+            data.id = doc.id;
+            files.push(data);
+          }
+        });
+        console.log('Folders:', folders)
+        console.log('Files:', files)
+      }
+      else if (filter === 'Files') {
+        const fileSnapshot = await getDocs(fileRef);
+        fileSnapshot.forEach((doc) => {
+          const data = doc.data();
+          if (data.name.toLowerCase().includes(searchQuery)) {
+            data.id = doc.id;
+            files.push(data);
+          }
+        });
+        console.log('Files:', files)
+      }
+      else if (filter === 'Folders') {
+        const folderSnapshot = await getDocs(folderRef);
+        folderSnapshot.forEach((doc) => {
+          const data = doc.data();
+          if (data.name.toLowerCase().includes(searchQuery)) {
+            data.id = doc.id;
+            folders.push(data);
+          }
+        });
+        console.log('Folders:', folders)
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }
+
+
+  const debouncedSearchItems = debounce(async (query, filter) => await getSearchItems(query, filter), 500);
+
+  const debounceRequest = useCallback((query) => debouncedSearchItems(query, filter), [])
+
+  const searchChange = (e) => {
+    setSearchQuery(e.target.value);
+    debounceRequest(e.target.value, filter);
+  }
   return (
     <div className="antialiased h-max  bg-Light20 dark:bg-dark">
       <Link
@@ -275,7 +343,7 @@ function Dashboard() {
       </Link>
       <nav className="bg-light px-4  dark:bg-darkNav dark:shadow-sm fixed left-0 right-0 top-0 z-50 shadow-sm">
         <div className="flex flex-wrap justify-between items-center relative">
-          <div className="flex justify-start items-center" ref={asideRef}>
+          <div className="flex justify-start items-center">
             <button
               className="p-2 mr-2 text-zinc-900 rounded-lg cursor-pointer  hover:text-gray-900 hover:bg-Light30 focus:bg-Light30 dark:focus:bg-darkElevateHover  dark:focus:ring-gray-700 dark:text-slate-200 dark:hover:bg-darkElevate dark:bg-darkElevate bg-Light30 dark:hover:text-slate-300 transition-all duration-200 ease-in"
               onClick={() => {
@@ -320,7 +388,7 @@ function Dashboard() {
               />
             </Link>
           </div>
-         {/* <div className=" flex flex-grow flex-row justify-start items-center gap-5 lg:order-1" ref={filterRef}>
+          <div className=" flex flex-grow flex-row justify-start items-center gap-5 lg:order-1" ref={filterRef}>
             <form className="max-w-lg w-1/2">
               <div className="flex relative rounded-lg dark:divide-gray-600 divide-gray-300">
                 <label
@@ -332,31 +400,35 @@ function Dashboard() {
 
                 <button
                   id="dropdown-button"
-                  onClick={()=>setFilterDropDown(!filterDropDown)}
-                  className="flex-shrink-0 flex-grow z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center rounded-l-lg focus:outline-none border-r-2 focus:decoration-transparent bg-Light20 hover:bg-Light30 dark:hover:bg-darkElevate/80 text-gray-900 dark:text-white dark:bg-darkElevate"
+                  onClick={() => setFilterDropDown(!filterDropDown)}
+                  className="flex-shrink-0 flex-grow z-10 flex items-center justify-between py-2.5 w-28 px-4 text-sm font-medium text-center rounded-l-lg focus:outline-none border-r-2 focus:decoration-transparent bg-Light20 hover:bg-Light30 dark:hover:bg-darkElevate/80  text-gray-900 dark:text-white dark:bg-darkElevate"
                   type="button"
                 >
                   {filter}{" "}
-                  <svg
-                    className="w-2.5 h-2.5 ms-2.5"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 10 6"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="m1 1 4 4 4-4"
-                    />
-                  </svg>
+                  <div>
+
+                    <svg
+                      className="w-2.5 h-2.5 ms-2.5"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 10 6"
+                    >
+                      <path
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="m1 1 4 4 4-4"
+                      />
+                    </svg>
+                  </div>
+
                 </button>
                 <div
                   id="dropdown"
-                  className="absolute top-14 z-10 shadow-md bg-Light20 dark:bg-darkElevate divide-y divide-gray-100 rounded-lg w-44"
-                  onClick={()=> setFilterDropDown(false)}
+                  className="absolute top-14 z-10 shadow-md bg-Light20 dark:bg-darkElevate divide-y divide-gray-100 rounded-lg w-28"
+                  onClick={() => setFilterDropDown(false)}
                   hidden={!filterDropDown}
                 >
                   <ul
@@ -364,7 +436,7 @@ function Dashboard() {
                     aria-labelledby="dropdown-button"
                   >
                     <li
-                        onClick={()=> setFilter('All')}
+                      onClick={() => setFilter('All')}
                     >
                       <button
                         type="button"
@@ -374,7 +446,7 @@ function Dashboard() {
                       </button>
                     </li>
                     <li
-                        onClick={()=> setFilter('Files')}
+                      onClick={() => setFilter('Files')}
                     >
                       <button
                         type="button"
@@ -383,7 +455,7 @@ function Dashboard() {
                         Files
                       </button>
                     </li>
-                    <li onClick={()=> {setFilter('Folders'),console.log(filter)}}>
+                    <li onClick={() => { setFilter('Folders'), console.log(filter) }}>
                       <button
                         type="button"
                         className="inline-flex w-full px-4 py-2 bg-Light20 hover:bg-Light30 dark:hover:bg-dark/30 text-gray-900 dark:text-white dark:bg-darkElevate"
@@ -400,8 +472,10 @@ function Dashboard() {
                     id="search-dropdown"
                     className="block w-full p-4 ps-3  bg-Light20 dark:border-none focus:outline-none  text-zinc-900 text-sm rounded-r-lg dark:focus:border-none  dark:bg-darkElevate  dark:placeholder-gray-400   dark:shadow-sm-light dark:text-slate-200 placeholder-gray-700"
                     placeholder="Search Files and Folders..."
-                    required=""
+                    value={searchQuery}
+                    onChange={searchChange}
                   />
+
                   <button
                     type="submit"
                     className="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-blue-700 rounded-e-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -426,7 +500,7 @@ function Dashboard() {
                 </div>
               </div>
             </form>
-          </div>*/}
+          </div>
 
           <div
             className="flex flex-row items-center justify-start w-fit lg:order-2"
@@ -458,9 +532,8 @@ function Dashboard() {
               {/* Notification indicator */}
               {notificationIndicator && (
                 <div
-                  className={`absolute -top-1 right-0 w-4 h-4 pl-[1px] pb-[1px] flex justify-center items-center rounded-full text-xs bg-blue-600 text-primary-200 font-semibold ${
-                    notificationCount > 0 ? "" : "hidden"
-                  }`}
+                  className={`absolute -top-1 right-0 w-4 h-4 pl-[1px] pb-[1px] flex justify-center items-center rounded-full text-xs bg-blue-600 text-primary-200 font-semibold ${notificationCount > 0 ? "" : "hidden"
+                    }`}
                 >
                   <div>{notificationCount}</div>
                 </div>
@@ -501,9 +574,8 @@ function Dashboard() {
               </div>
             </div>
             <button
-              className={`${
-                mode === "light" ? "bg-yellow-300" : "bg-darkElevate"
-              } w-fit h-fit p-2 rounded-full transition-all duration-500 ease-in mr-2`}
+              className={`${mode === "light" ? "bg-yellow-300" : "bg-darkElevate"
+                } w-fit h-fit p-2 rounded-full transition-all duration-500 ease-in mr-2`}
               onClick={toggleMode}
             >
               <span className="transition-all duration-200 ease-in">
@@ -552,9 +624,9 @@ function Dashboard() {
       </nav>
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 z-40 w-64 h-screen pt-14 transition-transform ease-in-out duration-200 bg-Light20 border-r shadow-xl border-gray-200  dark:bg-darkNav dark:border-gray-700 ${
-          asidehidden ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`fixed top-0 left-0 z-40 w-64 h-screen pt-14 transition-transform ease-in-out duration-200 bg-Light20 border-r shadow-xl border-gray-200  dark:bg-darkNav dark:border-gray-700 ${asidehidden ? "translate-x-0" : "-translate-x-full"
+          }`}
+        ref={asideRef}
       >
         <div className="overflow-y-auto py-5 px-3 h-full dark:bg-transparent">
           <ul className="space-y-2">
@@ -609,11 +681,6 @@ function Dashboard() {
           </div>
         </div>
         <ClientBreadCrumb currentFolder={folder} toggleMode={toggleMode} />
-        {/* <div className="hidden flex flex-row items-center gap-4 md:mt-14 mt-14">
-          
-       Add search bar here
-        </div> */}
-
         <div className="md:pl-0">
           <div className={`flex flex-col items-start justify-center w-full`}>
             <div
