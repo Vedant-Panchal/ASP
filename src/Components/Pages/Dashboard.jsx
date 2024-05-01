@@ -127,7 +127,7 @@ function Dashboard() {
   function getLocalStorageData() {
     return JSON.parse(localStorage.getItem("notificationData"));
   }
-
+// notifications
   useEffect(() => {
     const fetchData = async () => {
       try {

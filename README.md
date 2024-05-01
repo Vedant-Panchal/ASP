@@ -28,3 +28,4 @@ This guide demonstrates how to setup a local development environment.
 git clone https://github.com/YOUR_USERNAME/ASP.git
 ```
 
+3. Create a Firebase project, add authentication for mail and password. Create a Firestore database

@@ -5,7 +5,7 @@ import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 import "@react-pdf-viewer/thumbnail/lib/styles/index.css";
 import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
 import AdminNav from "../Admin/AdminNav";
-import { ArrowDownToLine, Moon, Sun, XSquare } from "lucide-react";
+import { ArrowDownToLine, Moon, Share2, Sun, XSquare } from "lucide-react";
 import { UserContext } from "../../context/AuthContext";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -246,6 +246,12 @@ function ClientPdfViewer() {
           >
             <XSquare strokeWidth={1} className="text-blue-500" />
           </button>
+          {/* <button
+            onClick={() => window.navigator.}
+            className="px-4 py-1 absolute bg-transparent z-[500] md:top-1 md:right-56 top-1 right-10 w-fit h-fit rounded-none"
+          >
+            <Share2 strokeWidth={1} className="text-blue-500" />
+          </button> */}
           <div className="w-screen h-full absolute top-0 right-0 z-50 print:hidden">
             <Worker
               workerUrl={`https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js`}
