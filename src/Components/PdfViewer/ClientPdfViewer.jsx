@@ -5,7 +5,7 @@ import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 import "@react-pdf-viewer/thumbnail/lib/styles/index.css";
 import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
 import AdminNav from "../Admin/AdminNav";
-import { ArrowDownToLine, Moon, Share2, Sun, XSquare } from "lucide-react";
+import { ArrowDownToLine, Moon, Share2, Sun, XSquare, Loader2 } from "lucide-react";
 import { UserContext } from "../../context/AuthContext";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -13,12 +13,18 @@ import { db } from "../../firebase";
 import { doc, getDoc } from "firebase/firestore";
 import Swal from "sweetalert2";
 
+import './ClientPdfViewer.css'
+
 async function fetchFileData(fileId) {
   const filesref = doc(db, "files", fileId);
   const fileDocSnap = await getDoc(filesref);
   const fileDoc = fileDocSnap.data();
   return fileDoc;
 }
+
+
+
+
 function ClientPdfViewer() {
   const { currentUser, mode, setmode, logoutUser } = useContext(UserContext);
   const { fileId } = useParams();
@@ -84,14 +90,14 @@ function ClientPdfViewer() {
     OpenMenuItem: () => <></>,
     ShowProperties: () => <></>,
     Open: () => <></>,
-    Download:()=> <>
+    Download: () => <>
       <button className="hover:bg-[#D6D6D6] px-1 py-1 rounded-md" onClick={downloadFile}>
-      <ArrowDownToLine strokeWidth={1} width={20}/>
+        <ArrowDownToLine strokeWidth={1} width={20} />
       </button>
-      </>,
+    </>,
     DownloadMenuItem: () => <>
-    <button className="hover:bg-[#D6D6D6] ml-2.5 px-1 py-1 rounded-md flex" onClick={downloadFile}> 
-      <ArrowDownToLine strokeWidth={1} width={20} className="mr-2"/> Download
+      <button className="hover:bg-[#D6D6D6] ml-2.5 px-1 py-1 rounded-md flex" onClick={downloadFile}>
+        <ArrowDownToLine strokeWidth={1} width={20} className="mr-2" /> Download
       </button>
     </>,
   });
@@ -157,6 +163,41 @@ function ClientPdfViewer() {
       }
     });
   };
+
+  const [loading, setLoading] = useState(false);
+  function LoadingIcon() {
+    return <Loader2 strokeWidth={1} className="text-blue-500 rotate-animation" />
+  }
+  function ShareIcon() {
+    return <Share2 strokeWidth={1} className="text-blue-500" onClick={() => {
+      setLoading(true);
+      copyURL(shortenURL(window.location.href));
+    }} />
+  }
+
+  async function shortenURL(url) {
+    let resp = await fetch("/titanurl/shorten", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      cache: "no-cache",
+      body: JSON.stringify({
+        "original-url": url,
+        "alias-type": "random"
+      })
+    })
+    let jsonResp = await resp.json()
+    if (!jsonResp.ok) {
+      return null
+    }
+    return jsonResp.message
+  }
+
+  const copyURL = async (url) => {
+    const shortenedURL = await shortenURL(url)
+    await window.navigator.clipboard.writeText((shortenedURL) ? shortenedURL : url )
+    setLoading(false);
+  }
+
   return (
     <>
       <div className="w-screen h-screen">
@@ -176,9 +217,8 @@ function ClientPdfViewer() {
             </div>
             <div className="flex flex-row items-center justify-start w-fit lg:order-2">
               <button
-                className={`${
-                  mode === "light" ? "bg-yellow-300" : "bg-darkElevate"
-                } w-fit h-fit p-2 rounded-full transition-all duration-500 ease-in mr-2`}
+                className={`${mode === "light" ? "bg-yellow-300" : "bg-darkElevate"
+                  } w-fit h-fit p-2 rounded-full transition-all duration-500 ease-in mr-2`}
                 onClick={toggleMode}
               >
                 <span className="transition-all duration-200 ease-in">
@@ -246,12 +286,12 @@ function ClientPdfViewer() {
           >
             <XSquare strokeWidth={1} className="text-blue-500" />
           </button>
-          {/* <button
-            onClick={() => window.navigator.}
+          <button
+            onClick={() => copyURL(window.location.href)}
             className="px-4 py-1 absolute bg-transparent z-[500] md:top-1 md:right-56 top-1 right-10 w-fit h-fit rounded-none"
           >
-            <Share2 strokeWidth={1} className="text-blue-500" />
-          </button> */}
+            {loading ? LoadingIcon() : ShareIcon()}
+          </button>
           <div className="w-screen h-full absolute top-0 right-0 z-50 print:hidden">
             <Worker
               workerUrl={`https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js`}

@@ -7,7 +7,15 @@ export default defineConfig({
 
   server: {
     port: 3000,
-    host: '192.168.1.5'
+    host: 'localhost',
+    proxy: {
+      "/titanurl" : {
+        target: 'https://titanurl.vercel.app/', // Replace with your API server URL
+        changeOrigin: true,
+        secure: true,
+        rewrite: (path) => path.replace(/^\/titanurl/, ''),
+      }
+    }
   }
 })
 
