@@ -7,7 +7,7 @@ import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
 import AdminNav from "../Admin/AdminNav";
 import { ArrowDownToLine, Moon, Share2, Sun, XSquare, Loader2 } from "lucide-react";
 import { UserContext } from "../../context/AuthContext";
-import { useDocumentData } from "react-firebase-hooks/firestore";
+// import { useDocumentData } from "react-firebase-hooks/firestore";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { db } from "../../firebase";
 import { doc, getDoc } from "firebase/firestore";
@@ -21,9 +21,6 @@ async function fetchFileData(fileId) {
   const fileDoc = fileDocSnap.data();
   return fileDoc;
 }
-
-
-
 
 function ClientPdfViewer() {
   const { currentUser, mode, setmode, logoutUser } = useContext(UserContext);
