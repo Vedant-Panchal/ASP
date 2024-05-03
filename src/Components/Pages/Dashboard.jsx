@@ -236,7 +236,7 @@ function Dashboard() {
     <div className="antialiased h-max  bg-Light20 dark:bg-dark">
       <Link
         to={
-          "https://github.com/XENOSTAR7/ASP-C-CODES/releases/download/v1.0.0/ASP-v1.0.0-arm64-v8a-release.apk "
+          "https://github.com/Mrunal-Shah7/ASP-Data/releases/download/v1.1.0/ASP-v1.1.0-arm64-v8a-release.apk"
         }
         className="z-50 fixed w-fit rounded-full bottom-10 right-5 mr-2 p-3 hover:bg-teal-900/95 bg-teal-900"
       >
