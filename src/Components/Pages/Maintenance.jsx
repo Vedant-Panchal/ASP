@@ -25,7 +25,7 @@ function Maintenance() {
             Under Maintenance
           </h1>
           <p className="mb-4 text-3xl tracking-tight font-bold text-gray-900 md:text-xl dark:text-white">
-            You are have been using ASP too much let it also rest some time.
+          Love using ASP? We are receiving more requests than expected, Let it get some rest and we will be back soon!
           </p>
           <p className="mb-4 text-lg font-light text-gray-500 dark:text-gray-400">
             We will be available soon.
