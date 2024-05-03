@@ -17,6 +17,7 @@ import {
   Sun,
   GraduationCap,
   ArrowDownToLine,
+  Filter,
 } from "lucide-react";
 import {
   collection,
@@ -183,17 +184,18 @@ function Dashboard() {
     fetchData();
   }, []); // Empty dependency array to run the effect only once on component mount
 
-  useEffect(() => {
-    let handler = (e) => {
-      if (!filterRef.current.contains(e.target)) {
-        setFilterDropDown(false)
-      }
-    };
-    document.addEventListener("click", handler);
-    return () => {
-      document.removeEventListener("click", handler);
-    };
-  });
+  // useEffect(() => {
+  //   let handler = (e) => {
+  //     if (!filterRef.current.contains(e.target)) {
+  //       setFilterDropDown(false)
+  //     }
+  //   };
+  //   document.addEventListener("click", handler);
+  //   return () => {
+  //     document.removeEventListener("click", handler);
+  //   };
+  // }, [filterRef]);
+
   useEffect(() => {
     let handler = (e) => {
       if (!notiRef.current.contains(e.target)) {
@@ -244,6 +246,7 @@ function Dashboard() {
       const files = [];
       if (query === '' || query === null || query === undefined || query === ' ')
         return;
+
       if (filter === 'All') {
         const folderSnapshot = await getDocs(folderRef);
         const fileSnapshot = await getDocs(fileRef);
@@ -261,6 +264,7 @@ function Dashboard() {
             files.push(data);
           }
         });
+        console.log("Filter:", filter)
         console.log('Folders:', folders)
         console.log('Files:', files)
       }
@@ -273,6 +277,7 @@ function Dashboard() {
             files.push(data);
           }
         });
+        console.log("Filter:", filter)
         console.log('Files:', files)
       }
       else if (filter === 'Folders') {
@@ -284,6 +289,7 @@ function Dashboard() {
             folders.push(data);
           }
         });
+        console.log("Filter:", filter)
         console.log('Folders:', folders)
       }
     } catch (error) {
@@ -299,6 +305,14 @@ function Dashboard() {
   const searchChange = (e) => {
     setSearchQuery(e.target.value);
     debounceRequest(e.target.value, filter);
+  }
+  useEffect(() => {
+    setFilter(filter)
+    console.log("Filter:", filter);
+  }, [filter])
+
+  const setFilterValue = (value) => {
+    setFilter(value);
   }
   return (
     <div className="antialiased h-max  bg-Light20 dark:bg-dark">
@@ -435,34 +449,32 @@ function Dashboard() {
                     className="py-2 text-sm text-gray-700 dark:text-gray-200"
                     aria-labelledby="dropdown-button"
                   >
+
                     <li
-                      onClick={() => setFilter('All')}
+                      onClick={() => setFilterValue("All")}
+                      type="button"
+                      className="inline-flex cursor-pointer w-full px-4 py-2 bg-Light20 hover:bg-Light30 dark:hover:bg-dark/30 text-gray-900 dark:text-white dark:bg-darkElevate"
                     >
-                      <button
-                        type="button"
-                        className="inline-flex w-full px-4 py-2 bg-Light20 hover:bg-Light30 dark:hover:bg-dark/30 text-gray-900 dark:text-white dark:bg-darkElevate"
-                      >
-                        All
-                      </button>
+                      All
                     </li>
-                    <li
-                      onClick={() => setFilter('Files')}
+
+
+                    <li onClick={() => setFilterValue("Files")}
+                      type="button"
+                      className="inline-flex w-full px-4 cursor-pointer py-2 bg-Light20 hover:bg-Light30 dark:hover:bg-dark/30 text-gray-900 dark:text-white dark:bg-darkElevate"
                     >
-                      <button
-                        type="button"
-                        className="inline-flex w-full px-4 py-2 bg-Light20 hover:bg-Light30 dark:hover:bg-dark/30 text-gray-900 dark:text-white dark:bg-darkElevate"
-                      >
-                        Files
-                      </button>
+                      Files
                     </li>
-                    <li onClick={() => { setFilter('Folders'), console.log(filter) }}>
-                      <button
-                        type="button"
-                        className="inline-flex w-full px-4 py-2 bg-Light20 hover:bg-Light30 dark:hover:bg-dark/30 text-gray-900 dark:text-white dark:bg-darkElevate"
-                      >
-                        Folders
-                      </button>
+
+
+                    <li onClick={() => setFilterValue("Folders")}
+                      type="button"
+                      className="inline-flex w-full px-4 py-2 cursor-pointer bg-Light20 hover:bg-Light30 dark:hover:bg-dark/30 text-gray-900 dark:text-white dark:bg-darkElevate"
+                    >
+                      Folders
+
                     </li>
+
                   </ul>
                 </div>
 
