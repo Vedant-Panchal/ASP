@@ -21,10 +21,10 @@ function Maintenance() {
               className='w-[50%] h-[50%]'
             />
           </div>
-          <h1 className="mb-4 text-7xl tracking-tight font-extrabold lg:text-5xl text-primary-600 dark:text-primary-500">
+          <h1 className="mb-4 text-3xl tracking-tight font-extrabold lg:text-5xl text-primary-600 dark:text-primary-500">
             Under Maintenance
           </h1>
-          <p className="mb-4 text-3xl tracking-tight font-bold text-gray-900 md:text-xl dark:text-white">
+          <p className="mb-4 text-xl tracking-tight font-bold text-gray-900 md:text-xl dark:text-white">
           Love using ASP? We are receiving more requests than expected, Let it get some rest and we will be back soon!
           </p>
           <p className="mb-4 text-lg font-light text-gray-500 dark:text-gray-400">
