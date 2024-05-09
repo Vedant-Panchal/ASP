@@ -279,7 +279,7 @@ function ClientPdfViewer() {
         <div className="relative h-full w-screen mt-16">
           <button
             onClick={() => window.close()}
-            className="px-4 py-1 absolute bg-transparent z-[500] md:top-1 md:right-28 top-1 right-10 w-fit h-fit rounded-none"
+            className="px-4 py-1 absolute bg-transparent z-[500] md:top-1 md:right-40 top-1 right-10 w-fit h-fit rounded-none"
           >
             <XSquare strokeWidth={1} className="text-blue-500" />
           </button>
