@@ -88,14 +88,14 @@ function ClientPdfViewer() {
     ShowProperties: () => <></>,
     Open: () => <></>,
     Download: () => <>
-      {/* <button className="hover:bg-[#D6D6D6] px-1 py-1 rounded-md" onClick={downloadFile}>
+       <button className="hover:bg-[#D6D6D6] px-1 py-1 rounded-md" onClick={downloadFile}>
         <ArrowDownToLine strokeWidth={1} width={20} />
-      </button> */}
+      </button> 
     </>,
     DownloadMenuItem: () => <>
-      {/* <button className="hover:bg-[#D6D6D6] ml-2.5 px-1 py-1 rounded-md flex" onClick={downloadFile}>
+       <button className="hover:bg-[#D6D6D6] ml-2.5 px-1 py-1 rounded-md flex" onClick={downloadFile}>
         <ArrowDownToLine strokeWidth={1} width={20} className="mr-2" /> Download
-      </button> */}
+      </button> 
     </>,
   });
 
