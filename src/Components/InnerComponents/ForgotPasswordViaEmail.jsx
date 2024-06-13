@@ -21,10 +21,10 @@ function ForgotPasswordViaEmail() {
 
     const newdomain = domainPart.toLowerCase()
     // Check if the domain part is "adaniuni.ac.in"
-    if (newdomain !== "adaniuni.ac.in") {
+    if (newdomain !== "adaniuni.ac.in" || "aii.ac.in") {
       sethidden(true);
       setemail("");
-      setError("Please use an email ending with @adaniuni.ac.in");
+      setError("Please use an email ending with @adaniuni.ac.in or aii.ac.in");
       sethidden(false);
 
       return;
