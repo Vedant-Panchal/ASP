@@ -3,7 +3,14 @@ import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { UserContext } from "../../context/AuthContext";
 import { useContext } from "react";
-import { PowerOff, PanelsTopLeft, Moon, Sun, ChevronDown, GraduationCap } from "lucide-react";
+import {
+  PowerOff,
+  PanelsTopLeft,
+  Moon,
+  Sun,
+  ChevronDown,
+  GraduationCap,
+} from "lucide-react";
 import AddSubject from "../InnerComponents/AddSubject";
 import EditSubject from "../InnerComponents/EditSubject";
 import AddSem from "../InnerComponents/AddSem";
@@ -533,7 +540,6 @@ function Calculator() {
                             {subjects.length > 0 ? subjects[0].totalCredits : 0}
                           </td>
                           <td colSpan="3"></td>
-
                           <th scope="col" className="px-4 py-3">
                             <span className="sr-only">Actions</span>
                           </th>
@@ -549,7 +555,6 @@ function Calculator() {
                               : 0}
                           </td>
                           <td colSpan="3"></td>
-
                           <th scope="col" className="px-4 py-3">
                             <span className="sr-only">Actions</span>
                           </th>
@@ -563,7 +568,7 @@ function Calculator() {
                             {subjects.length > 0
                               ? parseFloat(
                                   subjects[0].totalCreditsXGradePoints /
-                                    subjects[0].totalCredits
+                                    subjects[0].totalCredits,
                                 ).toFixed(2)
                               : 0}
                           </td>
@@ -575,9 +580,9 @@ function Calculator() {
                       </tbody>
                     </table>
                   </div>
-                ) : 
+                ) : (
                   ""
-                }
+                )}
               </div>
               <div className="flex">
                 <div className="flex-grow"></div>
@@ -588,7 +593,7 @@ function Calculator() {
                   type="button"
                   onClick={() => setSgpaaccordian(!sgpaaccordian)}
                 >
-                  <ChevronDown className="text-zinc-900 dark:text-white"/>
+                  <ChevronDown className="text-zinc-900 dark:text-white" />
                 </button>
               </div>
             </div>
@@ -612,11 +617,11 @@ function Calculator() {
                       type="button"
                       onClick={() => setcgpaaccordian(!cgpaaccordian)}
                     >
-                      <ChevronDown className="text-zinc-900 dark:text-white"/>
+                      <ChevronDown className="text-zinc-900 dark:text-white" />
                     </button>
                   </div>
                 </div>
-                {semsData.length > 0 && cgpaaccordian ?(
+                {semsData.length > 0 && cgpaaccordian ? (
                   <div className="flex outline-dashed outline-2 outline-slate-400 flex-row items-center justify-between rounded-lg overflow-x-scroll w-full mt-2 ">
                     <table className=" w-full text-sm text-left text-zinc-900 dark:text-slate-200 ">
                       <thead className="text-sm  uppercase bg-gray-300 dark:bg-darkElevate  font-mono">
@@ -693,20 +698,22 @@ function Calculator() {
                       </tbody>
                     </table>
                   </div>
-                ):''}
+                ) : (
+                  ""
+                )}
               </div>
               <div className="flex">
-                    <div className="flex-grow"></div>
-                    <button
-                      className={`text-white font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center transition-all ease-in duration-200 mr-5 mb-2 ${
-                        cgpaaccordian ? "rotate-180" : "hidden"
-                      }`}
-                      type="button"
-                      onClick={() => setcgpaaccordian(!cgpaaccordian)}
-                    >
-                      <ChevronDown className="text-zinc-900 dark:text-white"/>
-                    </button>
-                  </div>
+                <div className="flex-grow"></div>
+                <button
+                  className={`text-white font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center transition-all ease-in duration-200 mr-5 mb-2 ${
+                    cgpaaccordian ? "rotate-180" : "hidden"
+                  }`}
+                  type="button"
+                  onClick={() => setcgpaaccordian(!cgpaaccordian)}
+                >
+                  <ChevronDown className="text-zinc-900 dark:text-white" />
+                </button>
+              </div>
             </div>
           </div>
         </main>

@@ -1,14 +1,17 @@
 import { Header, Footer } from "./Components/index";
-import { Outlet } from 'react-router-dom';
+import { Outlet } from "react-router-dom";
 import { AuthCtxtProvider } from "./context/AuthContext";
 function App() {
-  
-  
   return (
     <AuthCtxtProvider>
-      <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-        <div style={{ flex: 1}} className="dark:bg-dark bg-Light20 overflow-hidden">          
-            <Outlet />
+      <div
+        style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
+      >
+        <div
+          style={{ flex: 1 }}
+          className="dark:bg-dark bg-Light20 overflow-hidden"
+        >
+          <Outlet />
         </div>
         <Footer />
       </div>

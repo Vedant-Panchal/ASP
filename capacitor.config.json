@@ -5,8 +5,7 @@
   "server": {
     "androidScheme": "https"
   },
-  "android":{
+  "android": {
     "icon": "./public/assets/app_icon.png"
   }
-  
 }

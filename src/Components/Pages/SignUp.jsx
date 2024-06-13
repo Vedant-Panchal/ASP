@@ -25,7 +25,7 @@ function SignUp() {
   const [error, setError] = useState("");
   const { createUser } = useContext(UserContext);
   const [emailPlaceholder, setemailPlaceholder] = useState(
-    "name.branchYY@adaniuni.ac.in"
+    "name.branchYY@adaniuni.ac.in",
   );
   const [eye, seteye] = useState(false);
   const [emailVerified, setemailVerified] = useState(true);
@@ -38,13 +38,13 @@ function SignUp() {
   const showeye = () => {
     seteye(!eye);
   };
- 
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(aspauth, (user) => {
       if (user) {
         // Reload user to get the latest emailVerified status
         user.reload();
-  
+
         if (user.emailVerified) {
           // Redirect to the dashboard if verified
           navigate("/dashboard");
@@ -54,9 +54,8 @@ function SignUp() {
         }
       }
     });
-  
+
     return () => unsubscribe(); // Cleanup the subscription
-  
   }, [navigate, aspauth]);
 
   const handleSubmit = async (e) => {
@@ -68,17 +67,21 @@ function SignUp() {
     // Check if the domain part is "adaniuni.ac.in"
     if (domainPart !== "adaniuni.ac.in" && domainPart !== "aii.ac.in") {
       setEmail("");
-      message("error", "Please use an email ending with @adaniuni.ac.in or @aii.ac.in", "");
+      message(
+        "error",
+        "Please use an email ending with @adaniuni.ac.in or @aii.ac.in",
+        "",
+      );
       return;
     }
     // Check if passwords match
     if (password !== confirmPassword) {
       return;
     }
-if(password.length < 8) {
-      message('error', 'Password must be at least 8 characters','');
-  return
-}
+    if (password.length < 8) {
+      message("error", "Password must be at least 8 characters", "");
+      return;
+    }
     // Check if terms and conditions are accepted
     if (!termsChecked) {
       return;
@@ -90,24 +93,22 @@ if(password.length < 8) {
     try {
       await createUser(lowerCaseEmail, password);
 
-      
       await updateProfile(aspauth.currentUser, {
         displayName: fullName, // You can custo mize how you want to set the display name
       });
-    
-      
+
       message("success", "Verification link sent on your email", "");
       await sendEmailVerification(aspauth.currentUser).then(() => {
         setemailVerified(true);
-      })
-      
-      await addDoc(userRef,{
+      });
+
+      await addDoc(userRef, {
         userName: fullName,
         userEmail: lowerCaseEmail,
         userBranch: branch,
         userSemester: parseInt(semester),
         userEnrollNum: parseInt(enrollmentnumber),
-      })
+      });
 
       setfirstName("");
       setlastName("");
@@ -193,7 +194,7 @@ if(password.length < 8) {
                       value={branch}
                       onChange={(e) => setBranch(e.target.value)}
                       className="shadow-sm bg-[#F2F2F2] text-zinc-900 text-sm rounded-lg focus:ring-slate-500 focus:border-slate-500 block w-full p-2.5 dark:bg-darkNav/80 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-slate-500 dark:focus:border-slate-500 dark:shadow-sm-light dark:text-slate-200"
-                      >
+                    >
                       <option value="ICT" className="mb-2 p-2">
                         ICT
                       </option>
@@ -253,8 +254,8 @@ if(password.length < 8) {
                   <input
                     type="number"
                     id="enrollmentnumber"
-className="shadow-sm bg-[#F2F2F2] text-zinc-900 text-sm rounded-lg focus:ring-slate-500 focus:border-slate-500 block w-full p-2.5 dark:bg-darkNav/80 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-slate-500 dark:focus:border-slate-500 dark:shadow-sm-light dark:text-slate-200"                   
- placeholder="Example : 220012"
+                    className="shadow-sm bg-[#F2F2F2] text-zinc-900 text-sm rounded-lg focus:ring-slate-500 focus:border-slate-500 block w-full p-2.5 dark:bg-darkNav/80 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-slate-500 dark:focus:border-slate-500 dark:shadow-sm-light dark:text-slate-200"
+                    placeholder="Example : 220012"
                     required="true"
                     onChange={(e) => setEnrollmentnumber(e.target.value)}
                     value={enrollmentnumber}
@@ -278,67 +279,64 @@ className="shadow-sm bg-[#F2F2F2] text-zinc-900 text-sm rounded-lg focus:ring-sl
                   />
                 </div>
                 <div>
-  <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-    Password
-  </label>
-  <input
-    type="password"
-    name="password"
-    id="password"
-    placeholder="••••••••"
-    className={` text-gray-900 dark:text-slate-200 sm:text-sm rounded-lg block w-full p-2.5
-      ${password !== ''
-        ? ''
-        : 'dark:bg-darkNav/80 bg-[#F2F2F2] '
-      }
-    ${(password !== confirmPassword) && (password && confirmPassword !== '') ? 'dark:bg-rose-400 bg-rose-300': 'dark:bg-emerald-500 bg-emerald-500'}
+                  <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Password
+                  </label>
+                  <input
+                    type="password"
+                    name="password"
+                    id="password"
+                    placeholder="••••••••"
+                    className={` text-gray-900 dark:text-slate-200 sm:text-sm rounded-lg block w-full p-2.5
+      ${password !== "" ? "" : "dark:bg-darkNav/80 bg-[#F2F2F2] "}
+    ${password !== confirmPassword && password && confirmPassword !== "" ? "dark:bg-rose-400 bg-rose-300" : "dark:bg-emerald-500 bg-emerald-500"}
       `}
-    required={true}
-    onChange={(e) => setPassword(e.target.value)}
-    value={password}
-  />
-</div>
-<div>
-  <label
-    htmlFor="confirm-password"
-    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-  >
-    Confirm password
-  </label>
-  <div className="relative flex items-center">
-    <input
-      type={eye ? 'password' : 'text'}
-      name="confirm-password"
-      id="confirm-password"
-      placeholder="••••••••"
-      className={` text-gray-900 dark:text-slate-200 sm:text-sm rounded-lg block w-full p-2.5
-      ${confirmPassword !== ''
-        ? ''
-        : 'dark:bg-darkNav/80 bg-[#F2F2F2]'
-      }
-    ${password !== confirmPassword ? 'dark:bg-rose-400 bg-rose-300': 'dark:bg-emerald-500 bg-emerald-500'}
+                    required={true}
+                    onChange={(e) => setPassword(e.target.value)}
+                    value={password}
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="confirm-password"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >
+                    Confirm password
+                  </label>
+                  <div className="relative flex items-center">
+                    <input
+                      type={eye ? "password" : "text"}
+                      name="confirm-password"
+                      id="confirm-password"
+                      placeholder="••••••••"
+                      className={` text-gray-900 dark:text-slate-200 sm:text-sm rounded-lg block w-full p-2.5
+      ${confirmPassword !== "" ? "" : "dark:bg-darkNav/80 bg-[#F2F2F2]"}
+    ${password !== confirmPassword ? "dark:bg-rose-400 bg-rose-300" : "dark:bg-emerald-500 bg-emerald-500"}
       `}
-      required={true}
-      onChange={(e) => setConfirmPassword(e.target.value)}
-      value={confirmPassword}
-    />
-    <button className="absolute right-2" onClick={showeye} type="button">
-      <div>
-        <Eye
-          className="text-zinc-900 dark:text-slate-200"
-          strokeWidth={1.25}
-          hidden={eye}
-        />
-        <EyeOff
-          className="text-zinc-900 dark:text-slate-200"
-          strokeWidth={1.25}
-          hidden={!eye}
-        />
-      </div>
-    </button>
-  </div>
-</div>
-
+                      required={true}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      value={confirmPassword}
+                    />
+                    <button
+                      className="absolute right-2"
+                      onClick={showeye}
+                      type="button"
+                    >
+                      <div>
+                        <Eye
+                          className="text-zinc-900 dark:text-slate-200"
+                          strokeWidth={1.25}
+                          hidden={eye}
+                        />
+                        <EyeOff
+                          className="text-zinc-900 dark:text-slate-200"
+                          strokeWidth={1.25}
+                          hidden={!eye}
+                        />
+                      </div>
+                    </button>
+                  </div>
+                </div>
 
                 <div className="flex items-start">
                   <div className="flex items-center h-5">
@@ -394,14 +392,17 @@ className="shadow-sm bg-[#F2F2F2] text-zinc-900 text-sm rounded-lg focus:ring-sl
       >
         <Header />
         <div className="flex flex-col items-center justify-start px-4 py-4 mx-auto bg-light dark:bg-dark h-screen ">
-          <div className="w-full h-48 bg-light rounded-lg shadow mt-16
-          md:mt-28 dark:border sm:max-w-md lg:max-w-xl xl:p-0 dark:bg-darkElevate dark:border-gray-700">
+          <div
+            className="w-full h-48 bg-light rounded-lg shadow mt-16
+          md:mt-28 dark:border sm:max-w-md lg:max-w-xl xl:p-0 dark:bg-darkElevate dark:border-gray-700"
+          >
             <div className="flex flex-col items-center justify-center h-full gap-4 px-5">
-              
-                      <div className="block text-xl md:text-3xl text-slate-200 font-bold ">Please verify your email
-                      </div>
-                      <p className="text-sm text-slate-200 font-mono text-center text-wrap">Refresh the page after verifying your email 😊</p>
-              
+              <div className="block text-xl md:text-3xl text-slate-200 font-bold ">
+                Please verify your email
+              </div>
+              <p className="text-sm text-slate-200 font-mono text-center text-wrap">
+                Refresh the page after verifying your email 😊
+              </p>
             </div>
           </div>
         </div>

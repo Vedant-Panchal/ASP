@@ -1,32 +1,31 @@
-import React, { useState } from 'react'
+import React, { useState } from "react";
 
-function AddSem({handleSemData}) {
-    const [hidden, setHidden] = useState(true);
-    const [semData, setSemData] = useState({
-        sem: 'SEM-1',
-        sgpa: '',
-        id:''
-    })
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        setHidden(true);
-        handleSemData(semData);
-        setSemData({
-            sem: 'SEM-1',
-            sgpa: '',
-            id:''
-        })
-      };
-      const handleChange = (e) => {
-        const { name, value} = e.target;
-        setSemData((prev)=>({
-            ...prev,
-            [name]: value,
-            id: Date.now()
-            
-        }))
-      };
-    
+function AddSem({ handleSemData }) {
+  const [hidden, setHidden] = useState(true);
+  const [semData, setSemData] = useState({
+    sem: "SEM-1",
+    sgpa: "",
+    id: "",
+  });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setHidden(true);
+    handleSemData(semData);
+    setSemData({
+      sem: "SEM-1",
+      sgpa: "",
+      id: "",
+    });
+  };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setSemData((prev) => ({
+      ...prev,
+      [name]: value,
+      id: Date.now(),
+    }));
+  };
+
   return (
     <>
       {/* Modal toggle */}
@@ -80,29 +79,28 @@ function AddSem({handleSemData}) {
               <form onSubmit={handleSubmit}>
                 <div className="grid gap-4 mb-4 sm:grid-cols-2">
                   <div>
-                    <label
-                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                    >
+                    <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                       Semester
                     </label>
-                    <select name="sem" value={semData.sem} onChange={handleChange} className='shadow-sm bg-[#F2F2F2]  text-zinc-900 text-sm rounded-lg focus:ring-slate-500 focus:border-slate-500 block w-full p-2.5 dark:bg-darkNav/80 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-slate-500 dark:focus:border-slate-500 dark:shadow-sm-light dark:text-slate-200'>
-                     
-                        <option value="SEM-1">SEM-1</option>
-                        <option value="SEM-2">SEM-2</option>
-                        <option value="SEM-3">SEM-3</option>
-                        <option value="SEM-4">SEM-4</option>
-                        <option value="SEM-5">SEM-5</option>
-                        <option value="SEM-6">SEM-6</option>
-                        <option value="SEM-7">SEM-7</option>
-                        <option value="SEM-8">SEM-8</option>
-                    </select>
-                    
-                  </div>
-                  
-                  <div>
-                    <label
-                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    <select
+                      name="sem"
+                      value={semData.sem}
+                      onChange={handleChange}
+                      className="shadow-sm bg-[#F2F2F2]  text-zinc-900 text-sm rounded-lg focus:ring-slate-500 focus:border-slate-500 block w-full p-2.5 dark:bg-darkNav/80 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-slate-500 dark:focus:border-slate-500 dark:shadow-sm-light dark:text-slate-200"
                     >
+                      <option value="SEM-1">SEM-1</option>
+                      <option value="SEM-2">SEM-2</option>
+                      <option value="SEM-3">SEM-3</option>
+                      <option value="SEM-4">SEM-4</option>
+                      <option value="SEM-5">SEM-5</option>
+                      <option value="SEM-6">SEM-6</option>
+                      <option value="SEM-7">SEM-7</option>
+                      <option value="SEM-8">SEM-8</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                       SGPA
                     </label>
                     <input
@@ -140,7 +138,7 @@ function AddSem({handleSemData}) {
         </div>
       </div>
     </>
-  )
+  );
 }
 
-export default AddSem
+export default AddSem;

@@ -127,7 +127,7 @@ function Dashboard() {
   function getLocalStorageData() {
     return JSON.parse(localStorage.getItem("notificationData"));
   }
-// notifications
+  // notifications
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -147,8 +147,8 @@ function Dashboard() {
               const newNotis = notifications.filter(
                 (item) =>
                   !storedData.some(
-                    (existing) => existing.message === item.message
-                  )
+                    (existing) => existing.message === item.message,
+                  ),
               );
 
               if (newNotis.length > 0) {
@@ -169,7 +169,7 @@ function Dashboard() {
               setNotificationData(notifications);
               console.log("NotificationData:" + JSON.stringify(notifications));
             }
-          }
+          },
         );
         // Return the unsubscribe function to detach the listener when component unmounts
         return unsubscribe;
@@ -184,7 +184,7 @@ function Dashboard() {
   useEffect(() => {
     let handler = (e) => {
       if (!filterRef.current.contains(e.target)) {
-        setFilterDropDown(false)
+        setFilterDropDown(false);
       }
     };
     document.addEventListener("click", handler);
@@ -320,7 +320,7 @@ function Dashboard() {
               />
             </Link>
           </div>
-         {/* <div className=" flex flex-grow flex-row justify-start items-center gap-5 lg:order-1" ref={filterRef}>
+          {/* <div className=" flex flex-grow flex-row justify-start items-center gap-5 lg:order-1" ref={filterRef}>
             <form className="max-w-lg w-1/2">
               <div className="flex relative rounded-lg dark:divide-gray-600 divide-gray-300">
                 <label

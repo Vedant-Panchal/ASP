@@ -5,7 +5,14 @@ import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 import "@react-pdf-viewer/thumbnail/lib/styles/index.css";
 import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
 import AdminNav from "../Admin/AdminNav";
-import { ArrowDownToLine, Moon, Share2, Sun, XSquare, Loader2 } from "lucide-react";
+import {
+  ArrowDownToLine,
+  Moon,
+  Share2,
+  Sun,
+  XSquare,
+  Loader2,
+} from "lucide-react";
 import { UserContext } from "../../context/AuthContext";
 // import { useDocumentData } from "react-firebase-hooks/firestore";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -13,7 +20,7 @@ import { db } from "../../firebase";
 import { doc, getDoc } from "firebase/firestore";
 import Swal from "sweetalert2";
 
-import './ClientPdfViewer.css'
+import "./ClientPdfViewer.css";
 
 async function fetchFileData(fileId) {
   const filesref = doc(db, "files", fileId);
@@ -68,7 +75,7 @@ function ClientPdfViewer() {
       const response = await fetch(fileDoc.url);
       const blob = await response.blob();
       const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = url;
       link.download = fileDoc.name;
       document.body.appendChild(link);
@@ -87,19 +94,28 @@ function ClientPdfViewer() {
     OpenMenuItem: () => <></>,
     ShowProperties: () => <></>,
     Open: () => <></>,
-    Download: () => <>
-       <button className="hover:bg-[#D6D6D6] px-1 py-1 rounded-md" onClick={downloadFile}>
-        <ArrowDownToLine strokeWidth={1} width={20} />
-      </button> 
-    </>,
-    DownloadMenuItem: () => <>
-       <button className="hover:bg-[#D6D6D6] ml-2.5 px-1 py-1 rounded-md flex" onClick={downloadFile}>
-        <ArrowDownToLine strokeWidth={1} width={20} className="mr-2" /> Download
-      </button> 
-    </>,
+    Download: () => (
+      <>
+        <button
+          className="hover:bg-[#D6D6D6] px-1 py-1 rounded-md"
+          onClick={downloadFile}
+        >
+          <ArrowDownToLine strokeWidth={1} width={20} />
+        </button>
+      </>
+    ),
+    DownloadMenuItem: () => (
+      <>
+        <button
+          className="hover:bg-[#D6D6D6] ml-2.5 px-1 py-1 rounded-md flex"
+          onClick={downloadFile}
+        >
+          <ArrowDownToLine strokeWidth={1} width={20} className="mr-2" />{" "}
+          Download
+        </button>
+      </>
+    ),
   });
-
-
 
   const renderToolbar = (Toolbar) => (
     <Toolbar>{renderDefaultToolbar(transformToolbarSlot)}</Toolbar>
@@ -107,10 +123,10 @@ function ClientPdfViewer() {
 
   const defaultLayoutPluginInstance = defaultLayoutPlugin({
     renderToolbar,
-    fileNameGenerator: file => {
+    fileNameGenerator: (file) => {
       // `file.name` is the URL of opened file
-      const fileName = file.name
-      return `${fileName}`
+      const fileName = file.name;
+      return `${fileName}`;
     },
   });
 
@@ -214,8 +230,9 @@ function ClientPdfViewer() {
             </div>
             <div className="flex flex-row items-center justify-start w-fit lg:order-2">
               <button
-                className={`${mode === "light" ? "bg-yellow-300" : "bg-darkElevate"
-                  } w-fit h-fit p-2 rounded-full transition-all duration-500 ease-in mr-2`}
+                className={`${
+                  mode === "light" ? "bg-yellow-300" : "bg-darkElevate"
+                } w-fit h-fit p-2 rounded-full transition-all duration-500 ease-in mr-2`}
                 onClick={toggleMode}
               >
                 <span className="transition-all duration-200 ease-in">

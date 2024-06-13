@@ -1,11 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { UserContext } from "../../context/AuthContext";
-import { Moon, Sun,ArrowDownToLine } from "lucide-react";
-
+import { Moon, Sun, ArrowDownToLine } from "lucide-react";
 
 function Header() {
-  
   const [hidden, sethidden] = useState(true);
   const { currentUser, mode, setmode } = useContext(UserContext);
   // const [AuthBtns, setAuthBtns] = useState(true);
@@ -60,9 +58,11 @@ function Header() {
               </g>
             </svg>
           </span>
-          <span className="text-[#00DE73] peer-hover:block text-xs font-normal hidden">Download App Now</span>
+          <span className="text-[#00DE73] peer-hover:block text-xs font-normal hidden">
+            Download App Now
+          </span>
         </div>
-            </Link>
+      </Link>
       <nav
         className={` fixed top-0 left-0 right-0  border-gray-200 shadow-sm  lg:px-6 bg-Light10 px-4  dark:bg-darkNav dark:shadow-sm`}
       >
@@ -112,8 +112,6 @@ function Header() {
               </span>
             </button>
 
-            
-            
             <Link
               to={"/signin"}
               className="text-gray-800 dark:text-white hover:bg-slate-300 focus:ring-4 focus:ring-gray-300  rounded-lg text-sm px-4 font-bold lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800 transition-all duration-200 ease-in"
@@ -127,7 +125,6 @@ function Header() {
             >
               {currentUser ? "Dashboard" : "Sign Up"}
             </Link>
-            
           </div>
           <div className="lg:flex lg:flex-row justify-between items-center hidden">
             <ul className="flex flex-col lg:flex-row  lg:space-x-8 lg:items-center lg:w-auto">
