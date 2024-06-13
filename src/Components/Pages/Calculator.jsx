@@ -240,7 +240,7 @@ function Calculator() {
   };
   return (
     <>
-      <div className="antialiased h-max  bg-light dark:bg-dark">
+      <div className="antialiased h-max  bg-Light20 dark:bg-dark">
         <nav className="bg-slate-100 px-4  dark:bg-darkNav dark:shadow-sm fixed left-0 right-0 top-0 z-50 shadow-lg rounded-sm">
           <div className="flex flex-wrap justify-between items-center relative">
             <div className="flex justify-start items-center">
@@ -386,7 +386,7 @@ function Calculator() {
         </aside>
         <main className="w-screen h-max p-5 pt-20">
           <div className="flex flex-col items-center justify-center w-full gap-4 mb-4 h-full">
-            <div className="dark:bg-darkNav bg-lightNav rounded-lg shadow-lg w-full lg:w-8/12 h-max md:h-max">
+            <div className="dark:bg-darkNav bg-Light20 rounded-lg shadow-lg w-full lg:w-8/12 h-max md:h-max">
               <div className="flex-col justify-center items-start h-full p-3 w-full">
                 <div className="flex flex-wrap flex-row items-center justify-between ">
                   <div className="flex-grow md:mr-2">
@@ -592,7 +592,7 @@ function Calculator() {
                 </button>
               </div>
             </div>
-            <div className="dark:bg-darkNav bg-lightNav rounded-lg shadow-lg w-full lg:w-8/12 h-max md:h-max">
+            <div className="dark:bg-darkNav bg-Light20 rounded-lg shadow-lg w-full lg:w-8/12 h-max md:h-max">
               <div className="flex-col justify-center items-start h-full p-3 w-full">
                 <div className="flex flex-wrap flex-row items-center justify-between ">
                   <div className="flex-grow md:mr-2">
