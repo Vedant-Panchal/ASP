@@ -75,6 +75,8 @@ export const AuthCtxtProvider = ({ children }) => {
 
   const logoutUser = () => {
     setLoading(true);
+    // remove tree from local storage
+    localStorage.removeItem("tree");
     return aspauth.signOut().finally(() => {
       setLoading(false); // Set loading to false once the operation is complete
     });
