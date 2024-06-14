@@ -4,33 +4,18 @@ import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 import "@react-pdf-viewer/thumbnail/lib/styles/index.css";
 import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
-import AdminNav from "../Admin/AdminNav";
-import {
-  ArrowDownToLine,
-  Moon,
-  Share2,
-  Sun,
-  XSquare,
-  Loader2,
-} from "lucide-react";
+import { ArrowDownToLine, Moon, Share2, Sun, XSquare } from "lucide-react";
 import { UserContext } from "../../context/AuthContext";
-// import { useDocumentData } from "react-firebase-hooks/firestore";
+import { DirectoryContext } from "../../context/DirectoryContext";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { db } from "../../firebase";
-import { doc, getDoc } from "firebase/firestore";
 import Swal from "sweetalert2";
-
 import "./ClientPdfViewer.css";
-
-async function fetchFileData(fileId) {
-  const filesref = doc(db, "files", fileId);
-  const fileDocSnap = await getDoc(filesref);
-  const fileDoc = fileDocSnap.data();
-  return fileDoc;
-}
 
 function ClientPdfViewer() {
   const { currentUser, mode, setmode, logoutUser } = useContext(UserContext);
+  // Get tree from local storage
+  const tree = JSON.parse(localStorage.getItem("tree"));
+
   const { fileId } = useParams();
   const [profileHidden, setProfileHidden] = useState(true);
   const [profilePicture, setProfilePicture] = useState(null);
@@ -40,19 +25,50 @@ function ClientPdfViewer() {
   const userEmail = currentUser.email;
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await fetchFileData(fileId);
-        setFileDoc(data);
-      } catch (error) {
-        console.log(error);
+  const [loading, setIsLoading] = useState(false);
+
+  //! Optimise this function to avoid multiple iterations
+  function fetchFileData(fileId) {
+    if (!tree || tree.length === 0) {
+      console.log("No data found in the tree");
+      return null;
+    }
+    function searchFile(data) {
+      for (let item of data) {
+        if (item.url && item.id === fileId) {
+          return item;
+        }
+        if (item.children && item.children.length > 0) {
+          const found = searchFile(item.children);
+          if (found) return found;
+        }
       }
+      return null;
+    }
+    return searchFile(tree);
+  }
+
+  useEffect(() => {
+    console.log("Current Tree State: ", tree); //! Remove this line
+    const fetchData = () => {
+      const data = fetchFileData(fileId);
+      console.log(data);
+      setFileDoc(data);
     };
 
-    fetchData();
-  }, [fileId]);
+    if (tree && tree.length > 0) {
+      fetchData();
+    } else {
+      console.log("No data found in the tree"); //! Remove this line
+    }
+  }, [fileId, tree]);
+
   const url = fileDoc && fileDoc.url ? fileDoc.url : "default-url"; // Provide a default URL or handle it accordingly
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -176,41 +192,6 @@ function ClientPdfViewer() {
       }
     });
   };
-
-  // const [loading, setLoading] = useState(false);
-  // function LoadingIcon() {
-  //   return <Loader2 strokeWidth={1} className="text-blue-500 rotate-animation" />
-  // }
-  // function ShareIcon() {
-  //   return <Share2 strokeWidth={1} className="text-blue-500" onClick={() => {
-  //     setLoading(true);
-  //     copyURL(shortenURL(window.location.href));
-  //   }} />
-  // }
-
-  // async function shortenURL(url) {
-  //   let resp = await fetch("/titanurl/shorten", {
-  //     method: "POST",
-  //     headers: { "Content-Type": "application/json" },
-  //     cache: "no-cache",
-  //     body: JSON.stringify({
-  //       "original-url": url,
-  //       "alias-type": "random"
-  //     })
-  //   })
-  //   let jsonResp = await resp.json()
-  //   if (!jsonResp.ok) {
-  //     return null
-  //   }
-  //   return jsonResp.message
-  // }
-
-  // const copyURL = async (url) => {
-  //   const shortenedURL = await shortenURL(url)
-  //   await window.navigator.clipboard.writeText((shortenedURL) ? shortenedURL : url )
-  //   setLoading(false);
-  // }
-
   return (
     <>
       <div className="w-screen h-screen">
@@ -300,12 +281,7 @@ function ClientPdfViewer() {
           >
             <XSquare strokeWidth={1} className="text-blue-500" />
           </button>
-          {/* <button
-            onClick={() => copyURL(window.location.href)}
-            className="px-4 py-1 absolute bg-transparent z-[500] md:top-1 md:right-56 top-1 right-10 w-fit h-fit rounded-none"
-          >
-            {loading ? LoadingIcon() : ShareIcon()}
-          </button> */}
+
           <div className="w-screen h-full absolute top-0 right-0 z-50 print:hidden">
             <Worker
               workerUrl={`https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js`}

@@ -77,6 +77,13 @@ class DirectoryTree {
         });
       }
     });
+
+    // Add all files which have no parentID to the root folder
+    this.filesArr.forEach((file) => {
+      if (file.folderId === null) {
+        this.rootFolder.push(file);
+      }
+    });
   }
 
   getTree() {

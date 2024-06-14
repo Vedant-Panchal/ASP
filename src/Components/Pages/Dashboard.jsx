@@ -2,7 +2,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import Swal from "sweetalert2";
 import { UserContext } from "../../context/AuthContext";
-import { useContext } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   PowerOff,
@@ -11,7 +10,14 @@ import {
   Sun,
   GraduationCap,
 } from "lucide-react";
-import { collection, orderBy, query, onSnapshot } from "firebase/firestore";
+import { useContext } from "react";
+import {
+  collection,
+  orderBy,
+  query,
+  onSnapshot,
+  getDocs,
+} from "firebase/firestore";
 import { db } from "../../firebase";
 import { useFolder } from "../Admin/hooks/useFolder";
 import ClientFolder from "./ClientFolder";
@@ -19,7 +25,7 @@ import ClientFile from "./ClientFile";
 import ClientBreadCrumb from "../InnerComponents/ClientBreadCrumb";
 
 //! Debug
-import buildTree from "../../utils/buildTree";
+import { DirectoryContext } from "../../context/DirectoryContext";
 //!
 
 function Dashboard() {
@@ -33,15 +39,34 @@ function Dashboard() {
   const [profilePicture, setProfilePicture] = useState(null);
   const { folderId } = useParams();
   const { folder, childFolders, childFiles } = useFolder(folderId);
+
   const [notificationDropDown, setnotificationDropDown] = useState(false);
   const [notificationIndicator, setNotificationIndicator] = useState(false);
   const [notificationCount, setNotificationCount] = useState(0);
   const [notificationData, setNotificationData] = useState([]);
-  const [filter, setFilter] = useState("All");
-  const [filterDropDown, setFilterDropDown] = useState(false);
+
+  const [_, setFilterDropDown] = useState(false);
+
+  const { tree, setTree } = useContext(DirectoryContext);
+
   let notiRef = useRef();
   let asideRef = useRef();
   let filterRef = useRef();
+
+  useEffect(() => {
+    async function fetchTree() {
+      const treeRef = collection(db, "trees");
+      const snapshot = await getDocs(treeRef);
+      const latestTree = snapshot.docs[snapshot.docs.length - 1].data();
+      setTree(JSON.parse(latestTree.tree));
+
+      // Save the tree to local storage
+      localStorage.setItem("tree", JSON.stringify(JSON.parse(latestTree.tree)));
+    }
+    if (Object.keys(tree).length === 0) {
+      fetchTree();
+    }
+  }, []);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -301,113 +326,6 @@ function Dashboard() {
               />
             </Link>
           </div>
-          {/* <div className=" flex flex-grow flex-row justify-start items-center gap-5 lg:order-1" ref={filterRef}>
-            <form className="max-w-lg w-1/2">
-              <div className="flex relative rounded-lg dark:divide-gray-600 divide-gray-300">
-                <label
-                  htmlFor="search-dropdown"
-                  className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
-                >
-                  Search for files and folders
-                </label>
-
-                <button
-                  id="dropdown-button"
-                  onClick={()=>setFilterDropDown(!filterDropDown)}
-                  className="flex-shrink-0 flex-grow z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center rounded-l-lg focus:outline-none border-r-2 focus:decoration-transparent bg-Light20 hover:bg-Light30 dark:hover:bg-darkElevate/80 text-gray-900 dark:text-white dark:bg-darkElevate"
-                  type="button"
-                >
-                  {filter}{" "}
-                  <svg
-                    className="w-2.5 h-2.5 ms-2.5"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 10 6"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="m1 1 4 4 4-4"
-                    />
-                  </svg>
-                </button>
-                <div
-                  id="dropdown"
-                  className="absolute top-14 z-10 shadow-md bg-Light20 dark:bg-darkElevate divide-y divide-gray-100 rounded-lg w-44"
-                  onClick={()=> setFilterDropDown(false)}
-                  hidden={!filterDropDown}
-                >
-                  <ul
-                    className="py-2 text-sm text-gray-700 dark:text-gray-200"
-                    aria-labelledby="dropdown-button"
-                  >
-                    <li
-                        onClick={()=> setFilter('All')}
-                    >
-                      <button
-                        type="button"
-                        className="inline-flex w-full px-4 py-2 bg-Light20 hover:bg-Light30 dark:hover:bg-dark/30 text-gray-900 dark:text-white dark:bg-darkElevate"
-                      >
-                        All
-                      </button>
-                    </li>
-                    <li
-                        onClick={()=> setFilter('Files')}
-                    >
-                      <button
-                        type="button"
-                        className="inline-flex w-full px-4 py-2 bg-Light20 hover:bg-Light30 dark:hover:bg-dark/30 text-gray-900 dark:text-white dark:bg-darkElevate"
-                      >
-                        Files
-                      </button>
-                    </li>
-                    <li onClick={()=> {setFilter('Folders'),console.log(filter)}}>
-                      <button
-                        type="button"
-                        className="inline-flex w-full px-4 py-2 bg-Light20 hover:bg-Light30 dark:hover:bg-dark/30 text-gray-900 dark:text-white dark:bg-darkElevate"
-                      >
-                        Folders
-                      </button>
-                    </li>
-                  </ul>
-                </div>
-
-                <div className="relative w-full">
-                  <input
-                    type="search"
-                    id="search-dropdown"
-                    className="block w-full p-4 ps-3  bg-Light20 dark:border-none focus:outline-none  text-zinc-900 text-sm rounded-r-lg dark:focus:border-none  dark:bg-darkElevate  dark:placeholder-gray-400   dark:shadow-sm-light dark:text-slate-200 placeholder-gray-700"
-                    placeholder="Search Files and Folders..."
-                    required=""
-                  />
-                  <button
-                    type="submit"
-                    className="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-blue-700 rounded-e-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                  >
-                    <svg
-                      className="w-4 h-4"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2.5}
-                        d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                      />
-                    </svg>
-                    <span className="sr-only">Search</span>
-                  </button>
-                </div>
-              </div>
-            </form>
-          </div>*/}
 
           <div
             className="flex flex-row items-center justify-start w-fit lg:order-2"

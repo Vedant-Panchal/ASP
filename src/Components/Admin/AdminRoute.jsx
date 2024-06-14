@@ -13,6 +13,8 @@ function AdminRoute({ children }) {
       return children;
     } else if (currentUser.email === "mrunalshah.ict22@adaniuni.ac.in") {
       return children;
+    } else if (currentUser.email === "janmejaychatterjee.cse21@aii.ac.in") {
+      return children;
     } else {
       message("error", "You must be an admin to access this page");
       return <Navigate to="/adminsignin" />;
