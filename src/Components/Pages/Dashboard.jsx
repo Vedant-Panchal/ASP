@@ -29,7 +29,7 @@ import { DirectoryContext } from "../../context/DirectoryContext";
 //!
 
 function Dashboard() {
-  const [_, seterror] = useState("");
+  const [error, seterror] = useState("");
   const [profileHidden, setProfileHidden] = useState(false);
   const navigate = useNavigate();
   const [asidehidden, setasidehidden] = useState(false);
@@ -39,12 +39,13 @@ function Dashboard() {
   const [profilePicture, setProfilePicture] = useState(null);
   const { folderId } = useParams();
   const { folder, childFolders, childFiles } = useFolder(folderId);
+
   const [notificationDropDown, setnotificationDropDown] = useState(false);
   const [notificationIndicator, setNotificationIndicator] = useState(false);
   const [notificationCount, setNotificationCount] = useState(0);
   const [notificationData, setNotificationData] = useState([]);
 
-  const [filterDropDown, setFilterDropDown] = useState(false);
+  const [_, setFilterDropDown] = useState(false);
 
   const { tree, setTree } = useContext(DirectoryContext);
 
@@ -57,12 +58,12 @@ function Dashboard() {
       const treeRef = collection(db, "trees");
       const snapshot = await getDocs(treeRef);
       const latestTree = snapshot.docs[snapshot.docs.length - 1].data();
-
-      console.debug("Latest tree:", JSON.parse(latestTree.tree)); //! Debug
       setTree(JSON.parse(latestTree.tree));
-    }
 
-    if (!tree) {
+      // Save the tree to local storage
+      localStorage.setItem("tree", JSON.stringify(JSON.parse(latestTree.tree)));
+    }
+    if (Object.keys(tree).length === 0) {
       fetchTree();
     }
   }, []);

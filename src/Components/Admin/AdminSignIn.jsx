@@ -3,8 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../../context/AuthContext";
 import { Eye, EyeOff } from "lucide-react";
 import { message } from "../InnerComponents/modal";
-import { aspauth } from "../../firebase";
-import { updateCurrentUser } from "firebase/auth";
 
 function AdminSignIn() {
   const [email, setEmail] = useState("");
@@ -25,24 +23,9 @@ function AdminSignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const [localPart, domainPart] = email.split("@");
-
-    // Check if the domain part is "adaniuni.ac.in"
-    // if (domainPart !== 'gmail.com') {
-    //   setEmail('');
-    //   return;
-    // }
-    // else if(localPart !== "vedkp2421@gmail.com"){
-    //     return
-    // }
-
-    // If all checks pass, attempt to create the user
     setError("");
     try {
       await loginUser(email, password);
-
-      // Wait for the user state to be updated
-      // Navigate to the dashboard
       setTimeout(() => {
         navigate("/admin");
       }, 1000);

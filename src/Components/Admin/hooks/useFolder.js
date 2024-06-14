@@ -1,4 +1,5 @@
-import React, { useEffect, useReducer } from "react";
+import { useEffect, useReducer, useContext } from "react";
+import { DirectoryContext } from "../../../context/DirectoryContext";
 
 export const ACTIONS = {
   SELECT_FOLDER: "selectFolder",
@@ -8,61 +9,6 @@ export const ACTIONS = {
 };
 
 export const ROOT_FOLDER = { name: "Home", id: null, path: [] };
-
-const folderData = [
-  {
-    id: "PSXXabzVNlg5nw56HbEA",
-    UserId: "",
-    createdAt: "",
-    name: "Practical",
-    parentId: null,
-    path: [],
-    children: [],
-  },
-  {
-    id: "UGlJE86RQQzBV7pyHWfj",
-    UserId: "randomValueHere",
-    createdAt: "14/6/2024, 1:09:21 pm",
-    name: "Dummy Folder",
-    parentId: null,
-    path: [],
-    children: [
-      {
-        id: "bJBLtplahTAfeBzpVzpV",
-        createdAt: "",
-        folderId: "UGlJE86RQQzBV7pyHWfj",
-        name: "file_name",
-        url: "https://firebasestorage.googleapis.com/v0/b/asp2024-5525f.appspot.com/o/Home%2FBATCH%202022-2026%2FSEM-2%2FBE%2FUNIT-1%2FModule%201_Special%20Diode.pdf?alt=media&token=29b8f9f6-fa6c-495d-949e-872277fa0b01",
-      },
-      {
-        id: "gtL2eQ7BcZCQWQibYJbR",
-        UserId: "",
-        createdAt: "",
-        name: "Nested Folder",
-        parentId: "UGlJE86RQQzBV7pyHWfj",
-        path: [""],
-        children: [
-          {
-            id: "uyp7BMYDf0lJvsQrCbGf",
-            UserId: "",
-            createdAt: "",
-            name: "Meow Meow",
-            parentId: "gtL2eQ7BcZCQWQibYJbR",
-            path: [""],
-            children: [],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: "iSSSgRjcL445IpppRbjQ",
-    createdAt: "",
-    folderId: null,
-    name: "Hello Kitty",
-    url: "meowmeo",
-  },
-];
 
 function reducer(state, { type, payload }) {
   switch (type) {
@@ -99,17 +45,19 @@ function reducer(state, { type, payload }) {
 
 function findFolderById(id, data) {
   if (id === null) return ROOT_FOLDER;
-  for (const folder of data) {
-    if (folder.id === id) return folder;
-    if (folder.children && folder.children.length > 0) {
-      const childFolder = findFolderById(id, folder.children);
-      if (childFolder) return childFolder;
+  for (const item of data) {
+    if (item.id === id) return item;
+    if (item.children && item.children.length > 0) {
+      const nestedItem = findFolderById(id, item.children);
+      if (nestedItem) return nestedItem;
     }
   }
   return null;
 }
 
 export function useFolder(folderId = null, folder = null) {
+  const { tree } = useContext(DirectoryContext);
+
   const [state, dispatch] = useReducer(reducer, {
     folderId,
     folder,
@@ -122,10 +70,10 @@ export function useFolder(folderId = null, folder = null) {
       type: ACTIONS.SELECT_FOLDER,
       payload: { folderId, folder },
     });
-  }, [folderId, folder]);
+  }, [folderId, folder, tree]);
 
   useEffect(() => {
-    const selectedFolder = findFolderById(folderId, folderData);
+    const selectedFolder = findFolderById(folderId, tree);
     if (selectedFolder) {
       dispatch({
         type: ACTIONS.UPDATE_FOLDER,
@@ -137,30 +85,47 @@ export function useFolder(folderId = null, folder = null) {
         payload: { folder: ROOT_FOLDER },
       });
     }
-  }, [folderId]);
+  }, [folderId, tree]);
 
   useEffect(() => {
-    const childFolders = folderData.filter(
-      (folder) => folder.parentId === folderId,
-    );
+    let childFolders = [];
+    if (folderId === null) {
+      // If we're at the root, get all top-level folders
+      childFolders = tree.filter(
+        (item) => item.parentId === null && item.children,
+      );
+    } else {
+      // If we're in a subfolder, find the current folder and get its children
+      const currentFolder = findFolderById(folderId, tree);
+      if (currentFolder && currentFolder.children) {
+        childFolders = currentFolder.children.filter((child) => child.children);
+      }
+    }
     dispatch({
       type: ACTIONS.SET_CHILD_FOLDERS,
       payload: { childFolders },
     });
-  }, [folderId]);
+  }, [folderId, tree]);
 
   useEffect(() => {
-    const currentFolder = findFolderById(folderId, folderData);
-    if (currentFolder && currentFolder.children) {
-      const childFiles = currentFolder.children.filter(
-        (child) => !child.children,
+    let childFiles = [];
+    if (folderId === null) {
+      // If we're at the root, get all top-level files
+      childFiles = tree.filter(
+        (item) => item.parentId === null && !item.children,
       );
-      dispatch({
-        type: ACTIONS.SET_CHILD_FILES,
-        payload: { childFiles },
-      });
+    } else {
+      // If we're in a subfolder, find the current folder and get its files
+      const currentFolder = findFolderById(folderId, tree);
+      if (currentFolder && currentFolder.children) {
+        childFiles = currentFolder.children.filter((child) => !child.children);
+      }
     }
-  }, [folderId]);
+    dispatch({
+      type: ACTIONS.SET_CHILD_FILES,
+      payload: { childFiles },
+    });
+  }, [folderId, tree]);
 
   return state;
 }

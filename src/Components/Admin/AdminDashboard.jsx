@@ -2,12 +2,14 @@ import { Timestamp, serverTimestamp } from "firebase/firestore";
 import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import { aspauth, db, storage } from "../../firebase";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, getDocs } from "firebase/firestore";
 import { UserContext } from "../../context/AuthContext";
+import { DirectoryContext } from "../../context/DirectoryContext";
 import { useContext, useState, useEffect, useRef } from "react";
 import { ROOT_FOLDER, useFolder } from "./hooks/useFolder";
 import AdminFolder from "./AdminFolder";
 import AdminNav from "./AdminNav";
+import buildTree from "../../utils/buildTree";
 
 import { deleteObject, ref as deleteRef } from "firebase/storage";
 import { deleteDoc, doc } from "firebase/firestore";
@@ -35,6 +37,22 @@ const AdminDashboard = () => {
   const { folderId } = useParams();
   const { folder, childFolders, childFiles } = useFolder(folderId);
   const { mode, setmode } = useContext(UserContext);
+  const { tree, setTree } = useContext(DirectoryContext);
+
+  useEffect(() => {
+    async function fetchTree() {
+      const treeRef = collection(db, "trees");
+      const snapshot = await getDocs(treeRef);
+      const latestTree = snapshot.docs[snapshot.docs.length - 1].data();
+      setTree(JSON.parse(latestTree.tree));
+
+      // Save the tree to local storage
+      localStorage.setItem("tree", JSON.stringify(JSON.parse(latestTree.tree)));
+    }
+    if (Object.keys(tree).length === 0) {
+      fetchTree();
+    }
+  }, []);
 
   const ref = collection(db, "folders");
   const filesref = collection(db, "files");
@@ -323,6 +341,7 @@ const AdminDashboard = () => {
             )}
           </span>
         </button>
+
         <div
           className={`after:content-[''] after:w-0 after:h-0 after:absolute after:-bottom-2 after:right-2 after:border-l-transparent after:border-r-transparent after:border-r-[9px] after:border-l-[9px] 
           after:border-t-slate-50 after:dark:border-t-darkElevate after:border-t-8 after:border-b-0 w-96 h-fit bg-slate-50 dark:bg-darkElevate fixed right-[5em] bottom-[5.5em] rounded-md shadow-lg z-40 transition-all ease-in p-3 duration-300 ${
@@ -360,6 +379,15 @@ const AdminDashboard = () => {
           >
             <Folder size={16} className="mr-3" />
             <div>Create Folder</div>
+          </button>
+
+          <button
+            className={`flex items-center text-white bg-red-400 hover:bg-red-600 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800 w-full ${
+              hidden ? "hidden" : ""
+            }`}
+            onClick={buildTree}
+          >
+            Build Tree
           </button>
 
           <label
@@ -448,6 +476,7 @@ const AdminDashboard = () => {
           className={`p-4 min-h-screen pt-20 transition-all ease-in-out delay-[40] duration-200 mb-20 `}
         >
           <FolderBreadCrumb currentFolder={folder} toggleMode={toggleMode} />
+
           <div className="md:pl-4">
             <div className={`flex flex-col items-start justify-center w-full`}>
               <div

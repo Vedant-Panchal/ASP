@@ -28,6 +28,7 @@ async function getAllFiles() {
 }
 
 async function buildTree() {
+  console.log("Building tree...");
   const folders = await getAllFolders();
   const files = await getAllFiles();
 
@@ -42,10 +43,12 @@ async function buildTree() {
 
   //* Serialize the tree to JSON
   const jsonTree = JSON.stringify(finalTree);
+  console.log("Tree built:", JSON.parse(jsonTree));
 
   //* Save the tree to Firestore
   const treeRef = doc(db, "trees", new Date().toISOString());
   await setDoc(treeRef, { tree: jsonTree, createdAt: new Date() });
+  console.log("Tree built and saved to Firestore");
 }
 
 export default buildTree;
