@@ -1,49 +1,50 @@
-import React, { useState,useEffect } from 'react'
+import React, { useState, useEffect } from "react";
 
-function EditSem({index,semsData,setSemsData}) {
-    const [hidden, setHidden] = useState(true);
-    const [sem, setSem] = useState(null)
-    const [semData, setSemData] = useState({
-        sem: '',
-        sgpa: '',
-        id:''
-    })
-    useEffect(() => {
-        // Update subjectData when subject changes
-        setSemData(sem || {
-          sem: "",
-          sgpa: "",
-          id: "",
-        });
-      }, [sem]);
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const updatedSemData = semsData.map((old) => 
-           old.id === index ? semData : old
-        )
-        setSemsData(updatedSemData);
+function EditSem({ index, semsData, setSemsData }) {
+  const [hidden, setHidden] = useState(true);
+  const [sem, setSem] = useState(null);
+  const [semData, setSemData] = useState({
+    sem: "",
+    sgpa: "",
+    id: "",
+  });
+  useEffect(() => {
+    // Update subjectData when subject changes
+    setSemData(
+      sem || {
+        sem: "",
+        sgpa: "",
+        id: "",
+      },
+    );
+  }, [sem]);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const updatedSemData = semsData.map((old) =>
+      old.id === index ? semData : old,
+    );
+    setSemsData(updatedSemData);
 
+    localStorage.setItem("semsData", JSON.stringify(updatedSemData));
+    setHidden(true);
+  };
+  const findItem = (index) => {
+    const semData = semsData.find((sem) => sem.id === index);
+    if (semData) {
+      setSem(semData);
+      setHidden(false);
+    } else {
+      console.error(`Sem with id ${index} not found.`);
+    }
+  };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setSemData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
-      localStorage.setItem("semsData", JSON.stringify(updatedSemData));    
-        setHidden(true);
-      };
-      const findItem = (index) => {
-        const semData = semsData.find((sem) => sem.id === index);
-        if (semData) {
-            setSem(semData);
-          setHidden(false);
-        } else {
-          console.error(`Sem with id ${index} not found.`);
-        }
-      };
-      const handleChange = (e) => {
-        const { name, value} = e.target;
-        setSemData((prev)=>({
-            ...prev,
-            [name]: value
-        }))
-      };
-    
   return (
     <>
       {/* Modal toggle */}
@@ -51,7 +52,9 @@ function EditSem({index,semsData,setSemsData}) {
         <button
           className="block text-xs text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg md:text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
           type="button"
-          onClick={() => {setHidden(!hidden),findItem(index)}}
+          onClick={() => {
+            setHidden(!hidden), findItem(index);
+          }}
         >
           Edit
         </button>
@@ -97,28 +100,28 @@ function EditSem({index,semsData,setSemsData}) {
               <form onSubmit={handleSubmit}>
                 <div className="grid gap-4 mb-4 sm:grid-cols-2">
                   <div>
-                    <label
-                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                    >
+                    <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                       Semester
                     </label>
-                    <select name="sem" value={semData.sem} onChange={handleChange} className='shadow-sm bg-[#F2F2F2]  text-zinc-900 text-sm rounded-lg focus:ring-slate-500 focus:border-slate-500 block w-full p-2.5 dark:bg-darkNav/80 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-slate-500 dark:focus:border-slate-500 dark:shadow-sm-light dark:text-slate-200'>
-                        <option value="SEM-1">SEM-1</option>
-                        <option value="SEM-2">SEM-2</option>
-                        <option value="SEM-3">SEM-3</option>
-                        <option value="SEM-4">SEM-4</option>
-                        <option value="SEM-5">SEM-5</option>
-                        <option value="SEM-6">SEM-6</option>
-                        <option value="SEM-7">SEM-7</option>
-                        <option value="SEM-8">SEM-8</option>
-                    </select>
-                    
-                  </div>
-                  
-                  <div>
-                    <label
-                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    <select
+                      name="sem"
+                      value={semData.sem}
+                      onChange={handleChange}
+                      className="shadow-sm bg-[#F2F2F2]  text-zinc-900 text-sm rounded-lg focus:ring-slate-500 focus:border-slate-500 block w-full p-2.5 dark:bg-darkNav/80 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-slate-500 dark:focus:border-slate-500 dark:shadow-sm-light dark:text-slate-200"
                     >
+                      <option value="SEM-1">SEM-1</option>
+                      <option value="SEM-2">SEM-2</option>
+                      <option value="SEM-3">SEM-3</option>
+                      <option value="SEM-4">SEM-4</option>
+                      <option value="SEM-5">SEM-5</option>
+                      <option value="SEM-6">SEM-6</option>
+                      <option value="SEM-7">SEM-7</option>
+                      <option value="SEM-8">SEM-8</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                       SGPA
                     </label>
                     <input
@@ -148,7 +151,7 @@ function EditSem({index,semsData,setSemsData}) {
                       clipRule="evenodd"
                     />
                   </svg>
-                  Edit 
+                  Edit
                 </button>
               </form>
             </div>
@@ -156,7 +159,7 @@ function EditSem({index,semsData,setSemsData}) {
         </div>
       </div>
     </>
-  )
+  );
 }
 
-export default EditSem
+export default EditSem;

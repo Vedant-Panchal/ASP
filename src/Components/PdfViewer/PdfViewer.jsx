@@ -7,7 +7,7 @@ import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
 import AdminNav from "../Admin/AdminNav";
 import { XSquare } from "lucide-react";
 import { UserContext } from "../../context/AuthContext";
-import { useDocumentData } from 'react-firebase-hooks/firestore';
+import { useDocumentData } from "react-firebase-hooks/firestore";
 import { useParams } from "react-router-dom";
 import { db } from "../../firebase";
 import { doc, getDoc } from "firebase/firestore";
@@ -35,8 +35,7 @@ function PdfViewer() {
     fetchData();
   }, [fileId]);
 
-  const url = fileDoc && fileDoc.url ? fileDoc.url : 'default-url'; // Provide a default URL or handle it accordingly
-
+  const url = fileDoc && fileDoc.url ? fileDoc.url : "default-url"; // Provide a default URL or handle it accordingly
 
   const transformToolbarSlot = (slot) => ({
     ...slot,
@@ -48,7 +47,7 @@ function PdfViewer() {
     ShowProperties: () => <></>,
     Open: () => <></>,
   });
-  
+
   const renderToolbar = (Toolbar) => (
     <Toolbar>{renderDefaultToolbar(transformToolbarSlot)}</Toolbar>
   );
@@ -56,31 +55,34 @@ function PdfViewer() {
   const defaultLayoutPluginInstance = defaultLayoutPlugin({
     renderToolbar,
   });
-  
+
   const { renderDefaultToolbar } =
-  defaultLayoutPluginInstance.toolbarPluginInstance;
-  
+    defaultLayoutPluginInstance.toolbarPluginInstance;
+
   return (
     <>
-
-    <div className="w-screen h-screen">
-      <AdminNav />
-      <div className="relative h-full w-screen mt-16">
-      <button onClick={()=>window.close()} className="px-4 py-1 absolute bg-transparent z-[1000] md:top-1 md:right-28 top-1 right-8 w-fit h-fit rounded-none"><XSquare strokeWidth={1} className="text-blue-500" /></button>
-    <div className="w-screen h-full absolute top-0 right-0 z-50 print:hidden px-2 select-none ">
-      
-      <Worker
-        workerUrl={`https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js`}
-      >
-        <Viewer
-          fileUrl={url}
-          plugins={[defaultLayoutPluginInstance]}
-          style={{ userSelect: 'none', pointerEvents: 'none' }}
-        />
-      </Worker>
-    </div>
-    </div>
-    </div>
+      <div className="w-screen h-screen">
+        <AdminNav />
+        <div className="relative h-full w-screen mt-16">
+          <button
+            onClick={() => window.close()}
+            className="px-4 py-1 absolute bg-transparent z-[1000] md:top-1 md:right-28 top-1 right-8 w-fit h-fit rounded-none"
+          >
+            <XSquare strokeWidth={1} className="text-blue-500" />
+          </button>
+          <div className="w-screen h-full absolute top-0 right-0 z-50 print:hidden px-2 select-none ">
+            <Worker
+              workerUrl={`https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js`}
+            >
+              <Viewer
+                fileUrl={url}
+                plugins={[defaultLayoutPluginInstance]}
+                style={{ userSelect: "none", pointerEvents: "none" }}
+              />
+            </Worker>
+          </div>
+        </div>
+      </div>
     </>
   );
 }

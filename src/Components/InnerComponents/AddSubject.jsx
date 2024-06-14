@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 function AddSubject({ handleAddSubject }) {
   const [hidden, setHidden] = useState(true);
   const [subjectData, setSubjectData] = useState({
-    name: '',
-    credits: '',
-    ccaMarks: '',
-    endSemMarks: '',
-    id:''
+    name: "",
+    credits: "",
+    ccaMarks: "",
+    endSemMarks: "",
+    id: "",
   });
 
   const handleChange = (e) => {
-    const { name, value} = e.target;
+    const { name, value } = e.target;
     setSubjectData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -24,13 +24,12 @@ function AddSubject({ handleAddSubject }) {
     handleAddSubject(subjectData);
     setHidden(true);
     setSubjectData({
-      name: '',
-      credits: '',
-      ccaMarks: '',
-      endSemMarks: '',
+      name: "",
+      credits: "",
+      ccaMarks: "",
+      endSemMarks: "",
     });
   };
-  
 
   return (
     <>
@@ -85,9 +84,7 @@ function AddSubject({ handleAddSubject }) {
               <form onSubmit={handleSubmit}>
                 <div className="grid gap-4 mb-4 sm:grid-cols-2">
                   <div>
-                    <label
-                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                    >
+                    <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                       Name
                     </label>
                     <input
@@ -101,9 +98,7 @@ function AddSubject({ handleAddSubject }) {
                     />
                   </div>
                   <div>
-                    <label
-                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                    >
+                    <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                       Credits
                     </label>
                     <input
@@ -117,9 +112,7 @@ function AddSubject({ handleAddSubject }) {
                     />
                   </div>
                   <div>
-                    <label
-                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                    >
+                    <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                       CCA/Mid-Sem Marks
                     </label>
                     <input
@@ -133,9 +126,7 @@ function AddSubject({ handleAddSubject }) {
                     />
                   </div>
                   <div>
-                    <label
-                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                    >
+                    <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                       End-Sem Marks
                     </label>
                     <input

@@ -7,17 +7,15 @@ import { UserContext } from "../../context/AuthContext";
 import { Navigate, useNavigate } from "react-router-dom";
 import Header from "./Header";
 
-
 function ForgotPassword() {
   const [password, setPassword] = useState("");
   const [confirmpassword, setconfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [eye, seteye] = useState(false);
-  const {currenUser} = useContext(UserContext)
+  const { currenUser } = useContext(UserContext);
 
   const navigate = useNavigate();
   const message = (type, title, text) => {
-    
     Swal.fire({
       icon: type,
       title: title,
@@ -29,7 +27,7 @@ function ForgotPassword() {
       color: "#FFFFF2",
       confirmButtonColor: "#111827",
       showConfirmButton: false,
-      marginBottom: "5em"
+      marginBottom: "5em",
     });
   };
   const handlePassword = async (e) => {
@@ -57,32 +55,29 @@ function ForgotPassword() {
 
     setError("");
     try {
-
-      await updatePassword(currenUser, confirmpassword).
-      then(()=>{
-        setPassword('');
-      message("success", "Password Updated 🎊", "");
+      await updatePassword(currenUser, confirmpassword).then(() => {
+        setPassword("");
+        message("success", "Password Updated 🎊", "");
 
         setTimeout(() => {
-          navigate("/signin")
+          navigate("/signin");
         }, 1000);
-      })
+      });
     } catch (err) {
-      setError(err)
+      setError(err);
       message("success", "Oops...", error);
-      
     }
   };
 
   return (
     <section className="bg-white dark:bg-gray-900 h-screen mt-10 ">
-      <Header/>
+      <Header />
       <div className="max-w-md px-4 py-8 mx-auto lg:py-16 ">
         <h2 className="mb-4 text-center text-3xl font-bold text-gray-900 dark:text-white">
           Update Password
         </h2>
-        <form onSubmit= {handlePassword}>
-          <div className="flex flex-col gap-4 mb-4 mt-8 sm:gap-6 sm:mb-5"   >
+        <form onSubmit={handlePassword}>
+          <div className="flex flex-col gap-4 mb-4 mt-8 sm:gap-6 sm:mb-5">
             <div>
               <label
                 htmlFor="newPassword"
@@ -134,7 +129,7 @@ function ForgotPassword() {
                 )}
 
                 <button
-                type="button"
+                  type="button"
                   className="absolute right-2"
                   onClick={(e) => {
                     e.preventDefault();
@@ -161,7 +156,6 @@ function ForgotPassword() {
           <button
             type="submit"
             className="w-full mt-3 text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-           
           >
             Update password
           </button>

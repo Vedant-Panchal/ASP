@@ -15,7 +15,6 @@ Currently, two official plugins are available:
 
 ASP is a centralized student portal for all your course material. View it [here](https://asp24.vercel.app/).
 
-
 ### Development Environment Setup
 
 This guide demonstrates how to setup a local development environment.

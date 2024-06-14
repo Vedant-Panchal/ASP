@@ -13,13 +13,15 @@ const EditSubject = ({ subjects, setSubjects, index }) => {
 
   useEffect(() => {
     // Update subjectData when subject changes
-    setSubjectData(subject || {
-      name: "",
-      credits: "",
-      ccaMarks: "",
-      endSemMarks: "",
-      id: "",
-    });
+    setSubjectData(
+      subject || {
+        name: "",
+        credits: "",
+        ccaMarks: "",
+        endSemMarks: "",
+        id: "",
+      },
+    );
   }, [subject]);
 
   const handleChange = (e) => {
@@ -33,17 +35,17 @@ const EditSubject = ({ subjects, setSubjects, index }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     let updatedTotalCredits = 0;
-  let updatedTotalCreditsXGradePoints = 0;
+    let updatedTotalCreditsXGradePoints = 0;
     if (subject) {
       const updatedSubjects = subjects.map((old) =>
-        old.id === index ? subjectData : old
+        old.id === index ? subjectData : old,
       );
       updatedSubjects.forEach((subject) => {
         subject.totalOutOf100 =
           Number(subject.endSemMarks) + Number(subject.ccaMarks);
         subject.gradePoints = gradePoints(subject.totalOutOf100);
         subject.creditsXGradePoints = subject.credits * subject.gradePoints;
-  
+
         updatedTotalCredits += Number(subject.credits);
         updatedTotalCreditsXGradePoints += subject.creditsXGradePoints;
       });
@@ -52,7 +54,6 @@ const EditSubject = ({ subjects, setSubjects, index }) => {
         subject.totalCreditsXGradePoints = updatedTotalCreditsXGradePoints;
       });
       setSubjects(updatedSubjects);
-
 
       localStorage.setItem("subjects", JSON.stringify(updatedSubjects));
       setHidden(true);
@@ -146,9 +147,7 @@ const EditSubject = ({ subjects, setSubjects, index }) => {
               <form onSubmit={handleSubmit}>
                 <div className="grid gap-4 mb-4 sm:grid-cols-2">
                   <div>
-                    <label
-                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                    >
+                    <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                       Name
                     </label>
                     <input
@@ -162,9 +161,7 @@ const EditSubject = ({ subjects, setSubjects, index }) => {
                     />
                   </div>
                   <div>
-                    <label
-                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                    >
+                    <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                       Credits
                     </label>
                     <input
@@ -178,9 +175,7 @@ const EditSubject = ({ subjects, setSubjects, index }) => {
                     />
                   </div>
                   <div>
-                    <label
-                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                    >
+                    <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                       CCA/Mid-Sem Marks
                     </label>
                     <input
@@ -194,9 +189,7 @@ const EditSubject = ({ subjects, setSubjects, index }) => {
                     />
                   </div>
                   <div>
-                    <label
-                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                    >
+                    <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                       End-Sem Marks
                     </label>
                     <input

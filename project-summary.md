@@ -4,6 +4,7 @@
 - 🟩 [@capacitor/haptics@5.0.7](https://github.com/ionic-team/capacitor-plugins.git)
 - 🟩 [@capacitor/keyboard@5.0.8](https://github.com/ionic-team/capacitor-plugins.git)
 - 🟩 [@capacitor/status-bar@5.0.7](https://github.com/ionic-team/capacitor-plugins.git)
+
 ## Cordova Plugins
 
 ## Dependencies
@@ -44,12 +45,13 @@
 - 🟩 [tailwindcss@3.4.1](https://github.com/tailwindlabs/tailwindcss.git)
 - 🟩 [uuid@9.0.1](https://github.com/uuidjs/uuid.git)
 - 🟩 [vite@5.0.11](https://github.com/vitejs/vite.git) - (Latest 5.1.4)
+
 ### Maintenance Score
+
 35 out of 40 dependencies were up to date without issues.
 
-
-
 ## Nonstandard naming
+
 The following files and folders do not follow the standard naming convention:
 
 - \App.jsx
