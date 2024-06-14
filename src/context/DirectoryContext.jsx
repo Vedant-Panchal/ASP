@@ -1,9 +1,10 @@
-import { createContext } from "react";
+import { useState, createContext } from "react";
 
 export const DirectoryContext = createContext();
 
 export const DirectoryContextProvider = ({ children }) => {
-  const value = {}; //? Create a value object which will be passed to the Provider
+  const [tree, setTree] = useState(null); //? Create a state variable to store the tree
+  const value = { tree, setTree }; //? Create a value object which will be passed to the Provider
 
   return (
     <DirectoryContext.Provider value={value}>

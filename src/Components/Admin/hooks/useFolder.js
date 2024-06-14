@@ -1,26 +1,69 @@
 import React, { useEffect, useReducer } from "react";
-import { db } from "../../../firebase";
-import {
-  collection,
-  doc,
-  getDoc,
-  query,
-  where,
-  orderBy,
-  onSnapshot,
-} from "firebase/firestore";
+
 export const ACTIONS = {
   SELECT_FOLDER: "selectFolder",
   UPDATE_FOLDER: "updateFolder",
-  SET_CHILD_FOLDERS: "setchildFolders",
-  SET_CHILD_FILES: "setchildFiles",
-};
-//setting the current folder id
-const formatedDoc = (doc) => {
-  return { id: doc.id, ...doc.data() };
+  SET_CHILD_FOLDERS: "setChildFolders",
+  SET_CHILD_FILES: "setChildFiles",
 };
 
 export const ROOT_FOLDER = { name: "Home", id: null, path: [] };
+
+const folderData = [
+  {
+    id: "PSXXabzVNlg5nw56HbEA",
+    UserId: "",
+    createdAt: "",
+    name: "Practical",
+    parentId: null,
+    path: [],
+    children: [],
+  },
+  {
+    id: "UGlJE86RQQzBV7pyHWfj",
+    UserId: "randomValueHere",
+    createdAt: "14/6/2024, 1:09:21 pm",
+    name: "Dummy Folder",
+    parentId: null,
+    path: [],
+    children: [
+      {
+        id: "bJBLtplahTAfeBzpVzpV",
+        createdAt: "",
+        folderId: "UGlJE86RQQzBV7pyHWfj",
+        name: "file_name",
+        url: "https://firebasestorage.googleapis.com/v0/b/asp2024-5525f.appspot.com/o/Home%2FBATCH%202022-2026%2FSEM-2%2FBE%2FUNIT-1%2FModule%201_Special%20Diode.pdf?alt=media&token=29b8f9f6-fa6c-495d-949e-872277fa0b01",
+      },
+      {
+        id: "gtL2eQ7BcZCQWQibYJbR",
+        UserId: "",
+        createdAt: "",
+        name: "Nested Folder",
+        parentId: "UGlJE86RQQzBV7pyHWfj",
+        path: [""],
+        children: [
+          {
+            id: "uyp7BMYDf0lJvsQrCbGf",
+            UserId: "",
+            createdAt: "",
+            name: "Meow Meow",
+            parentId: "gtL2eQ7BcZCQWQibYJbR",
+            path: [""],
+            children: [],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: "iSSSgRjcL445IpppRbjQ",
+    createdAt: "",
+    folderId: null,
+    name: "Hello Kitty",
+    url: "meowmeo",
+  },
+];
+
 function reducer(state, { type, payload }) {
   switch (type) {
     case ACTIONS.SELECT_FOLDER:
@@ -36,6 +79,7 @@ function reducer(state, { type, payload }) {
         ...state,
         folder: payload.folder,
       };
+
     case ACTIONS.SET_CHILD_FOLDERS:
       return {
         ...state,
@@ -52,6 +96,19 @@ function reducer(state, { type, payload }) {
       return state;
   }
 }
+
+function findFolderById(id, data) {
+  if (id === null) return ROOT_FOLDER;
+  for (const folder of data) {
+    if (folder.id === id) return folder;
+    if (folder.children && folder.children.length > 0) {
+      const childFolder = findFolderById(id, folder.children);
+      if (childFolder) return childFolder;
+    }
+  }
+  return null;
+}
+
 export function useFolder(folderId = null, folder = null) {
   const [state, dispatch] = useReducer(reducer, {
     folderId,
@@ -68,60 +125,42 @@ export function useFolder(folderId = null, folder = null) {
   }, [folderId, folder]);
 
   useEffect(() => {
-    if (folderId == null) {
-      return dispatch({
+    const selectedFolder = findFolderById(folderId, folderData);
+    if (selectedFolder) {
+      dispatch({
+        type: ACTIONS.UPDATE_FOLDER,
+        payload: { folder: selectedFolder },
+      });
+    } else {
+      dispatch({
         type: ACTIONS.UPDATE_FOLDER,
         payload: { folder: ROOT_FOLDER },
       });
     }
+  }, [folderId]);
 
-    getDoc(doc(db, "folders", folderId))
-      .then((doc) => {
-        //getting the current folder we are on!
-        dispatch({
-          type: ACTIONS.UPDATE_FOLDER,
-          payload: { folder: formatedDoc(doc) },
-        });
-      })
-      .catch(() => {
-        dispatch({
-          type: ACTIONS.UPDATE_FOLDER,
-          payload: { folder: ROOT_FOLDER },
-        });
+  useEffect(() => {
+    const childFolders = folderData.filter(
+      (folder) => folder.parentId === folderId,
+    );
+    dispatch({
+      type: ACTIONS.SET_CHILD_FOLDERS,
+      payload: { childFolders },
+    });
+  }, [folderId]);
+
+  useEffect(() => {
+    const currentFolder = findFolderById(folderId, folderData);
+    if (currentFolder && currentFolder.children) {
+      const childFiles = currentFolder.children.filter(
+        (child) => !child.children,
+      );
+      dispatch({
+        type: ACTIONS.SET_CHILD_FILES,
+        payload: { childFiles },
       });
+    }
   }, [folderId]);
 
-  useEffect(() => {
-    return onSnapshot(
-      query(
-        collection(db, "folders"),
-        where("parentId", "==", folderId),
-        orderBy("createdAt"),
-      ),
-      (snapshot) => {
-        dispatch({
-          type: ACTIONS.SET_CHILD_FOLDERS,
-          payload: { childFolders: snapshot.docs.map(formatedDoc) },
-        });
-      },
-    );
-  }, [folderId]);
-
-  //get files
-  useEffect(() => {
-    return onSnapshot(
-      query(
-        collection(db, "files"),
-        where("folderId", "==", folderId),
-        // orderBy("createdAt")
-      ),
-      (snapshot) => {
-        dispatch({
-          type: ACTIONS.SET_CHILD_FILES,
-          payload: { childFiles: snapshot.docs.map(formatedDoc) },
-        });
-      },
-    );
-  }, [folderId]);
   return state;
 }
