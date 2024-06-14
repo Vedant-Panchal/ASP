@@ -27,13 +27,13 @@ function Home() {
                 y2="669.514"
                 gradientUnits="userSpaceOnUse"
               >
-                <stop stop-color="#F24822" />
+                <stop stopColor="#F24822" />
                 <stop
                   offset="0.494792"
-                  stop-color="#FF26C5"
-                  stop-opacity="0.75"
+                  stopColor="#FF26C5"
+                  stopOpacity="0.75"
                 />
-                <stop offset="1" stop-color="#0072C4" />
+                <stop offset="1" stopColor="#0072C4" />
               </linearGradient>
             </defs>
           </svg>

@@ -3,41 +3,25 @@ import React, { useEffect, useState, useRef } from "react";
 import Swal from "sweetalert2";
 import { UserContext } from "../../context/AuthContext";
 import { useContext } from "react";
-import { Link, NavLink, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
-  Eye,
-  ChevronDown,
-  ChevronUp,
   PowerOff,
-  FileText,
   PanelsTopLeft,
-  BellRing,
-  XCircle,
   Moon,
   Sun,
   GraduationCap,
-  ArrowDownToLine,
 } from "lucide-react";
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  orderBy,
-  query,
-  where,
-  onSnapshot,
-} from "firebase/firestore";
+import { collection, orderBy, query, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase";
 import { useFolder } from "../Admin/hooks/useFolder";
-import AdminFolder from "../Admin/AdminFolder";
 import ClientFolder from "./ClientFolder";
-import FolderBreadCrumb from "../Admin/FolderBreadCrumb";
 import ClientFile from "./ClientFile";
 import ClientBreadCrumb from "../InnerComponents/ClientBreadCrumb";
-import { data } from "autoprefixer";
 
-// import { onMessage } from "firebase/messaging";
+//! Debug
+import buildTree from "../../utils/buildTree";
+//!
+
 function Dashboard() {
   const [error, seterror] = useState("");
   const [profileHidden, setProfileHidden] = useState(false);
@@ -58,6 +42,7 @@ function Dashboard() {
   let notiRef = useRef();
   let asideRef = useRef();
   let filterRef = useRef();
+
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -101,7 +86,6 @@ function Dashboard() {
         no-repeat
         `,
     }).then((result) => {
-      /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
         logoutUser();
         navigate("/signin");
@@ -139,8 +123,6 @@ function Dashboard() {
             // Map through the snapshot and get the data from firebase collection
             const notifications = snapshot.docs.map((doc) => doc.data());
 
-            console.log("StoredData:" + storedData);
-
             if (storedData && storedData.length > 0) {
               // console.log("StoredData:"+ storedData);
               // Compare fetched notifications with stored notifications to get new ones
@@ -167,7 +149,6 @@ function Dashboard() {
               setNotificationIndicator(true);
               setNotificationCount(notifications.length);
               setNotificationData(notifications);
-              console.log("NotificationData:" + JSON.stringify(notifications));
             }
           },
         );

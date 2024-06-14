@@ -1,20 +1,28 @@
-import { Header, Footer } from "./Components/index";
+import { Footer } from "./Components/index";
 import { Outlet } from "react-router-dom";
 import { AuthCtxtProvider } from "./context/AuthContext";
+import { DirectoryContextProvider } from "./context/DirectoryContext";
+
 function App() {
   return (
     <AuthCtxtProvider>
-      <div
-        style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
-      >
+      <DirectoryContextProvider>
         <div
-          style={{ flex: 1 }}
-          className="dark:bg-dark bg-Light20 overflow-hidden"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            minHeight: "100vh",
+          }}
         >
-          <Outlet />
+          <div
+            style={{ flex: 1 }}
+            className="dark:bg-dark bg-Light20 overflow-hidden"
+          >
+            <Outlet />
+          </div>
+          <Footer />
         </div>
-        <Footer />
-      </div>
+      </DirectoryContextProvider>
     </AuthCtxtProvider>
   );
 }

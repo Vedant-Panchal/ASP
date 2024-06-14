@@ -27,7 +27,6 @@ import {
   Folder,
   FileText,
 } from "lucide-react";
-import Drag from "../../../public/assets/Drag";
 import FolderBreadCrumb from "./FolderBreadCrumb";
 
 const AdminDashboard = () => {
