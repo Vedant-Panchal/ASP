@@ -499,12 +499,11 @@ function Dashboard() {
       >
         <div className="flex flex-col mb-2 items-start justify-center md:mt-14 mt-14">
           <h1 className="dark:text-slate-100 text-zinc-900 lg:text-2xl text-md font-bold  mb-2 ">
-            Feature Update 📢
+            Midsem Alert 📢
             <br />
           </h1>
-          <div className="md:text-md text-sm dark:text-slate-200 ">
-            We have added a new notification feature to notify you whenever a
-            file/folder is uploaded🔔
+          <div className="md:text-md text-sm lg:text-md dark:text-slate-200 ">
+            Please avoid refreshing the page repeatedly as it creates excessive requests and could overload the server. We're operating with limited free reads, so your cooperation is appreciated to keep things running smoothly. 
           </div>
         </div>
         <ClientBreadCrumb currentFolder={folder} toggleMode={toggleMode} />
