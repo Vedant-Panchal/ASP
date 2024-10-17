@@ -496,16 +496,20 @@ function Dashboard() {
       </aside>
       <main
         className={`p-4 min-h-screen bg-Light20 dark:bg-dark pt-20 transition-all ease-in-out delay-[40] duration-200 mb-20 `}
-      >
-        <div className="flex flex-col mb-2 items-start justify-center md:mt-14 mt-14">
-          <h1 className="dark:text-slate-100 text-zinc-900 lg:text-2xl text-md font-bold  mb-2 ">
-            Midsem Alert 📢
-            <br />
-          </h1>
-          <div className="md:text-md text-sm lg:text-md dark:text-slate-200 ">
-            Please avoid refreshing the page repeatedly as it creates excessive requests and could overload the server. We're operating with limited free reads, so your cooperation is appreciated to keep things running smoothly. 
-          </div>
-        </div>
+      ><div className="flex flex-col mb-2 items-start justify-center md:mt-14 mt-14">
+  <h1 className="dark:text-slate-100 text-zinc-900 lg:text-2xl text-md font-bold mb-2">
+    Midsem Alert 📢
+    <br />
+  </h1>
+  <div className="md:text-md text-sm lg:text-md dark:text-slate-200">
+    <ul>
+      <li>If ASP is loaded once in your browser, please don’t close the tab and try to keep it open at all times.</li>
+      <li>Please avoid refreshing the page repeatedly, as it creates excessive requests and could overload the server.</li>
+      <li>We’re operating with limited free reads, so your cooperation is appreciated to keep things running smoothly.</li>
+    </ul>
+  </div>
+</div>
+
         <ClientBreadCrumb currentFolder={folder} toggleMode={toggleMode} />
         {/* <div className="hidden flex flex-row items-center gap-4 md:mt-14 mt-14">
           
