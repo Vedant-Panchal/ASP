@@ -304,7 +304,10 @@ function Dashboard() {
       <button
         className="z-50 fixed w-fit rounded-full bottom-24 right-5 mr-2 p-3 bg-blue-400 text-white hover:bg-blue-500/95 transition-colors"
         title="Force Fetch"
-        onClick={forceFetchTree}
+        onClick={(e) => {
+          e.stopPropagation();
+          forceFetchTree()
+        }
       >
         <IoGitNetworkOutline />
       </button>
