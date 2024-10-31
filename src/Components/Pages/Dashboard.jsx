@@ -23,6 +23,7 @@ import { useFolder } from "../Admin/hooks/useFolder";
 import ClientFolder from "./ClientFolder";
 import ClientFile from "./ClientFile";
 import ClientBreadCrumb from "../InnerComponents/ClientBreadCrumb";
+import { IoGitNetworkOutline } from "react-icons/io5";
 
 //! Debug
 import { DirectoryContext } from "../../context/DirectoryContext";
@@ -53,20 +54,80 @@ function Dashboard() {
   let asideRef = useRef();
   let filterRef = useRef();
 
-  useEffect(() => {
-    async function fetchTree() {
+  async function forceFetchTree() {
+    try {
       const treeRef = collection(db, "trees");
       const snapshot = await getDocs(treeRef);
-      const latestTree = snapshot.docs[snapshot.docs.length - 1].data();
-      setTree(JSON.parse(latestTree.tree));
 
-      // Save the tree to local storage
-      localStorage.setItem("tree", JSON.stringify(JSON.parse(latestTree.tree)));
+      if (snapshot.docs.length > 0) {
+        const latestTree = snapshot.docs[snapshot.docs.length - 1].data();
+
+        const parsedTree = JSON.parse(latestTree.tree);
+        setTree(parsedTree);
+        localStorage.setItem("tree", JSON.stringify(parsedTree));
+        localStorage.setItem("treeTimestamp", new Date().getTime().toString());
+      } else {
+        console.log("No tree documents found");
+      }
+    } catch (error) {
+      console.error("Error fetching tree:", error);
     }
+  }
+
+  useEffect(() => {
+    async function fetchTree() {
+      try {
+        const storedTree = localStorage.getItem("tree");
+        const storedTreeTimestamp = localStorage.getItem("treeTimestamp");
+
+        if (storedTree && storedTreeTimestamp) {
+          const parsedTree = JSON.parse(storedTree);
+          const treeCreatedAt = parseInt(storedTreeTimestamp);
+
+          const now = new Date().getTime();
+          const treeAge = now - treeCreatedAt;
+          const sevenDays = 7 * 24 * 60 * 60 * 1000;
+
+          // If tree is less than 7 days old, use it
+          if (treeAge < sevenDays) {
+            setTree(parsedTree);
+            return;
+          }
+        }
+
+        // If no stored tree or tree is old, fetch new one
+        const treeRef = collection(db, "trees");
+        const snapshot = await getDocs(treeRef);
+
+        if (snapshot.docs.length > 0) {
+          const latestTree = snapshot.docs[snapshot.docs.length - 1].data();
+          const parsedTree = JSON.parse(latestTree.tree);
+
+          // Store timestamp separately
+          const currentTimestamp = new Date().getTime();
+          localStorage.setItem("treeTimestamp", currentTimestamp.toString());
+
+          setTree(parsedTree);
+          localStorage.setItem("tree", JSON.stringify(parsedTree));
+        } else {
+          console.log("No tree documents found");
+        }
+      } catch (error) {
+        console.error("Error fetching tree:", error);
+
+        // On error, try to use stored tree as fallback
+        const storedTree = localStorage.getItem("tree");
+        if (storedTree) {
+          setTree(JSON.parse(storedTree));
+        }
+      }
+    }
+
+    // Only fetch if tree is empty
     if (Object.keys(tree).length === 0) {
       fetchTree();
     }
-  }, []);
+  }, [tree, setTree]);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -240,6 +301,16 @@ function Dashboard() {
 
   return (
     <div className="antialiased h-max  bg-Light20 dark:bg-dark">
+      <button
+        className="z-50 fixed w-fit rounded-full bottom-24 right-5 mr-2 p-3 bg-blue-400 text-white hover:bg-blue-500/95 transition-colors"
+        title="Force Fetch"
+        onClick={(e) => {
+          e.stopPropagation();
+          forceFetchTree()
+        }
+      >
+        <IoGitNetworkOutline />
+      </button>
       <Link
         to={
           "https://github.com/Mrunal-Shah7/ASP-Data/releases/download/v1.1.0/ASP-v1.1.0-arm64-v8a-release.apk"
@@ -498,18 +569,22 @@ function Dashboard() {
         className={`p-4 min-h-screen bg-Light20 dark:bg-dark pt-20 transition-all ease-in-out delay-[40] duration-200 mb-20 `}
       >
         <div className="flex flex-col mb-2 items-start justify-center md:mt-14 mt-14">
-  <h1 className="dark:text-slate-100 text-zinc-900 lg:text-2xl text-md font-bold mb-2">
-    Midsem Alert 📢
-    <br />
-  </h1>
-  <div className="md:text-md text-sm lg:text-md dark:text-slate-200">
-    <ul className="list-disc list-inside">
-      <li>If ASP is loaded once in your browser, please don’t close the tab and try to keep it open at all times.</li>
-      <li>Please avoid refreshing the page repeatedly, as it creates excessive requests and could overload the server.</li>
-      <li>We’re operating with limited free reads, so your cooperation is appreciated to keep things running smoothly.</li>
-    </ul>
-  </div>
-</div>
+          <h1 className="dark:text-slate-100 text-zinc-900 lg:text-2xl text-md font-bold mb-2">
+            Welcome to ASP
+            <br />
+          </h1>
+          <div className="md:text-md text-sm lg:text-md dark:text-slate-200">
+            <ul className="list-disc list-inside">
+              <li>
+                The requests are cached in order to save read requests. If a
+                document has been uploaded but not reflected, use the force
+                fetch button in bottom right.
+              </li>
+            </ul>
+          </div>
+          <p className="text-white"></p>
+          <div className="md:text-md text-sm lg:text-md dark:text-slate-200"></div>
+        </div>
 
         <ClientBreadCrumb currentFolder={folder} toggleMode={toggleMode} />
         {/* <div className="hidden flex flex-row items-center gap-4 md:mt-14 mt-14">
