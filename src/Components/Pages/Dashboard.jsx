@@ -308,8 +308,8 @@ function Dashboard() {
         title="Force Fetch"
         onClick={(e) => {
           e.stopPropagation();
-          forceFetchTree();
-        }}
+          forceFetchTree()
+          }}
       >
         <IoGitNetworkOutline />
       </button>
