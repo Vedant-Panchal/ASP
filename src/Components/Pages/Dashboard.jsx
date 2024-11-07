@@ -17,6 +17,7 @@ import {
   query,
   onSnapshot,
   getDocs,
+  limit,
 } from "firebase/firestore";
 import { db } from "../../firebase";
 import { useFolder } from "../Admin/hooks/useFolder";
@@ -24,10 +25,7 @@ import ClientFolder from "./ClientFolder";
 import ClientFile from "./ClientFile";
 import ClientBreadCrumb from "../InnerComponents/ClientBreadCrumb";
 import { IoGitNetworkOutline } from "react-icons/io5";
-
-//! Debug
 import { DirectoryContext } from "../../context/DirectoryContext";
-//!
 
 function Dashboard() {
   const [error, seterror] = useState("");
@@ -57,7 +55,9 @@ function Dashboard() {
   async function forceFetchTree() {
     try {
       const treeRef = collection(db, "trees");
-      const snapshot = await getDocs(treeRef);
+      const snapshot = await getDocs(
+        query(treeRef, orderBy("createdAt", "desc"), limit(1)),
+      );
 
       if (snapshot.docs.length > 0) {
         const latestTree = snapshot.docs[snapshot.docs.length - 1].data();
@@ -97,7 +97,9 @@ function Dashboard() {
 
         // If no stored tree or tree is old, fetch new one
         const treeRef = collection(db, "trees");
-        const snapshot = await getDocs(treeRef);
+        const snapshot = await getDocs(
+          query(treeRef, orderBy("createdAt", "desc"), limit(1)),
+        );
 
         if (snapshot.docs.length > 0) {
           const latestTree = snapshot.docs[snapshot.docs.length - 1].data();
@@ -306,8 +308,8 @@ function Dashboard() {
         title="Force Fetch"
         onClick={(e) => {
           e.stopPropagation();
-          forceFetchTree()
-        }
+          forceFetchTree();
+        }}
       >
         <IoGitNetworkOutline />
       </button>

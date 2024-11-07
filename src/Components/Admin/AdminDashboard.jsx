@@ -12,9 +12,8 @@ import AdminNav from "./AdminNav";
 import buildTree from "../../utils/buildTree";
 
 import { deleteObject, ref as deleteRef } from "firebase/storage";
-import { deleteDoc, doc } from "firebase/firestore";
+import { deleteDoc, doc, query, orderBy, limit } from "firebase/firestore";
 import {
-  uploadBytes,
   ref as StorageRef,
   uploadBytesResumable,
   getDownloadURL,
@@ -42,8 +41,10 @@ const AdminDashboard = () => {
   useEffect(() => {
     async function fetchTree() {
       const treeRef = collection(db, "trees");
-      const snapshot = await getDocs(treeRef);
-      const latestTree = snapshot.docs[snapshot.docs.length - 1].data();
+      const snapshot = await getDocs(
+        query(treeRef, orderBy("createdAt", "desc"), limit(1)),
+      );
+      const latestTree = snapshot.docs[0].data();
       setTree(JSON.parse(latestTree.tree));
 
       // Save the tree to local storage
