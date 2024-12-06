@@ -86,7 +86,7 @@ function Dashboard() {
 
           const now = new Date().getTime();
           const treeAge = now - treeCreatedAt;
-          const sevenDays = 7 * 24 * 60 * 60 * 1000;
+          const sevenDays = 28 * 24 * 60 * 60 * 1000;
 
           // If tree is less than 7 days old, use it
           if (treeAge < sevenDays) {
