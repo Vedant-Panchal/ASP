@@ -309,7 +309,7 @@ function Dashboard() {
         onClick={(e) => {
           e.stopPropagation();
           forceFetchTree()
-          }}
+        }}
       >
         <IoGitNetworkOutline />
       </button>
@@ -430,9 +430,8 @@ function Dashboard() {
               {/* Notification indicator */}
               {notificationIndicator && (
                 <div
-                  className={`absolute -top-1 right-0 w-4 h-4 pl-[1px] pb-[1px] flex justify-center items-center rounded-full text-xs bg-blue-600 text-primary-200 font-semibold ${
-                    notificationCount > 0 ? "" : "hidden"
-                  }`}
+                  className={`absolute -top-1 right-0 w-4 h-4 pl-[1px] pb-[1px] flex justify-center items-center rounded-full text-xs bg-blue-600 text-primary-200 font-semibold ${notificationCount > 0 ? "" : "hidden"
+                    }`}
                 >
                   <div>{notificationCount}</div>
                 </div>
@@ -473,9 +472,8 @@ function Dashboard() {
               </div>
             </div>
             <button
-              className={`${
-                mode === "light" ? "bg-yellow-300" : "bg-darkElevate"
-              } w-fit h-fit p-2 rounded-full transition-all duration-500 ease-in mr-2`}
+              className={`${mode === "light" ? "bg-yellow-300" : "bg-darkElevate"
+                } w-fit h-fit p-2 rounded-full transition-all duration-500 ease-in mr-2`}
               onClick={toggleMode}
             >
               <span className="transition-all duration-200 ease-in">
@@ -524,9 +522,8 @@ function Dashboard() {
       </nav>
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 z-40 w-64 h-screen pt-14 transition-transform ease-in-out duration-200 bg-Light20 border-r shadow-xl border-gray-200  dark:bg-darkNav dark:border-gray-700 ${
-          asidehidden ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`fixed top-0 left-0 z-40 w-64 h-screen pt-14 transition-transform ease-in-out duration-200 bg-Light20 border-r shadow-xl border-gray-200  dark:bg-darkNav dark:border-gray-700 ${asidehidden ? "translate-x-0" : "-translate-x-full"
+          }`}
       >
         <div className="overflow-y-auto py-5 px-3 h-full dark:bg-transparent">
           <ul className="space-y-2">
@@ -571,21 +568,28 @@ function Dashboard() {
         className={`p-4 min-h-screen bg-Light20 dark:bg-dark pt-20 transition-all ease-in-out delay-[40] duration-200 mb-20 `}
       >
         <div className="flex flex-col mb-2 items-start justify-center md:mt-14 mt-14">
-          <h1 className="dark:text-slate-100 text-zinc-900 lg:text-2xl text-md font-bold mb-2">
-            Welcome to ASP
-            <br />
+          <h1 className="dark:text-slate-300 text-zinc-900 lg:text-2xl text-md font-bold mb-2">
+            🚨 ASP Needs You! 🚨
           </h1>
-          <div className="md:text-md text-sm lg:text-md dark:text-slate-200">
-            <ul className="list-disc list-inside">
-              <li>
-                The requests are cached in order to save read requests. If a
-                document has been uploaded but not reflected, use the force
-                fetch button in bottom right.
-              </li>
+          <div className="md:text-md text-sm lg:text-md text-zinc-900 dark:text-slate-200">
+            <p>
+              Our userbase is growing, but our free-tier plan is hitting its limit—daily quotas are exhausted, causing slowdowns. We hate this experience as much as you do!
+            </p>
+            <p className="text-red-500 font-semibold mt-2">
+              Please download your files ASAP before free quotas run out again!
+              <br />
+            </p>
+            <p className="mt-2">
+              To keep ASP alive, we need your help. Vote now in our <a href="https://forms.gle/JE4Pa3v7Z6Tz72q98" target="_blank" className="text-blue-500 underline">Google Form</a>:
+            </p>
+            <ul className="list-disc list-inside mt-2">
+              <li>Shut down ASP forever 😢</li>
+              <li>Keep it running for just <span className="dark:text-yellow-400 font-bold italic">₹ 20/month</span> and get better UI, notes, PYQs, and 100% uptime! ✨</li>
             </ul>
+            <p className="dark:text-yellow-400 font-bold mt-2">
+              You’re the heart of ASP—let’s build its future together!
+            </p>
           </div>
-          <p className="text-white"></p>
-          <div className="md:text-md text-sm lg:text-md dark:text-slate-200"></div>
         </div>
 
         <ClientBreadCrumb currentFolder={folder} toggleMode={toggleMode} />
