@@ -569,25 +569,25 @@ function Dashboard() {
       >
         <div className="flex flex-col mb-2 items-start justify-center md:mt-14 mt-14">
           <h1 className="dark:text-slate-300 text-zinc-900 lg:text-2xl text-md font-bold mb-2">
-            🚨 ASP Needs You! 🚨
+            📢 Important Update: ASP Archiving Announcement 📢
           </h1>
           <div className="md:text-md text-sm lg:text-md text-zinc-900 dark:text-slate-200">
             <p>
-              Our userbase is growing, but our free-tier plan is hitting its limit—daily quotas are exhausted, causing slowdowns. We hate this experience as much as you do!
+              We want to thank you for being part of the ASP journey. Our userbase has grown tremendously, but we’ve reached a point where maintaining the site is no longer sustainable.
             </p>
             <p className="text-red-500 font-semibold mt-2">
-              Please download your files ASAP before free quotas run out again!
+              ASP will be archived, and the site will no longer be maintained.
               <br />
             </p>
             <p className="mt-2">
-              To keep ASP alive, we need your help. Vote now in our <a href="https://forms.gle/JE4Pa3v7Z6Tz72q98" target="_blank" className="text-blue-500 underline">Google Form</a>:
+              This wasn’t an easy decision, but it’s time to close this chapter.
             </p>
             <ul className="list-disc list-inside mt-2">
-              <li>Shut down ASP forever 😢</li>
-              <li>Keep it running for just <span className="dark:text-yellow-400 font-bold italic">₹ 20/month</span> and get better UI, notes, PYQs, and 100% uptime! ✨</li>
+              <li>No new updates or features will be added.</li>
+              <li>The site will remain accessible.</li>
             </ul>
             <p className="dark:text-yellow-400 font-bold mt-2">
-              You’re the heart of ASP—let’s build its future together!
+              Thank you for using ASP!
             </p>
           </div>
         </div>
